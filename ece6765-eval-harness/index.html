@@ -608,10 +608,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-time-to-first-token-ttft" class="md-nav__link">
+  <a href="#32-throughput" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2. Time to first token (TTFT)
+        3.2. Throughput
       
     </span>
   </a>
@@ -619,21 +619,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-makespan-total-generation-time" class="md-nav__link">
+  <a href="#33-what-this-means-for-optimization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3. Makespan (total generation time)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#34-what-this-means-for-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.4. What this means for optimization
+        3.3. What this means for optimization
       
     </span>
   </a>
@@ -856,10 +845,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-time-to-first-token-ttft" class="md-nav__link">
+  <a href="#32-throughput" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2. Time to first token (TTFT)
+        3.2. Throughput
       
     </span>
   </a>
@@ -867,21 +856,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-makespan-total-generation-time" class="md-nav__link">
+  <a href="#33-what-this-means-for-optimization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3. Makespan (total generation time)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#34-what-this-means-for-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.4. What this means for optimization
+        3.3. What this means for optimization
       
     </span>
   </a>
@@ -955,14 +933,12 @@
 <h1 id="evaluation-harness-and-metrics">Evaluation Harness and Metrics<a class="headerlink" href="#evaluation-harness-and-metrics" title="Permanent link">&para;</a></h1>
 <p>The evaluation harness is course-provided. It is the single source of truth
 for both correctness and performance: every milestone number you report
-comes out of it, which is what makes results comparable across groups. This page describes what it does and
-how it scores you.</p>
+comes out of it, which is what makes results comparable across groups. </p>
 <div class="admonition warning">
 <p class="admonition-title">Draft</p>
 <p>The harness is under development. Endpoint details, exact metric
 definitions, and score thresholds marked <em>TBD</em> below will be fixed
-before Milestone 1 is released. The structure described here will not
-change.</p>
+before Milestone 1 is released. </p>
 </div>
 <h2 id="1-what-the-harness-does">1. What the harness does<a class="headerlink" href="#1-what-the-harness-does" title="Permanent link">&para;</a></h2>
 <ol>
@@ -979,20 +955,16 @@ change.</p>
 <p>The trace contains every request up front: all of them are available to your
 pipeline at t=0, with no arrival process and no rate limit. This models a
 server that has already been handed a full queue of work by an upstream
-scheduler. See <a href="../ece6765-project-arch/#21-the-execution-model">the execution
-model</a> for the interface.</p>
+scheduler. </p>
 <p>Because everything is available immediately, <strong>you own the scheduling
 decision entirely.</strong> Nothing requires you to run requests in trace order.</p>
 <h2 id="2-dataset-and-answer-quality">2. Dataset and answer quality<a class="headerlink" href="#2-dataset-and-answer-quality" title="Permanent link">&para;</a></h2>
-<p>Queries and ground-truth answers come from <strong>ClapNQ</strong>, a long-form RAG
-benchmark built from Natural Questions, where answers are grounded in
-retrieved passages rather than extracted spans.</p>
-<p>Answer quality is scored against the ClapNQ reference answers using the
-benchmark's own metrics. <em>Exact metric set and the passing threshold: TBD.</em></p>
+<p>Queries and ground-truth answers come from <em>TBD</em></p>
+<p>Answer quality is scored against <em>TBD</em></p>
 <p>Two properties of the scoring matter for how you engineer the pipeline:</p>
 <p><strong>It is a gate, not a gradient.</strong> Above the quality threshold, a better
 answer score does not improve your performance standing. Below it, your
-performance numbers do not count at all.</p>
+performance numbers do not count.</p>
 <p><strong>Held-out traces exist.</strong> The traces you develop against are public, but
 staff evaluation may use a trace you have not seen, drawn from the same
 distribution. Beyond catching shortcuts, this is a genuine measurement
@@ -1003,7 +975,7 @@ knowing whether your findings generalize is part of the work.</p>
 <p>Memoizing answers by query text, or precomputing results for the public
 traces, is not an optimization -- it is a way to score zero. Caching
 <em>within</em> the serving path (a warmed index, a reused KV cache across a
-batch, a persistent connection pool) is fine and expected. The line is
+batch, a persistent connection pool) is fine and encouraged. The line is
 whether your pipeline would still work on a query it has never seen.</p>
 </div>
 <h2 id="3-performance-metrics">3. Performance metrics<a class="headerlink" href="#3-performance-metrics" title="Permanent link">&para;</a></h2>
@@ -1018,44 +990,37 @@ your pipeline leaves until the end of the run carries the entire queuing
 delay of everything you ran before it. Two pipelines with identical
 throughput can have completely different latency distributions purely
 because of the order in which they drained the queue.</p>
-<h3 id="32-time-to-first-token-ttft">3.2. Time to first token (TTFT)<a class="headerlink" href="#32-time-to-first-token-ttft" title="Permanent link">&para;</a></h3>
-<p>For each request: <code>first_token_ms</code>, the time from t=0 until its first token
-is emitted. Also reported as a distribution.</p>
-<p>The gap between TTFT and per-request latency tells you how much of a
-request's life was spent waiting versus generating. Aggressive batching
-tends to widen the queuing portion for the requests that lose the batching
-lottery.</p>
-<h3 id="33-makespan-total-generation-time">3.3. Makespan (total generation time)<a class="headerlink" href="#33-makespan-total-generation-time" title="Permanent link">&para;</a></h3>
-<p>Wall-clock time from t=0 until the last request completes. This is the
-headline throughput number, and it is also measured externally by the
-harness as a check on your self-reported timings.</p>
-<p>Also reported normalized as requests per second over the run.</p>
+<h3 id="32-throughput">3.2. Throughput<a class="headerlink" href="#32-throughput" title="Permanent link">&para;</a></h3>
+<p>Requests per second over the run: the number of requests in the trace
+divided by the wall-clock time from t=0 until the last one completes.</p>
+<p>This is the headline throughput number, and the harness also measures that
+wall clock externally as a check on your self-reported timings.</p>
 <div class="admonition note">
-<p class="admonition-title">Max latency and makespan are the same number</p>
+<p class="admonition-title">Max latency and throughput are the same measurement</p>
 <p>Since every request is available at t=0, the request that finishes last
-finishes at exactly the makespan. <strong>p100 latency and total generation
-time are mathematically identical here</strong> -- they are not two independent
-things to optimize.</p>
+finishes at exactly the total run time -- so <strong>p100 latency and the run
+time behind your throughput number are mathematically identical here</strong>.</p>
 <p>The distinction that survives is between the <em>tail</em> and the <em>body</em> of
-the distribution. Makespan tells you how long the whole workload took;
+the distribution. Throughput tells you how long the whole workload took;
 p50 and p95 tell you how your scheduler distributed waiting across
 requests. A pipeline can improve p50 substantially -- by running short
-requests first -- without moving its makespan at all, and it can improve
-makespan while making p50 much worse. Those really are in tension.
-Do not report them as though they were independent.</p>
+requests first -- without moving its throughput at all, and it can
+improve throughput while making p50 much worse.</p>
 </div>
-<h3 id="34-what-this-means-for-optimization">3.4. What this means for optimization<a class="headerlink" href="#34-what-this-means-for-optimization" title="Permanent link">&para;</a></h3>
-<p>The three metrics push in different directions, and reconciling them is the
-project:</p>
+<h3 id="33-what-this-means-for-optimization">3.3. What this means for optimization<a class="headerlink" href="#33-what-this-means-for-optimization" title="Permanent link">&para;</a></h3>
+<p>The two metrics push in different directions:</p>
 <ul>
-<li><strong>Makespan</strong> rewards keeping every resource busy: large batches, deep
+<li><strong>Throughput</strong> rewards keeping every resource busy: large batches, deep
    pipelining, high utilization, and no idle services.</li>
 <li><strong>p50 latency</strong> rewards finishing individual requests quickly once
    started, and running cheap requests early.</li>
-<li><strong>TTFT</strong> punishes holding a request while you wait for a batch to fill.</li>
 </ul>
-<p>Reporting all three, and being explicit about which you traded away, is
-expected in every milestone writeup.</p>
+<p>The tension between them is the whole point. Large batches raise throughput
+and make the requests that wait for a batch to fill wait longer; a schedule
+that runs cheap requests first improves p50 and can leave a service idle at
+the end of the run.</p>
+<p>Reporting both, and being explicit about which you traded away, is expected
+in every milestone writeup.</p>
 <h2 id="4-running-the-harness-yourself">4. Running the harness yourself<a class="headerlink" href="#4-running-the-harness-yourself" title="Permanent link">&para;</a></h2>
 <p>You run the same harness the staff runs, on your own server, as often as you
 like:</p>
@@ -1073,10 +1038,9 @@ not a result.</p>
    variation across them, not a single number.</li>
 <li><strong>Vary the trace.</strong> A schedule tuned to one trace can fail on another
    with a different mix of query lengths. Check your results across the
-   provided traces, not just your favorite one.</li>
+   provided traces, not just a single one.</li>
 <li><strong>Discard warmup.</strong> The first run after a service starts is not
-   representative. The harness supports a warmup pass; use it, and say in
-   your writeup that you did.</li>
+   representative. The harness supports a warmup pass.</li>
 <li><strong>Control the machine.</strong> Another group's job is not running on your
    server, but your own stray processes might be. See the <a href="../ece6765-server-guide/">Server and
    Measurement Guide</a> for a checklist.</li>
@@ -1089,11 +1053,6 @@ correct. The harness supports a fast correctness-only mode over a small
 query subset:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>%<span class="w"> </span>ece6765-harness<span class="w"> </span>check<span class="w"> </span>--trace<span class="w"> </span>traces/smoke.jsonl<span class="w">   </span><span class="c1"># _exact CLI: TBD_</span>
 </span></code></pre></div>
-<p>Run this after every change. The most expensive failure mode in this project
-is spending a week optimizing a pipeline that has been silently returning
-degraded answers since Tuesday -- especially since most of the optimizations
-you will try (batching, quantization, reduced <code>k</code>, transport changes) are
-exactly the kind that can quietly damage answer quality.</p>
 
 
 

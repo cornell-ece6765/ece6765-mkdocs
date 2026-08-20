@@ -1019,14 +1019,14 @@
 
 
 <h1 id="server-and-measurement-guide">Server and Measurement Guide<a class="headerlink" href="#server-and-measurement-guide" title="Permanent link">&para;</a></h1>
-<p>Every group gets a dedicated Ampere server. This page covers access, the
+<p>Every group gets a dedicated server. This page covers access, the
 tools available for profiling, and the measurement hygiene that makes your
 numbers mean something.</p>
 <div class="admonition warning">
 <p class="admonition-title">Draft</p>
 <p>Access details, hostnames, the reservation mechanism, and the exact
 tooling available are <em>TBD</em> and will be filled in before Milestone 1 is
-released. The measurement discipline in Sections 3 and 4 is final.</p>
+released. </p>
 </div>
 <h2 id="1-access">1. Access<a class="headerlink" href="#1-access" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1037,7 +1037,7 @@ released. The measurement discipline in Sections 3 and 4 is final.</p>
 </ul>
 <p>All groups have identical hardware, so your numbers are directly comparable
 with the rest of the class. If another group measures something different
-from you on the same knob, that difference is real and worth chasing down.</p>
+from you on the same knob, that difference is real and worth chasing down. </p>
 <div class="admonition danger">
 <p class="admonition-title">The server is shared with your own group</p>
 <p>Three people running timed experiments on one machine at the same time
@@ -1063,7 +1063,7 @@ made to get the machine into the state where your numbers were good.</p>
 <p>The rule that follows is simple: <strong>the git repository is where your project
 lives, and the server is a place you temporarily run it.</strong> If a server were
 wiped right now, you should be able to get a fresh one, clone your repo, run
-your setup script, and be back where you were.</p>
+your setup script, and be back where you were. </p>
 <h3 id="21-what-belongs-in-the-repo">2.1. What belongs in the repo<a class="headerlink" href="#21-what-belongs-in-the-repo" title="Permanent link">&para;</a></h3>
 <p>Everything needed to reconstruct your work, not just the parts that look
 like source code:</p>
@@ -1114,18 +1114,15 @@ week a milestone is due.</p>
 you start:</p>
 <ul>
 <li>Python wheels and container images that "just work" on x86 sometimes do
-   not have ARM64 builds. Check early; discovering this the night before M1
-   is due is avoidable.</li>
+   not have ARM64 builds. </li>
 <li>Performance counter names, SIMD instruction sets, and profiling tool
    support differ from x86. Guides you find online assume x86 more often
    than not.</li>
 <li>Vector unit behavior, page size options, and NUMA topology are all
-   platform-specific. Do not assume; check the machine.</li>
+   platform-specific. </li>
 </ul>
-<p>Machine details -- core count, NUMA topology, cache hierarchy, memory
-configuration, available page sizes, frequency range -- are <em>TBD</em> and will
-be documented here. You should also learn to query them yourself; your M3
-sweeps depend on knowing the actual topology.</p>
+<p><em>Machine details</em> (core count, NUMA topology, cache hierarchy, memory
+configuration, available page sizes, frequency range): You should also learn to query them yourself. </p>
 <h2 id="4-profiling-tools">4. Profiling tools<a class="headerlink" href="#4-profiling-tools" title="Permanent link">&para;</a></h2>
 <p><em>Exact tool availability and any required permissions: TBD.</em></p>
 <p>You will need, at minimum, the ability to:</p>

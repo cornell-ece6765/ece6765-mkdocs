@@ -1077,14 +1077,12 @@ Reading and parsing the trace itself happens <strong>after</strong> t=0 and is o
 clock.</p>
 <h3 id="24-results-file">2.4. Results file<a class="headerlink" href="#24-results-file" title="Permanent link">&para;</a></h3>
 <p>One record per request. <em>Exact schema TBD.</em></p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"answer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sanae Takaichi"</span><span class="p">,</span><span class="w"> </span><span class="nt">"start_time_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">100.8</span><span class="p">,</span><span class="w"> </span><span class="nt">"first_token_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">412.7</span><span class="p">,</span><span class="w"> </span><span class="nt">"last_token_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">1893.2</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"answer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sanae Takaichi"</span><span class="p">,</span><span class="w"> </span><span class="nt">"start_time_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">100.8</span><span class="p">,</span><span class="w"> </span><span class="nt">"last_token_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">1893.2</span><span class="p">}</span>
 </span></code></pre></div>
 <ul>
 <li><code>answer</code> -- the generated text, scored for quality by the harness.</li>
 <li><code>start_time_ms</code> -- milliseconds from <strong>t=0</strong> to when the request is 
    scheduled for execution by the frontend.</li>
-<li><code>first_token_ms</code> -- milliseconds from <strong>t=0</strong> to the first token emitted
-   for this request.</li>
 <li><code>last_token_ms</code> -- milliseconds from <strong>t=0</strong> to the last token emitted for
    this request.</li>
 </ul>
@@ -1138,48 +1136,11 @@ the table for the rest of the semester.</p>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>frontend ──POST /generate─────▶ generation   {"query": "...", "passages": [...]}
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                                             →  {"answer": "..."}
 </span></code></pre></div>
-<p><strong>Replace any of it.</strong> The axes available to you, roughly in the order
-groups tend to find them:</p>
-<ul>
-<li><strong>Serialization.</strong> JSON arrays of floats are an expensive way to move
-   embedding vectors. The <code>frontend ↔ embedding ↔ vectordb</code> path is the
-   obvious first casualty. Binary encodings, protobuf/FlatBuffers, or a raw
-   length-prefixed float buffer.</li>
-<li><strong>Transport.</strong> gRPC, raw TCP sockets, Unix domain sockets, shared memory
-   rings for colocated services. Each has a different cost structure and a
-   different failure mode.</li>
-<li><strong>Batching.</strong> The reference implementation processes batch size 1 at
-   every hop. Constructing batches at service boundaries is one of the
-   largest available wins, and it trades throughput against tail latency in
-   a way you should be able to quantify.</li>
-<li><strong>Concurrency and call structure.</strong> Synchronous request/response versus
-   pipelined or streaming calls; how many requests are in flight per hop;
-   whether generation can begin before retrieval fully completes.</li>
-<li><strong>Connection management.</strong> Pooling, keep-alive, how many connections per
-   service pair, and what happens to tail latency when the pool is too small.</li>
-<li><strong>Data movement.</strong> Whether passages are copied through the frontend at all
-   or passed by reference, and who owns the buffer.</li>
-</ul>
-<p>Note that these interact. A binary format that halves serialization cost may
-change the batch size at which batching stops paying; a shared-memory ring
-may make copies free but pin two services to the same NUMA node, which M3
-will make you care about.</p>
-<div class="admonition tip">
-<p class="admonition-title">Write the template so the protocol can change</p>
-<p>This matters more here than it would in a project where the structure was
-negotiable. The decomposition is fixed precisely so that the boundary
-stays a thing you can measure and swap -- so build the boundary as a
-seam from day one.</p>
-<p>Put the transport behind an interface in M1: a client class per service
-with a single implementation, so that swapping HTTP for gRPC later is a
-new implementation rather than a rewrite. Groups that hard-code
-<code>requests.post(...)</code> calls throughout the frontend pay for it every
-milestone after M1, and they pay most in M4 when they want to combine
-three protocol choices and cannot.</p>
-<p>Being able to select the protocol from a config file -- and therefore
-run the same trace across protocols back to back -- is worth the hour it
-costs you in M1.</p>
-</div>
+<p><strong>Replace any of it.</strong> Build this protocol in M1 because it is the fastest
+thing to get correct, then start taking it apart in M2, where the axes open
+to you -- serialization, transport, batching, call structure, connection
+management, who owns the buffer -- are laid out, and where a measured
+protocol change is a required deliverable.</p>
 <h2 id="4-repository-layout">4. Repository layout<a class="headerlink" href="#4-repository-layout" title="Permanent link">&para;</a></h2>
 <p>Milestone writeups are collected automatically, so <strong>the four <code>mN.md</code> files
 must sit at the repo root with exactly those names</strong>. Because the four
