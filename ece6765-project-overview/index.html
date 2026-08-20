@@ -1,0 +1,1463 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Mohammad Alian">
+      
+      
+        <link rel="canonical" href="https://cornell-ece6765.github.io/ece6765-mkdocs/ece6765-project-overview/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../ece6765-project-m1/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Project Overview - ECE 6765 Modern Datacenter Architecture</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#course-project-overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ECE 6765 Modern Datacenter Architecture" class="md-header__button md-logo" aria-label="ECE 6765 Modern Datacenter Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ECE 6765 Modern Datacenter Architecture
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Project Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cornell-ece6765/ece6765-mkdocs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cornell-ece6765/ece6765-mkdocs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ece6765-project-arch/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ECE 6765 Modern Datacenter Architecture" class="md-nav__button md-logo" aria-label="ECE 6765 Modern Datacenter Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ECE 6765 Modern Datacenter Architecture
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cornell-ece6765/ece6765-mkdocs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cornell-ece6765/ece6765-mkdocs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Project
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-project-is-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the project is for
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-kind-of-project-this-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What kind of project this is
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What kind of project this is">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assumed-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assumed background
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-open-ended-means-for-grading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "open-ended" means for grading
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-note-on-the-end-of-the-semester" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A note on the end of the semester
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#machine-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grading-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grading criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#academic-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Academic integrity
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: RAG Pipeline Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 2: Profiling and Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 3: System Sensitivity Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 4: Contest and Final Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-arch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference Architecture and API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-eval-harness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Harness and Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-server-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server and Measurement Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-report-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Report Guidelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-git-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Workflow for Group Repos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-project-is-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the project is for
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-kind-of-project-this-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What kind of project this is
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What kind of project this is">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assumed-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assumed background
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-open-ended-means-for-grading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "open-ended" means for grading
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-note-on-the-end-of-the-semester" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A note on the end of the semester
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#machine-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grading-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grading criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#academic-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Academic integrity
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="course-project-overview">Course Project Overview<a class="headerlink" href="#course-project-overview" title="Permanent link">&para;</a></h1>
+<p>The ECE 6765 course project is a semester-long study of <strong>system
+sensitivity</strong>, built around a single application: a <strong>retrieval-augmented
+generation (RAG) pipeline implemented as four microservices</strong>. You build it
+once, then spend the rest of the semester using it to find out how a real
+workload responds to the machine underneath it.</p>
+<h2 id="what-the-project-is-for">What the project is for<a class="headerlink" href="#what-the-project-is-for" title="Permanent link">&para;</a></h2>
+<p>The goal is to develop a working understanding of how application
+performance responds to the system underneath it -- to be able to take a
+real workload, change something about the machine, and explain what happened
+and why. By the end of the semester you should be able to answer questions
+like:</p>
+<ul>
+<li>Which parts of this workload are sensitive to <strong>CPU frequency</strong>, and
+   which are not? What does that tell you about what limits them?</li>
+<li>What does <strong>NUMA placement</strong> cost when you get it wrong, and which
+   component pays?</li>
+<li>When does <strong>page size</strong> matter, and how would you have predicted it from
+   a TLB miss rate?</li>
+<li>What happens to a latency-sensitive component when something else on the
+   machine starts contending for <strong>shared cache and memory bandwidth</strong>? How
+   much of a "dedicated" server is actually dedicated?</li>
+<li>How does performance scale with <strong>cores per component</strong>, and why does the
+   end-to-end optimum differ from what the individual scaling curves
+   predict?</li>
+<li>What does the <strong>interconnect between components</strong> cost, and how does that
+   change with placement?</li>
+</ul>
+<p>These are sensitivity questions, and answering them is the substance of the
+project. A group that measures carefully, finds that a knob does nothing,
+and explains correctly why it does nothing has done the assignment. A group
+that makes the pipeline fast without being able to account for any of it has
+not.</p>
+<h2 id="why-this-application">Why this application<a class="headerlink" href="#why-this-application" title="Permanent link">&para;</a></h2>
+<p>RAG serving is not only an extremely important application, it is also
+a good instrument for these questions because it is not one
+program with one bottleneck. It is a set of components with genuinely
+different resource profiles chained together behind a single request:</p>
+<ul>
+<li><strong>Embedding</strong> is compute-bound and vectorizable -- sensitive to cores,
+   SIMD width, and frequency.</li>
+<li><strong>Vector DB</strong> is memory-bound -- sensitive to capacity, bandwidth, NUMA
+   locality, and page size.</li>
+<li><strong>Generation</strong> is bound by both compute and memory bandwidth.</li>
+<li><strong>Frontend</strong> is I/O-bound and sensitive to request ordering.</li>
+</ul>
+<p>That variety is the point. The same knob moves these four components in
+different directions and by different amounts, so every configuration change
+you make becomes a small experiment with four simultaneous answers. </p>
+<h2 id="what-kind-of-project-this-is">What kind of project this is<a class="headerlink" href="#what-kind-of-project-this-is" title="Permanent link">&para;</a></h2>
+<p>This is a graduate course, and this is a graduate project. It is open-ended
+research and engineering work, not a guided lab.</p>
+<p>Every milestone handout on this site states <strong>what you must accomplish and
+what you must report</strong>. None of them tell you how.</p>
+<p>You will be given a <strong>starter code template</strong>. It is not a solution and it
+is not a working application -- it is a skeleton that shows the shape of the
+interfaces. Making it into something that runs, and then something that runs 
+well, is entirely on you. There is no reference implementation, no 
+step-by-step walkthrough, and no provided debugging path.</p>
+<p>Choosing an implementation strategy, finding out why your service deadlocks
+under load, discovering that a library has no ARM64 build and deciding what
+to do about it, and figuring out how to measure something the tooling does
+not measure directly -- <strong>all of that is the project.</strong> It is not an
+obstacle standing between you and the project.</p>
+<div class="admonition danger">
+<p class="admonition-title">The instructor and staff do not debug your code</p>
+<p>Course staff support the <strong>infrastructure</strong>: server access, the
+evaluation harness, the fixed models, and the requirements themselves. If
+a server is broken or a handout is genuinely ambiguous, ask immediately.</p>
+<p>Course staff do <strong>not</strong> debug your services, fix your build, resolve your
+dependency conflicts, teach the Linux command line, or teach you the
+tooling. Those are prerequisites and they are graded work. "We could not
+get it working" is a result you will be asked to explain, not a reason
+for an extension.</p>
+</div>
+<h3 id="assumed-background">Assumed background<a class="headerlink" href="#assumed-background" title="Permanent link">&para;</a></h3>
+<p>You are expected to arrive already fluent in the following. The course will
+not teach them:</p>
+<ul>
+<li><strong>Linux command line and systems administration.</strong> Building software from
+   source, reading and fixing build failures, managing processes and
+   services, understanding what your machine is doing and why. You will live
+   on a remote server for a semester.</li>
+<li><strong>AI coding tools.</strong> You are expected to use them, and to use them well.
+   A four-service pipeline is a lot of code to write in a semester alongside
+   the measurement work, and groups that hand-write everything will run out
+   of time. Using these tools competently -- including knowing when their
+   output is wrong -- is a professional skill this project assumes.</li>
+<li><strong>Low-level systems and computer architecture.</strong> ECE 4750 or equivalent
+   is a prerequisite. You should be comfortable reasoning about caches,
+   memory hierarchies, TLBs, coherence, and instruction-level behavior, and
+   be prepared to read hardware documentation.</li>
+<li><strong>Independent research.</strong> Reading documentation, papers, mailing lists,
+   and source code to answer your own questions. When a performance counter
+   on an ARM64 server behaves unexpectedly, the answer is somewhere in the
+   vendor documentation, and finding it is part of the project.</li>
+</ul>
+<h3 id="what-open-ended-means-for-grading">What "open-ended" means for grading<a class="headerlink" href="#what-open-ended-means-for-grading" title="Permanent link">&para;</a></h3>
+<p>Because execution is yours, the interesting variation between groups will be
+in <em>approach</em>, not in whether you followed instructions correctly. This
+shapes how the project is graded:</p>
+<ul>
+<li><strong>There is no single right implementation.</strong> Two groups can make opposite
+   design choices and both score well, provided each can justify its choice
+   with evidence.</li>
+<li><strong>Novel approaches are rewarded.</strong> If you find an implementation strategy
+   that is not the obvious one and can show it works, that counts for more
+   than a careful execution of the expected path.</li>
+<li><strong>Dead ends count, when they are diagnosed.</strong> An approach you pursued,
+   measured, and abandoned for a stated reason is real work and is graded as
+   such. The same dead end, unreported, is a gap in your report.</li>
+<li><strong>You are responsible for scope.</strong> Nobody will tell you that your plan is
+   too ambitious for the time available. Estimating that yourself is part of
+   the exercise.</li>
+</ul>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<p>Four services, driven by a trace file of requests:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                          ┌──────────────┐      ┌────────────┐
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   trace file             │              │─────▶│ embedding  │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   all requests at t=0    │              │◀─────│            │
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> ────────────────────────▶│              │      └────────────┘
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                          │   frontend   │
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                          │              │      ┌────────────┐
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                          │   loads      │─────▶│ vector DB  │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   results file           │   schedules  │◀─────│            │
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   answers + per-request  │   runs it    │      └────────────┘
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>   timings from t=0       │              │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a> ◀────────────────────────│              │      ┌────────────┐
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                          │              │─────▶│ generation │
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                          │              │◀─────│            │
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                          └──────────────┘      └────────────┘
+</span></code></pre></div>
+<p>Your pipeline is driven by a <strong>trace file</strong>: a set of requests that are all
+available to it at time zero, with no arrival process. This models a server
+that an upstream scheduler has already handed a full queue of work. Because
+everything is available immediately, <strong>the execution order is entirely
+yours</strong> -- and per-request latency is measured from t=0, so it includes
+however long a request sat in your queue before you got to it.</p>
+<p>The reference implementation uses <strong>plain HTTP with JSON</strong> between services,
+<strong>batch size 1</strong>, and processes the trace in order. All three are
+deliberate: they are the obvious things to optimize, and we want you to
+measure the cost before you fix it.</p>
+<div class="admonition note">
+<p class="admonition-title">This structure is a starting point, not a specification</p>
+<p>We provide the four-service decomposition so that you have somewhere to
+begin and so that the milestones have a shared vocabulary. <strong>It is not a
+constraint.</strong> You may merge services, split them, or re-decompose the
+pipeline entirely, at any point in the semester.</p>
+<p>Exactly one thing is fixed: the trace-in / results-out contract and the
+<code>/health</code> check, because a single evaluation harness has to drive every
+group's pipeline, and because comparable numbers across groups are
+what make a class-wide discussion of results possible. Everything
+behind that interface -- process structure, transport, languages,
+libraries, scheduling -- is yours.</p>
+<p>Changing the structure is a design decision like any other, which means
+it is held to the same standard: justify it and measure it against what
+it replaced. See <a href="../ece6765-project-arch/#11-changing-the-decomposition">changing the
+decomposition</a>.</p>
+</div>
+<p>The full contract -- endpoint shapes, request and response schemas, and what
+is fixed versus suggested -- is on the <a href="../ece6765-project-arch/">Reference Architecture and
+API</a> page. Read it before Milestone 1.</p>
+<h2 id="a-note-on-the-end-of-the-semester">A note on the end of the semester<a class="headerlink" href="#a-note-on-the-end-of-the-semester" title="Permanent link">&para;</a></h2>
+<p>The last Milestone is currently planned to include a <strong>performance bake-off</strong>:
+every group runs the same trace on identical servers and the results are
+compared. </p>
+<div class="admonition note">
+<p class="admonition-title">This may change</p>
+<p>This is the first offering of this project. Milestones are released
+gradually, and the shape of Milestones will depend on how the earlier milestones
+actually go -- both for you and for the server cluster. </p>
+</div>
+<h2 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h2>
+<p>Each group is given access to a <strong>dedicated Ampere server</strong>. All groups get
+identical hardware.</p>
+<p>Models are fixed for all groups so that the comparison is about systems, not
+about model optimization. </p>
+<p>Server accesses are covered
+in the <a href="../ece6765-server-guide/">Server and Measurement Guide</a>.</p>
+<div class="admonition danger">
+<p class="admonition-title">Keep nothing of value only on the server</p>
+<p>These machines can crash without warning, and in the worst case may need
+to be reformatted -- taking your code, environment, configuration, and
+results with them. There is no backup. Commit and push to your group
+repository constantly, and make sure the repo contains enough to rebuild
+the machine from scratch, not just your source files. See <a href="../ece6765-server-guide/#2-the-server-is-not-storage">The Server Is
+Not Storage</a>.</p>
+</div>
+<h3 id="machine-topology">Machine topology<a class="headerlink" href="#machine-topology" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Packages (sockets)</td>
+<td>2</td>
+</tr>
+<tr>
+<td>NUMA nodes</td>
+<td>2 -- one per package, 16 GB each, <strong>32 GB total</strong></td>
+</tr>
+<tr>
+<td>Cores</td>
+<td>160 -- 80 per package, one thread per core</td>
+</tr>
+<tr>
+<td>L1 (per core)</td>
+<td>64 KB data + 64 KB instruction</td>
+</tr>
+<tr>
+<td>L2 (per core)</td>
+<td>1 MB, <strong>private</strong></td>
+</tr>
+<tr>
+<td>Shared LLC</td>
+<td>32 MB SLC per socket</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>NVMe and HDD</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>2 port 1Gbps Ethernet</td>
+</tr>
+</tbody>
+</table>
+<details class="exercise">
+<summary>Verify this yourself</summary>
+<p>The table above is a summary of the published specification. Confirm it
+against the machine you are actually given, and pay attention to where the
+two disagree:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>%<span class="w"> </span>lscpu
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>%<span class="w"> </span>lstopo<span class="w"> </span>--of<span class="w"> </span>txt
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>%<span class="w"> </span>numactl<span class="w"> </span>--hardware
+</span></code></pre></div>
+<p>Start with the cache hierarchy, because that is where the table and the
+machine disagree. Your tools will report L1 and a private L2 per core,
+and then <strong>nothing else</strong> -- no last-level cache at all. The table above
+says 32 MB.</p>
+<p>The table is right. Ampere Altra parts (Arm Neoverse N1 cores) have a
+<strong>32 MB System Level Cache</strong> that the OS does not expose through the
+usual interfaces. Its absence from <code>lscpu</code> and <code>lstopo</code> is an enumeration
+issue with Linux.</p>
+</details>
+<h2 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Groups are <strong>three students</strong>. </li>
+<li>Each group gets a private repository <code>project-gNN</code> in the
+   <a href="https://github.com/cornell-ece6765">cornell-ece6765</a> GitHub
+   organization, with all members as collaborators. See the <a href="../ece6765-git-workflow/">Git
+   Workflow</a> page.</li>
+<li>All members receive the same milestone scores, adjusted by a peer
+   contribution assessment collected with each Milestone report.</li>
+<li>Even though you might split the project tasks between each other,
+   all the students within a group should be able to explain the code, 
+   the results, and the take aways from the experiments. </li>
+</ul>
+<h2 id="grading-criteria">Grading criteria<a class="headerlink" href="#grading-criteria" title="Permanent link">&para;</a></h2>
+<p>Across the project, we are looking for:</p>
+<p><strong>Methodology.</strong> Are experiments controlled? Is the baseline fair? Do you
+run enough repetitions to distinguish a real effect from noise?</p>
+<p><strong>Explanation over tuning.</strong> Can you explain <em>why</em> a configuration helped,
+in terms of the architecture? </p>
+<p><strong>Rigor in reporting.</strong> Distributions, not single numbers. Named confounds.
+Honest negative results -- an optimization that did not work, clearly
+diagnosed, earns full credit.</p>
+<p><strong>Communication.</strong> Readable figures, correct units, claims that match the
+evidence.</p>
+<h2 id="academic-integrity">Academic integrity<a class="headerlink" href="#academic-integrity" title="Permanent link">&para;</a></h2>
+<p>Collaboration within your group is unrestricted. Across groups, you may
+discuss ideas and approaches but may <strong>not</strong> share code, configuration
+files, tuning parameters, or measurement data. Comparing findings with
+another group is useful and encouraged; adopting their configuration is not,
+and it also defeats the purpose -- the point is to have measured it
+yourself.</p>
+<p>External libraries and open-source components are allowed and encouraged,
+but must be cited in your writeups. AI coding tools are expected -- see the
+<a href="../ece6765-report-guidelines/#7-use-of-ai-assistants">Report Guidelines</a> for
+what you remain accountable for and what must be disclosed.</p>
+<p>The Cornell Code of Academic Integrity applies:
+<a href="https://theuniversityfaculty.cornell.edu/academic-integrity/">https://theuniversityfaculty.cornell.edu/academic-integrity/</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Mohammad Alian
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../js/extras.js"></script>
+      
+        <script src="../js/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

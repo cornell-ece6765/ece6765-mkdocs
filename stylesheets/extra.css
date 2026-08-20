@@ -1,0 +1,161 @@
+/*======================================================================*/
+/* Material Stylesheet                                                  */
+/*======================================================================*/
+/*
+  Author : Christopher Batten
+  Date   : September 2019
+*/
+
+.md-typeset H1
+{
+  color : black;
+  font-weight : 500;
+  margin: 0 0 0;  
+}
+
+.md-typeset H2
+{
+  color : black;
+  font-weight : 500;
+  margin: 1em 0 0;  
+}
+
+.md-typeset H3
+{
+  color : black;
+  font-weight : 500;
+  margin: 0 0 0;  
+}
+
+.md-typeset .admonition
+{
+  font-size : 100%;
+}
+
+.md-typeset details
+{
+  font-size : 100%;
+}
+
+.md-typeset details.question
+{
+  border-left-color : #448aff;
+}
+
+.md-typeset details.question > summary
+{
+  background-color: rgba(68, 138, 255, 0.1);
+}
+
+.md-typeset details.question > summary::before
+{
+  color: #448aff;
+}
+
+.md-typeset ul li
+{
+  margin-bottom: 0;
+}
+
+.md-typeset ol li
+{
+  margin-bottom: 0;
+}
+
+.md-typeset table:not([class])
+{
+  font-size : 100%;
+}
+
+IMG
+{
+  display: block;
+  margin: auto;
+}
+
+UL.tight-list
+{
+  color: red;
+}
+
+img[src*="#border"] {
+  border: 1px solid black;
+}
+
+/* prevent prompts from copying to clipboard */
+
+.highlight .gp { /* Generic.Prompt */
+  user-select: none;
+}
+
+/*
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+    margin:  0px;
+    padding: 0px;
+    border: 1px solid;
+    width: 1px;
+    white-space:nowrap;
+}
+*/
+
+/* tables like github tables?
+th, td {
+    border: 1px solid var(--md-typeset-table-color);
+    border-spacing: 0;
+    border-bottom: none;
+    border-left: none;
+    border-top: none;
+}
+
+.md-typeset__table {
+    line-height: 1;
+}
+
+.md-typeset__table table:not([class]) {
+    font-size: .74rem;
+    border-right: none;
+}
+
+.md-typeset__table table:not([class]) td,
+.md-typeset__table table:not([class]) th {
+    padding: 9px;
+}
+
+.md-typeset__table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+}
+
+[data-md-color-scheme="slate"] .md-typeset__table tr:nth-child(2n) {
+    background-color: hsla(var(--md-hue),25%,25%,1)
+}
+*/
+
+/*----------------------------------------------------------------------*/
+/* Custom "exercise" admonition                                         */
+/*----------------------------------------------------------------------*/
+/* Usage:  !!! exercise "Title"   or   ??? exercise "Title" (collapsible) */
+
+:root {
+  --md-admonition-icon--exercise: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M20.71%207.04c.39-.39.39-1.04%200-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41%200l-1.84%201.83%203.75%203.75M3%2017.25V21h3.75L17.81%209.93l-3.75-3.75L3%2017.25Z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.md-typeset .admonition.exercise,
+.md-typeset details.exercise
+{
+  border-color: rgb(120, 78, 189);
+}
+
+.md-typeset .exercise > .admonition-title,
+.md-typeset .exercise > summary
+{
+  background-color: rgba(120, 78, 189, 0.1);
+}
+
+.md-typeset .exercise > .admonition-title::before,
+.md-typeset .exercise > summary::before
+{
+  background-color: rgb(120, 78, 189);
+  -webkit-mask-image: var(--md-admonition-icon--exercise);
+          mask-image: var(--md-admonition-icon--exercise);
+}

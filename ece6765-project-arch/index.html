@@ -1,0 +1,1389 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Mohammad Alian">
+      
+      
+        <link rel="canonical" href="https://cornell-ece6765.github.io/ece6765-mkdocs/ece6765-project-arch/">
+      
+      
+        <link rel="prev" href="../ece6765-project-m4/">
+      
+      
+        <link rel="next" href="../ece6765-eval-harness/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Reference Architecture and API - ECE 6765 Modern Datacenter Architecture</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#reference-architecture-and-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ECE 6765 Modern Datacenter Architecture" class="md-header__button md-logo" aria-label="ECE 6765 Modern Datacenter Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ECE 6765 Modern Datacenter Architecture
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Reference Architecture and API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cornell-ece6765/ece6765-mkdocs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cornell-ece6765/ece6765-mkdocs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ece6765-project-overview/" class="md-tabs__link">
+          
+  
+  
+  Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ECE 6765 Modern Datacenter Architecture" class="md-nav__button md-logo" aria-label="ECE 6765 Modern Datacenter Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ECE 6765 Modern Datacenter Architecture
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cornell-ece6765/ece6765-mkdocs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cornell-ece6765/ece6765-mkdocs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Project
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: RAG Pipeline Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 2: Profiling and Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 3: System Sensitivity Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 4: Contest and Final Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference Architecture and API
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference Architecture and API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Services
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-changing-the-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1. Changing the decomposition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-fixed-interface-trace-in-results-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Fixed Interface: Trace In, Results Out
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Fixed Interface: Trace In, Results Out">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-execution-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. The execution model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-trace-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Trace file format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-invocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Invocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-results-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4. Results file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5. Readiness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-internal-interfaces-suggested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Internal interfaces (suggested)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-repository-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Repository layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reproducibility-requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reproducibility requirement
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-eval-harness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Harness and Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-server-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server and Measurement Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-report-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Report Guidelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-git-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Workflow for Group Repos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Services
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-changing-the-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1. Changing the decomposition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-fixed-interface-trace-in-results-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Fixed Interface: Trace In, Results Out
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Fixed Interface: Trace In, Results Out">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-execution-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. The execution model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-trace-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Trace file format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-invocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Invocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-results-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4. Results file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5. Readiness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-internal-interfaces-suggested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Internal interfaces (suggested)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-repository-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Repository layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reproducibility-requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reproducibility requirement
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="reference-architecture-and-api">Reference Architecture and API<a class="headerlink" href="#reference-architecture-and-api" title="Permanent link">&para;</a></h1>
+<p>This page describes <strong>one fixed contract and one suggested starting
+structure</strong>, and it is important not to confuse them.</p>
+<p>The <strong>fixed part</strong> is the external interface: your pipeline
+consumes a <strong>trace file</strong> of requests and writes a results file with answers
+and per-request timings. A single evaluation harness has to drive every
+group's pipeline, and because comparable numbers across groups make a
+class-wide discussion of results possible. That interface, plus a <code>/health</code>
+readiness check, is what cannot change. That is the whole of what is
+fixed.</p>
+<p>The <strong>suggested part</strong> is everything else on this page: the four-service
+decomposition, the internal endpoints, the transport, the repository layout.
+That is a reference structure we provide so you have somewhere to start, not
+a specification you must conform to. <strong>You may change any of it, including
+the decomposition itself</strong>, at any point in the semester.</p>
+<h2 id="1-services">1. Services<a class="headerlink" href="#1-services" title="Permanent link">&para;</a></h2>
+<p>The reference structure is four services, running as separate processes and
+communicating over HTTP on localhost.</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Responsibility</th>
+<th>Dominant resource</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>frontend</code></td>
+<td>Loads the trace, schedules and orchestrates work across the other three, writes results</td>
+<td>Scheduling / request overhead</td>
+</tr>
+<tr>
+<td><code>embedding</code></td>
+<td>Encodes query text into a dense vector</td>
+<td>CPU, SIMD, cache</td>
+</tr>
+<tr>
+<td><code>vectordb</code></td>
+<td>Nearest-neighbor search over the passage index</td>
+<td>Memory capacity and bandwidth</td>
+</tr>
+<tr>
+<td><code>generation</code></td>
+<td>Produces the answer text from query + retrieved passages</td>
+<td>Memory bandwidth, sequential compute</td>
+</tr>
+</tbody>
+</table>
+<p>Note that under the trace-driven model the frontend's job is larger than it
+looks. It is not just a proxy: it is the <strong>scheduler</strong> for the whole
+workload, and it owns the decision of what order several thousand queued
+requests get executed in. That decision is worth more than most of the
+micro-optimizations you will make.</p>
+<p>They are split this way because they scale differently. Embedding and
+vector DB in particular look adjacent but are not: one is compute-bound over
+a tiny working set, the other is memory-bound over a large one. Splitting
+them lets you provision each independently, at the cost of a serialization
+hop between them.</p>
+<p>That is a tradeoff, not a law -- and you are free to make it differently.</p>
+<h3 id="11-changing-the-decomposition">1.1. Changing the decomposition<a class="headerlink" href="#11-changing-the-decomposition" title="Permanent link">&para;</a></h3>
+<p>You may merge services, split them further, or re-decompose the pipeline
+entirely. Some things groups might reasonably try:</p>
+<ul>
+<li><strong>Fusing embedding and vectordb</strong> to eliminate the hop that serializes
+   full dense vectors -- at the cost of no longer being able to scale
+   compute and memory independently.</li>
+<li><strong>Splitting generation</strong> into prefill and decode, which have quite
+   different resource profiles.</li>
+<li><strong>Splitting the frontend</strong> into request admission and orchestration.</li>
+<li><strong>Replicating one service</strong> many times behind the others while leaving
+   the rest singular.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Re-decomposition is a design decision, so justify and measure it</p>
+<p>Changing the structure is allowed and can be a strong result. It is not
+a free win, and it is not exempt from the standard the rest of the
+project is held to: if you fuse two services, show what it bought you and
+what it cost, measured against the version that did not. "We merged them
+and it got faster" is not a finding. "We merged them, which removed 40%
+of frontend CPU spent in serialization but cost us the ability to scale
+the index independently, net X" is.</p>
+<p>One caveat worth thinking about before you fuse anything: the structure
+you end up with is also the structure you have to <em>reason about</em>. Groups
+that collapse the pipeline early often find that their profiling gets
+harder, because the boundaries where they used to measure are gone.</p>
+</div>
+<h2 id="2-the-fixed-interface-trace-in-results-out">2. The Fixed Interface: Trace In, Results Out<a class="headerlink" href="#2-the-fixed-interface-trace-in-results-out" title="Permanent link">&para;</a></h2>
+<p>Your pipeline is driven by a <strong>trace file</strong>. This is the one part of the
+contract that cannot change, because a single evaluation harness has to
+drive every group's pipeline and produce numbers that mean the same thing
+across the class.</p>
+<h3 id="21-the-execution-model">2.1. The execution model<a class="headerlink" href="#21-the-execution-model" title="Permanent link">&para;</a></h3>
+<p>The trace file contains a set of requests that are <strong>all available to your
+pipeline at time zero</strong>. There is no arrival process and no request rate.</p>
+<p>This models a real situation in a datacenter: a scheduler upstream has
+already assigned a batch of work to this server, and the server has a full
+queue in front of it from the moment it starts. Everything in the trace is
+sitting there, waiting, at t=0.</p>
+<p>The consequence is worth stating plainly, because it drives most of the
+design decisions in this project: <strong>you have complete freedom over execution
+order.</strong> Nothing forces you to process requests in trace order, one at a
+time, or as they appear. You may reorder, group, batch, and schedule the
+entire workload however you like. How you use that freedom is most of what
+separates a fast pipeline from a slow one.</p>
+<h3 id="22-trace-file-format">2.2. Trace file format<a class="headerlink" href="#22-trace-file-format" title="Permanent link">&para;</a></h3>
+<p><em>Exact schema TBD -- fixed before M1 is released.</em> The working format is
+newline-delimited JSON, one request per line:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"what is the capital of australia"</span><span class="p">}</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"who wrote the tell tale heart"</span><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li><code>id</code> is an opaque unique string. Results must carry it back unchanged, so
+   answers can be attributed to requests.</li>
+<li><code>text</code> is the raw query.</li>
+<li>Traces range from a handful of requests to several thousand. <strong>Do not
+   assume a bound</strong>, and do not assume the whole trace fits comfortably
+   anywhere you might want to put it.</li>
+</ul>
+<h3 id="23-invocation">2.3. Invocation<a class="headerlink" href="#23-invocation" title="Permanent link">&para;</a></h3>
+<p>The harness starts your pipeline, waits for it to report ready, and then
+starts the timed run by handing it a trace path and an output path:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>%<span class="w"> </span>./scripts/run.sh<span class="w"> </span>--trace<span class="w"> </span>&lt;trace-path&gt;<span class="w"> </span>--output<span class="w"> </span>&lt;results-path&gt;
+</span></code></pre></div>
+<p><em>Exact invocation TBD.</em> The timer starts (t=0) when the harness issues this
+command, and stops when your process exits having written the results file.</p>
+<p>Everything expensive that can happen before t=0 should happen before t=0:
+loading models, building or memory-mapping the index, spawning workers,
+opening connections. That is what <code>/health</code> is for -- see Section 2.5.
+Reading and parsing the trace itself happens <strong>after</strong> t=0 and is on your
+clock.</p>
+<h3 id="24-results-file">2.4. Results file<a class="headerlink" href="#24-results-file" title="Permanent link">&para;</a></h3>
+<p>One record per request. <em>Exact schema TBD.</em></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"answer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Canberra is ..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"first_token_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">412.7</span><span class="p">,</span><span class="w"> </span><span class="nt">"last_token_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">1893.2</span><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li><code>answer</code> -- the generated text, scored for quality by the harness.</li>
+<li><code>first_token_ms</code> -- milliseconds from <strong>t=0</strong> to the first token emitted
+   for this request.</li>
+<li><code>last_token_ms</code> -- milliseconds from <strong>t=0</strong> to the last token emitted for
+   this request.</li>
+</ul>
+<p>Both timestamps are measured from the start of the run, <strong>not</strong> from when
+your pipeline happened to start working on that request. A request your
+scheduler leaves until the end has a large <code>last_token_ms</code>, and that is the
+point: the number includes however long the request sat in your queue.</p>
+<p>Every <code>id</code> in the trace must appear exactly once in the results. Order does
+not matter; the harness matches on <code>id</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">You report your own timestamps, and they are checked</p>
+<p>Per-request timing has to come from inside your pipeline -- the harness
+cannot see individual completions from outside. It does independently
+measure total wall-clock time for the run, and it will cross-check your
+reported numbers against it. Results whose self-reported timings are
+inconsistent with the externally observed wall clock are treated as a
+failed run, not as a fast one.</p>
+<p>Instrument this carefully and early. A pipeline that is genuinely fast
+but reports its own timing incorrectly scores the same as a slow one.</p>
+</div>
+<h3 id="25-readiness">2.5. Readiness<a class="headerlink" href="#25-readiness" title="Permanent link">&para;</a></h3>
+<p>Your pipeline must expose <code>GET /health</code> returning HTTP 200 only once
+<strong>every</strong> component is ready to serve. The harness polls this before
+starting the timed run, so that model loading and index construction do not
+land inside your measured time.</p>
+<p>How you aggregate readiness across however many processes you end up with is
+your problem. Reporting healthy before you actually are will show up as
+inexplicably terrible numbers, because that work moves inside the clock.</p>
+<h2 id="3-internal-interfaces-suggested">3. Internal interfaces (suggested)<a class="headerlink" href="#3-internal-interfaces-suggested" title="Permanent link">&para;</a></h2>
+<p>The reference structure wires the services together with <strong>plain HTTP and
+JSON bodies</strong>, one query at a time. This is intentionally the naive choice:
+it is easy to get working in M1 and it leaves the obvious wins on the table
+for M2.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>frontend ──POST /embed────────▶ embedding    {"texts": [...]}  →  {"vectors": [[...]]}
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>frontend ──POST /search───────▶ vectordb     {"vectors": [[...]], "k": N}
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                                             →  {"passages": [[...]]}
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>frontend ──POST /generate─────▶ generation   {"query": "...", "passages": [...]}
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                                             →  {"answer": "..."}
+</span></code></pre></div>
+<p>You are free to replace any of this. Things groups typically end up
+changing:</p>
+<ul>
+<li><strong>Serialization.</strong> JSON arrays of floats are an expensive way to move
+   embedding vectors. The <code>embedding → vectordb</code> path is the obvious first
+   casualty.</li>
+<li><strong>Transport.</strong> gRPC, raw sockets, shared memory, Unix domain sockets.</li>
+<li><strong>Batching.</strong> The reference implementation processes batch size 1 at
+   every hop. Constructing batches at service boundaries is one of the
+   largest available wins, and it trades throughput against tail latency in
+   a way you should be able to quantify.</li>
+<li><strong>Concurrency.</strong> Where requests queue, how many in flight, how work is
+   distributed across cores within a service.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Write the template so it can change</p>
+<p>In M1 you are building the thing you will spend three more milestones
+modifying. Put the transport behind an interface now -- a client class
+per service with a single implementation -- so that swapping HTTP for
+gRPC in M2 is a new implementation rather than a rewrite. Groups that
+hard-code <code>requests.post(...)</code> calls throughout the frontend pay for it
+later.</p>
+</div>
+<h2 id="4-repository-layout">4. Repository layout<a class="headerlink" href="#4-repository-layout" title="Permanent link">&para;</a></h2>
+<p>Milestone writeups are collected automatically, so <strong>the four <code>mN.md</code> files
+must sit at the repo root with exactly those names</strong>. The rest of the layout
+below is a suggestion that will stop making sense the moment you change the
+decomposition -- reorganize it as you like.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>project-gNN/
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  README.md              project description + group members
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  m1.md  m2.md           milestone writeups (root level, exact names)
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  m3.md  m4.md
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  img/                   figures referenced from the writeups
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  src/
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    frontend/
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    embedding/
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    vectordb/
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    generation/
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    common/              shared client/transport code
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  config/                configuration for each experiment you run
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  scripts/               launch, sweep, and measurement scripts
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  results/               small summarized result files (CSV/JSON)
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  README-data.md         where large artifacts live, how to regenerate
+</span></code></pre></div>
+<p><code>results/</code> should hold summarized numbers, not raw traces. See the <a href="../ece6765-git-workflow/">Git
+Workflow</a> page for size limits.</p>
+<h2 id="5-reproducibility-requirement">5. Reproducibility requirement<a class="headerlink" href="#5-reproducibility-requirement" title="Permanent link">&para;</a></h2>
+<p>From M1 onward, your repository must contain a single documented command
+that brings up your entire pipeline, whatever it consists of, on a clean
+server:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>%<span class="w"> </span>./scripts/launch.sh
+</span></code></pre></div>
+<p>and a single command that runs the harness against them. The staff will run
+these. If your pipeline only comes up when a specific group member types a
+specific sequence of commands from memory, it does not count as working, and
+it means your final results cannot be reproduced.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Mohammad Alian
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../js/extras.js"></script>
+      
+        <script src="../js/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
