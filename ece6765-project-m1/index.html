@@ -1135,9 +1135,10 @@ deadline.</strong></p>
 <p>By the end of this milestone your group should have:</p>
 <ul>
 <li>A working pipeline that embeds a query, retrieves passages, and generates
-   an answer. The <a href="../ece6765-project-arch/">reference structure</a> is four
-   services over HTTP; adopting it is the fast path, and departing from it is
-   allowed if you can justify the departure.</li>
+   an answer, built as the <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">four required
+   services</a> --
+   <code>frontend</code>, <code>embedding</code>, <code>vectordb</code>, <code>generation</code> -- communicating over
+   HTTP.</li>
 <li>Conformance to the <a href="../ece6765-project-arch/">trace-in / results-out
    contract</a>: your pipeline consumes a trace file,
    answers every request in it, and writes a results file with answers and
@@ -1156,20 +1157,23 @@ deadline.</strong></p>
 <p class="admonition-title">Requirements, not instructions</p>
 <p>What follows describes <strong>what must exist</strong> at the end of this milestone.
 It does not prescribe how to build it. Language, frameworks, libraries,
-process structure, and serving strategy are yours to choose and yours to
-justify.</p>
-<p>The subsections below follow the <a href="../ece6765-project-arch/">reference
-structure</a> -- four services over HTTP -- because
-it is a reasonable place to start and it gives the rest of the handouts a
-shared vocabulary. <strong>You are not required to adopt it.</strong> If you have a
-reason to decompose the pipeline differently, do that instead and explain
-why in your writeup. The only hard requirement is the trace-in /
-results-out contract and <code>/health</code>.</p>
-<p>Most groups should take the reference structure in M1 anyway -- not
-because it is mandated, but because M1 is where you find out how much of
-your semester the toolchain intends to consume, and that is a bad week to
-also be inventing an architecture. You can re-decompose in M2 with
-measurements telling you where to cut.</p>
+algorithms, threading, and serving strategy are yours to choose and yours
+to justify.</p>
+<p>Two things are not open. The <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">four-service
+decomposition</a> is
+required and stays fixed for the whole semester, and the trace-in /
+results-out contract plus <code>/health</code> must be met exactly. Build the four
+services with the responsibilities given in the reference architecture.</p>
+<p>Use <strong>plain HTTP with JSON</strong> for M1. It is the naive choice on purpose:
+it is quick to get working, and the cost it leaves on the table is what
+you spend M2 onward measuring and removing. Do not optimize the
+communication path in M1 -- you need the slow baseline to measure
+against, and you need M1 to be about finding out how much of your
+semester the toolchain intends to consume.</p>
+<p>Do build the transport as a <strong>seam</strong> from the start, though: one client
+class per service, with the protocol behind an interface. Swapping it out
+is the recurring activity of this project, and groups that hard-code HTTP
+calls throughout the frontend pay for it in every later milestone.</p>
 </div>
 <h3 id="21-get-access-and-read-the-contract">2.1. Get access and read the contract<a class="headerlink" href="#21-get-access-and-read-the-contract" title="Permanent link">&para;</a></h3>
 <p>Claim your server (see the <a href="../ece6765-server-guide/">Server and Measurement

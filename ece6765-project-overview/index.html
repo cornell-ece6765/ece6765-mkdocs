@@ -1251,24 +1251,28 @@ however long a request sat in your queue before you got to it.</p>
 deliberate: they are the obvious things to optimize, and we want you to
 measure the cost before you fix it.</p>
 <div class="admonition note">
-<p class="admonition-title">This structure is a starting point, not a specification</p>
-<p>We provide the four-service decomposition so that you have somewhere to
-begin and so that the milestones have a shared vocabulary. <strong>It is not a
-constraint.</strong> You may merge services, split them, or re-decompose the
-pipeline entirely, at any point in the semester.</p>
-<p>Exactly one thing is fixed: the trace-in / results-out contract and the
-<code>/health</code> check, because a single evaluation harness has to drive every
-group's pipeline, and because comparable numbers across groups are
-what make a class-wide discussion of results possible. Everything
-behind that interface -- process structure, transport, languages,
-libraries, scheduling -- is yours.</p>
-<p>Changing the structure is a design decision like any other, which means
-it is held to the same standard: justify it and measure it against what
-it replaced. See <a href="../ece6765-project-arch/#11-changing-the-decomposition">changing the
-decomposition</a>.</p>
+<p class="admonition-title">The four services are fixed; how they talk is the experiment</p>
+<p>You keep these four services -- <code>frontend</code>, <code>embedding</code>, <code>vectordb</code>,
+<code>generation</code> -- with these responsibilities, from M1 through M4.
+<strong>Merging, splitting, or re-decomposing the pipeline is not permitted.</strong>
+You may replicate a service, which is provisioning rather than
+re-decomposition.</p>
+<p>What you <em>do</em> change, all semester, is <strong>the communication between
+them</strong>: wire format, transport, framing, batching, concurrency,
+connection management. That is the open design space in this project, and
+it is a deeper one than it looks. Everything inside a service --
+languages, libraries, algorithms, threading, memory layout -- is yours
+as well.</p>
+<p>The reason for the constraint is that a boundary you delete is a boundary
+you can no longer measure. This project is about what it costs to move
+data and coordinate work between components that are genuinely separate.
+Keeping the four boundaries in place is also what lets the class compare
+results at the end of the semester and have the numbers mean the same
+thing. See <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">the decomposition is
+fixed</a>.</p>
 </div>
 <p>The full contract -- endpoint shapes, request and response schemas, and what
-is fixed versus suggested -- is on the <a href="../ece6765-project-arch/">Reference Architecture and
+is fixed versus open -- is on the <a href="../ece6765-project-arch/">Reference Architecture and
 API</a> page. Read it before Milestone 1.</p>
 <h2 id="a-note-on-the-end-of-the-semester">A note on the end of the semester<a class="headerlink" href="#a-note-on-the-end-of-the-semester" title="Permanent link">&para;</a></h2>
 <p>The last Milestone is currently planned to include a <strong>performance bake-off</strong>:
@@ -1311,7 +1315,7 @@ Not Storage</a>.</p>
 </tr>
 <tr>
 <td>NUMA nodes</td>
-<td>2 -- one per package, 16 GB each, <strong>32 GB total</strong></td>
+<td>2 -- one per package, 16 GB each, 32 GB total</td>
 </tr>
 <tr>
 <td>Cores</td>
@@ -1323,7 +1327,7 @@ Not Storage</a>.</p>
 </tr>
 <tr>
 <td>L2 (per core)</td>
-<td>1 MB, <strong>private</strong></td>
+<td>1 MB, private</td>
 </tr>
 <tr>
 <td>Shared LLC</td>

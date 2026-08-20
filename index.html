@@ -868,6 +868,10 @@ bugs or errors in this documentation, please contant the instructor.</p>
 microservices</strong> -- frontend, embedding, vector DB, and generation -- and
 then spend the semester using it to find out how sensitive a real workload
 is to the system underneath it.</p>
+<p>Those four services stay fixed for the semester. What you change is
+everything underneath and between them -- in particular <strong>how the services
+communicate</strong>, which you will re-implement and re-measure from Milestone 2
+onward.</p>
 <p>The pipeline is the instrument, not the goal. What you are building is the
 ability to change something about a machine and explain what happened.</p>
 <p>Your pipeline is driven by a <strong>trace file</strong> of requests that are all
@@ -875,11 +879,13 @@ available to it at time zero -- a server handed a full queue by an upstream
 scheduler. Execution order is entirely yours, and per-request latency is
 measured from t=0, so it includes queuing as well as processing.</p>
 <p>Because the services have genuinely different resource profiles, the
-interesting decisions are about resource allocation and scheduling: for example, how many
-cores each service gets, where its memory lives, how requests are batched at
-each hop, what the interconnect costs, what order you drain the queue
-in, etc. Those are datacenter architecture decisions, and this project puts you
-on the other side of them.</p>
+interesting decisions are about communication, resource allocation, and
+scheduling: for example, what protocol carries a dense vector between two
+services and what that costs, how many cores each service gets, where its
+memory lives, how requests are batched at each hop, what the interconnect
+costs, what order you drain the queue in, etc. Those are datacenter
+architecture decisions, and this project puts you on the other side of
+them.</p>
 <div class="admonition danger">
 <p class="admonition-title">This is an open-ended graduate project</p>
 <p>The handouts here state <strong>what</strong> you must accomplish and what you must

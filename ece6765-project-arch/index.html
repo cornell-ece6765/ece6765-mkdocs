@@ -659,10 +659,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11-changing-the-decomposition" class="md-nav__link">
+  <a href="#11-the-decomposition-is-fixed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.1. Changing the decomposition
+        1.1. The decomposition is fixed
       
     </span>
   </a>
@@ -747,10 +747,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-internal-interfaces-suggested" class="md-nav__link">
+  <a href="#3-internal-interfaces-the-semesters-experiment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Internal interfaces (suggested)
+        3. Internal interfaces: the semester's experiment
       
     </span>
   </a>
@@ -946,10 +946,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11-changing-the-decomposition" class="md-nav__link">
+  <a href="#11-the-decomposition-is-fixed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.1. Changing the decomposition
+        1.1. The decomposition is fixed
       
     </span>
   </a>
@@ -1034,10 +1034,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-internal-interfaces-suggested" class="md-nav__link">
+  <a href="#3-internal-interfaces-the-semesters-experiment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Internal interfaces (suggested)
+        3. Internal interfaces: the semester's experiment
       
     </span>
   </a>
@@ -1087,23 +1087,28 @@
 
 
 <h1 id="reference-architecture-and-api">Reference Architecture and API<a class="headerlink" href="#reference-architecture-and-api" title="Permanent link">&para;</a></h1>
-<p>This page describes <strong>one fixed contract and one suggested starting
-structure</strong>, and it is important not to confuse them.</p>
-<p>The <strong>fixed part</strong> is the external interface: your pipeline
+<p>This page describes <strong>what is fixed for the semester and what is yours to
+change</strong>, and it is important not to confuse them.</p>
+<p>Two things are fixed. The first is the external interface: your pipeline
 consumes a <strong>trace file</strong> of requests and writes a results file with answers
-and per-request timings. A single evaluation harness has to drive every
-group's pipeline, and because comparable numbers across groups make a
-class-wide discussion of results possible. That interface, plus a <code>/health</code>
-readiness check, is what cannot change. That is the whole of what is
-fixed.</p>
-<p>The <strong>suggested part</strong> is everything else on this page: the four-service
-decomposition, the internal endpoints, the transport, the repository layout.
-That is a reference structure we provide so you have somewhere to start, not
-a specification you must conform to. <strong>You may change any of it, including
-the decomposition itself</strong>, at any point in the semester.</p>
+and per-request timings, and it exposes a <code>/health</code> readiness check. A single
+evaluation harness has to drive every group's pipeline, and comparable
+numbers across groups are what make a class-wide discussion of results
+possible.</p>
+<p>The second is the <strong>four-service decomposition</strong> -- <code>frontend</code>, <code>embedding</code>,
+<code>vectordb</code>, and <code>generation</code>. You keep these four services, with these
+responsibilities, from M1 through M4. You may not merge them, split them, or
+re-decompose the pipeline. See Section 1.1.</p>
+<p>What is open -- and what this project is actually about -- is <strong>how those
+four services talk to each other</strong>. Transport, serialization, framing,
+batching, concurrency, connection management: all of it is yours, and
+changing it is the primary experimental axis of the semester. Everything
+<em>inside</em> a service is yours too: languages, libraries, algorithms, threading,
+memory layout.</p>
 <h2 id="1-services">1. Services<a class="headerlink" href="#1-services" title="Permanent link">&para;</a></h2>
-<p>The reference structure is four services, running as separate processes and
-communicating over HTTP on localhost.</p>
+<p>Your pipeline is four services, running as separate processes. In M1 they
+communicate over HTTP on localhost; what they communicate over after that is
+up to you.</p>
 <table>
 <thead>
 <tr>
@@ -1145,33 +1150,47 @@ vector DB in particular look adjacent but are not: one is compute-bound over
 a tiny working set, the other is memory-bound over a large one. Splitting
 them lets you provision each independently, at the cost of a serialization
 hop between them.</p>
-<p>That is a tradeoff, not a law -- and you are free to make it differently.</p>
-<h3 id="11-changing-the-decomposition">1.1. Changing the decomposition<a class="headerlink" href="#11-changing-the-decomposition" title="Permanent link">&para;</a></h3>
-<p>You may merge services, split them further, or re-decompose the pipeline
-entirely. Some things groups might reasonably try:</p>
+<p>That serialization hop is not an accident of the reference design. It is the
+thing you will spend the semester attacking.</p>
+<h3 id="11-the-decomposition-is-fixed">1.1. The decomposition is fixed<a class="headerlink" href="#11-the-decomposition-is-fixed" title="Permanent link">&para;</a></h3>
+<p><strong>These four services, with these responsibilities, are a constraint for the
+whole semester.</strong> You may not fuse embedding into vectordb, split generation
+into prefill and decode, absorb the frontend's scheduling into another
+service, or otherwise re-cut the boundaries.</p>
+<p>Concretely, for the whole semester:</p>
 <ul>
-<li><strong>Fusing embedding and vectordb</strong> to eliminate the hop that serializes
-   full dense vectors -- at the cost of no longer being able to scale
-   compute and memory independently.</li>
-<li><strong>Splitting generation</strong> into prefill and decode, which have quite
-   different resource profiles.</li>
-<li><strong>Splitting the frontend</strong> into request admission and orchestration.</li>
-<li><strong>Replicating one service</strong> many times behind the others while leaving
-   the rest singular.</li>
+<li>Each of the four services remains a <strong>separately addressable service</strong>
+   that the other services reach through a defined interface.</li>
+<li>Each keeps the responsibility given in the table above. Embedding encodes
+   text; vectordb searches the index; generation produces answer text; the
+   frontend loads the trace, schedules, and orchestrates.</li>
+<li>Work does not migrate across a boundary to make the boundary cheaper. Do
+   not, for example, move nearest-neighbor search into the embedding service
+   to avoid shipping vectors.</li>
 </ul>
+<p>You <strong>may replicate</strong> a service -- several instances of <code>embedding</code> behind
+the frontend, a sharded <code>vectordb</code> -- because that is provisioning, not
+re-decomposition, and the M3 scalability study depends on your being able to
+do it. Replicas of a service still present that service's interface.</p>
 <div class="admonition note">
-<p class="admonition-title">Re-decomposition is a design decision, so justify and measure it</p>
-<p>Changing the structure is allowed and can be a strong result. It is not
-a free win, and it is not exempt from the standard the rest of the
-project is held to: if you fuse two services, show what it bought you and
-what it cost, measured against the version that did not. "We merged them
-and it got faster" is not a finding. "We merged them, which removed 40%
-of frontend CPU spent in serialization but cost us the ability to scale
-the index independently, net X" is.</p>
-<p>One caveat worth thinking about before you fuse anything: the structure
-you end up with is also the structure you have to <em>reason about</em>. Groups
-that collapse the pipeline early often find that their profiling gets
-harder, because the boundaries where they used to measure are gone.</p>
+<p class="admonition-title">Why we are constraining this</p>
+<p>Fusing services is a real technique and in a different course it would be
+a legitimate answer. It is excluded here for two reasons.</p>
+<p>The first is that it is the wrong lesson for this project. Once two
+services are fused, the communication cost between them stops being a
+thing you can measure -- the boundary where you used to observe it is
+gone. This project is about what it costs to move data and coordinate
+work between components that are genuinely separate, which is the
+situation an actual datacenter operator is in. Deleting the boundary
+answers a question nobody asked you.</p>
+<p>The second is comparability. Four fixed services with fixed
+responsibilities mean that when the class compares results at the end of
+the semester, "the embedding service is memory-bound at batch size 64"
+means the same thing in every group's report. That is what makes a
+class-wide discussion possible.</p>
+<p>The freedom you might have spent on the decomposition is instead spent on
+the interface between the pieces, which is a considerably deeper design
+space than it first appears. See Section 3.</p>
 </div>
 <h2 id="2-the-fixed-interface-trace-in-results-out">2. The Fixed Interface: Trace In, Results Out<a class="headerlink" href="#2-the-fixed-interface-trace-in-results-out" title="Permanent link">&para;</a></h2>
 <p>Your pipeline is driven by a <strong>trace file</strong>. This is the one part of the
@@ -1253,45 +1272,78 @@ land inside your measured time.</p>
 <p>How you aggregate readiness across however many processes you end up with is
 your problem. Reporting healthy before you actually are will show up as
 inexplicably terrible numbers, because that work moves inside the clock.</p>
-<h2 id="3-internal-interfaces-suggested">3. Internal interfaces (suggested)<a class="headerlink" href="#3-internal-interfaces-suggested" title="Permanent link">&para;</a></h2>
-<p>The reference structure wires the services together with <strong>plain HTTP and
-JSON bodies</strong>, one query at a time. This is intentionally the naive choice:
-it is easy to get working in M1 and it leaves the obvious wins on the table
-for M2.</p>
+<h2 id="3-internal-interfaces-the-semesters-experiment">3. Internal interfaces: the semester's experiment<a class="headerlink" href="#3-internal-interfaces-the-semesters-experiment" title="Permanent link">&para;</a></h2>
+<p>The decomposition is fixed; the way the four services communicate is not.
+This section is the open one, and it is where the design work of this project
+actually lives.</p>
+<p>What is fixed here is only the <strong>semantics</strong> of each hop -- which service
+needs what data from which other service:</p>
+<ul>
+<li>the frontend needs a <strong>vector</strong> for a query from <code>embedding</code></li>
+<li>the frontend needs <strong>passages</strong> for a vector from <code>vectordb</code></li>
+<li>the frontend needs an <strong>answer</strong> for a query plus passages from
+   <code>generation</code></li>
+</ul>
+<p>Everything about <em>how</em> that data crosses the boundary is yours: the wire
+format, the transport, the framing, how many requests travel at once, who
+initiates, and whether the call blocks.</p>
+<p>The reference implementation wires the services together with <strong>plain HTTP
+and JSON bodies</strong>, one query at a time. This is intentionally the naive
+choice: it is easy to get working in M1, and it leaves the obvious wins on
+the table for the rest of the semester.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>frontend ──POST /embed────────▶ embedding    {"texts": [...]}  →  {"vectors": [[...]]}
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>frontend ──POST /search───────▶ vectordb     {"vectors": [[...]], "k": N}
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                                             →  {"passages": [[...]]}
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>frontend ──POST /generate─────▶ generation   {"query": "...", "passages": [...]}
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                                             →  {"answer": "..."}
 </span></code></pre></div>
-<p>You are free to replace any of this. Things groups typically end up
-changing:</p>
+<p><strong>Replace any of it.</strong> The axes available to you, roughly in the order
+groups tend to find them:</p>
 <ul>
 <li><strong>Serialization.</strong> JSON arrays of floats are an expensive way to move
-   embedding vectors. The <code>embedding → vectordb</code> path is the obvious first
-   casualty.</li>
-<li><strong>Transport.</strong> gRPC, raw sockets, shared memory, Unix domain sockets.</li>
+   embedding vectors. The <code>frontend ↔ embedding ↔ vectordb</code> path is the
+   obvious first casualty. Binary encodings, protobuf/FlatBuffers, or a raw
+   length-prefixed float buffer.</li>
+<li><strong>Transport.</strong> gRPC, raw TCP sockets, Unix domain sockets, shared memory
+   rings for colocated services. Each has a different cost structure and a
+   different failure mode.</li>
 <li><strong>Batching.</strong> The reference implementation processes batch size 1 at
    every hop. Constructing batches at service boundaries is one of the
    largest available wins, and it trades throughput against tail latency in
    a way you should be able to quantify.</li>
-<li><strong>Concurrency.</strong> Where requests queue, how many in flight, how work is
-   distributed across cores within a service.</li>
+<li><strong>Concurrency and call structure.</strong> Synchronous request/response versus
+   pipelined or streaming calls; how many requests are in flight per hop;
+   whether generation can begin before retrieval fully completes.</li>
+<li><strong>Connection management.</strong> Pooling, keep-alive, how many connections per
+   service pair, and what happens to tail latency when the pool is too small.</li>
+<li><strong>Data movement.</strong> Whether passages are copied through the frontend at all
+   or passed by reference, and who owns the buffer.</li>
 </ul>
+<p>Note that these interact. A binary format that halves serialization cost may
+change the batch size at which batching stops paying; a shared-memory ring
+may make copies free but pin two services to the same NUMA node, which M3
+will make you care about.</p>
 <div class="admonition tip">
-<p class="admonition-title">Write the template so it can change</p>
-<p>In M1 you are building the thing you will spend three more milestones
-modifying. Put the transport behind an interface now -- a client class
-per service with a single implementation -- so that swapping HTTP for
-gRPC in M2 is a new implementation rather than a rewrite. Groups that
-hard-code <code>requests.post(...)</code> calls throughout the frontend pay for it
-later.</p>
+<p class="admonition-title">Write the template so the protocol can change</p>
+<p>This matters more here than it would in a project where the structure was
+negotiable. The decomposition is fixed precisely so that the boundary
+stays a thing you can measure and swap -- so build the boundary as a
+seam from day one.</p>
+<p>Put the transport behind an interface in M1: a client class per service
+with a single implementation, so that swapping HTTP for gRPC later is a
+new implementation rather than a rewrite. Groups that hard-code
+<code>requests.post(...)</code> calls throughout the frontend pay for it every
+milestone after M1, and they pay most in M4 when they want to combine
+three protocol choices and cannot.</p>
+<p>Being able to select the protocol from a config file -- and therefore
+run the same trace across protocols back to back -- is worth the hour it
+costs you in M1.</p>
 </div>
 <h2 id="4-repository-layout">4. Repository layout<a class="headerlink" href="#4-repository-layout" title="Permanent link">&para;</a></h2>
 <p>Milestone writeups are collected automatically, so <strong>the four <code>mN.md</code> files
-must sit at the repo root with exactly those names</strong>. The rest of the layout
-below is a suggestion that will stop making sense the moment you change the
-decomposition -- reorganize it as you like.</p>
+must sit at the repo root with exactly those names</strong>. Because the four
+services are fixed, the <code>src/</code> layout below should stay recognizable all
+semester; the rest is a suggestion you can reorganize as you like.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>project-gNN/
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  README.md              project description + group members
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  m1.md  m2.md           milestone writeups (root level, exact names)
@@ -1302,11 +1354,13 @@ decomposition -- reorganize it as you like.</p>
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    embedding/
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    vectordb/
 </span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    generation/
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    common/              shared client/transport code
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  config/                configuration for each experiment you run
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  scripts/               launch, sweep, and measurement scripts
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  results/               small summarized result files (CSV/JSON)
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  README-data.md         where large artifacts live, how to regenerate
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    common/              shared client/transport code -- one client class
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>                         per service, with a selectable protocol
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>                         implementation behind it
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  config/                configuration for each experiment you run
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  scripts/               launch, sweep, and measurement scripts
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  results/               small summarized result files (CSV/JSON)
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  README-data.md         where large artifacts live, how to regenerate
 </span></code></pre></div>
 <p><code>results/</code> should hold summarized numbers, not raw traces. See the <a href="../ece6765-git-workflow/">Git
 Workflow</a> page for size limits.</p>

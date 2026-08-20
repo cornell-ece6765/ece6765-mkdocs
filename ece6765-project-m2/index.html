@@ -583,10 +583,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#communication-stack" class="md-nav__link">
+  <a href="#communication-stack-required" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Communication stack
+        Communication stack (required)
       
     </span>
   </a>
@@ -1057,10 +1057,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#communication-stack" class="md-nav__link">
+  <a href="#communication-stack-required" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Communication stack
+        Communication stack (required)
       
     </span>
   </a>
@@ -1200,7 +1200,8 @@ deadline.</strong></p>
 <li>A confirmed or refuted M1 bottleneck hypothesis, with the evidence.</li>
 <li>At least <strong>three</strong> application-level optimizations implemented and
    measured independently, drawn from different categories in Section 2.3,
-   <strong>including at least one scheduling change</strong>.</li>
+   <strong>including at least one scheduling change and at least one change to the
+   communication stack between services</strong>.</li>
 <li>A quantified account of the throughput/tail-latency tradeoff your
    batching strategy makes.</li>
 <li>A cumulative speedup over the M1 baseline, with an attribution of how
@@ -1239,9 +1240,10 @@ correctly diagnosed wrong hypothesis is worth full credit here, and it is a
 more interesting result than being right by luck.</p>
 <h3 id="23-optimize">2.3. Optimize<a class="headerlink" href="#23-optimize" title="Permanent link">&para;</a></h3>
 <p>Implement and measure <strong>at least three</strong> optimizations, from at least
-<strong>two</strong> of the following categories, at least one of which must be a
-scheduling change. Each must be measured independently
-against the M1 baseline, one change at a time.</p>
+<strong>two</strong> of the following categories. Two of them are required: at least one
+<strong>scheduling change</strong>, and at least one change to the <strong>communication stack</strong>
+between services. Each must be measured independently against the M1
+baseline, one change at a time.</p>
 <h4 id="scheduling-and-request-ordering">Scheduling and request ordering<a class="headerlink" href="#scheduling-and-request-ordering" title="Permanent link">&para;</a></h4>
 <p>The reference implementation processes the trace in order, which is the
 worst reasonable choice. Every request is available at t=0, so the execution
@@ -1271,14 +1273,23 @@ per-invocation overhead dominates.</p>
 <p>Things to work out: where batches are formed, how long you are willing to
 wait to fill one, whether batch size should differ per service, and what it
 does to TTFT. <strong>Report the tradeoff curve, not just your chosen point.</strong></p>
-<h4 id="communication-stack">Communication stack<a class="headerlink" href="#communication-stack" title="Permanent link">&para;</a></h4>
-<p>The <code>embedding → vectordb</code> path serializes full dense vectors as JSON. This
-is the obvious candidate. Options include gRPC with protobuf, a binary
-framing over raw sockets, Unix domain sockets or shared memory for
-colocated services, or simply a more efficient encoding over the existing
-HTTP transport.</p>
+<h4 id="communication-stack-required">Communication stack (required)<a class="headerlink" href="#communication-stack-required" title="Permanent link">&para;</a></h4>
+<p>This is the axis the project is built around, and the <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">four-service
+decomposition</a> is fixed
+precisely so that it stays measurable. You cannot make a hop cheaper by
+deleting it, so make it cheaper on its own terms.</p>
+<p>The path that carries full dense vectors as JSON is the obvious first
+candidate. Options include gRPC with protobuf, binary framing over raw
+sockets, Unix domain sockets or shared memory for colocated services,
+pipelined or streaming calls in place of synchronous request/response, or
+simply a more efficient encoding over the existing HTTP transport.</p>
 <p>Measure the cost you are removing before you remove it: how many bytes, how
-much CPU in serialization versus deserialization versus transport.</p>
+much CPU in serialization versus deserialization versus transport. A protocol
+change that you cannot account for in those terms is a guess that happened to
+work.</p>
+<p>Keep the old implementation selectable. You will want to re-run against it in
+M3 and M4, and a protocol you can switch at launch time is worth far more
+than one you replaced in place.</p>
 <h4 id="parallelism-and-concurrency">Parallelism and concurrency<a class="headerlink" href="#parallelism-and-concurrency" title="Permanent link">&para;</a></h4>
 <p>How many requests are in flight, how work is distributed across threads
 within a service, where queues form and how deep they get. Look for
@@ -1356,7 +1367,12 @@ containing:</p>
 <tr>
 <td>Optimization breadth</td>
 <td><em>TBD</em></td>
-<td>Three-plus optimizations across two-plus categories, measured in isolation</td>
+<td>Three-plus optimizations across two-plus categories, including the two required ones, measured in isolation</td>
+</tr>
+<tr>
+<td>Communication stack</td>
+<td><em>TBD</em></td>
+<td>Protocol change justified by measured serialization/transport cost, not assumed</td>
 </tr>
 <tr>
 <td>Explanation</td>
