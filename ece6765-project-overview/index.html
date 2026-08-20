@@ -1042,9 +1042,6 @@ different resource profiles chained together behind a single request:</p>
 <li><strong>Generation</strong> is bound by both compute and memory bandwidth.</li>
 <li><strong>Frontend</strong> is I/O-bound and sensitive to request ordering.</li>
 </ul>
-<p>That variety is the point. The same knob moves these four components in
-different directions and by different amounts, so every configuration change
-you make becomes a small experiment with four simultaneous answers. </p>
 <h2 id="what-kind-of-project-this-is">What kind of project this is<a class="headerlink" href="#what-kind-of-project-this-is" title="Permanent link">&para;</a></h2>
 <p>This is a graduate course, and this is a graduate project. It is open-ended
 research and engineering work, not a guided lab.</p>
@@ -1139,31 +1136,25 @@ however long a request sat in your queue before you got to it.</p>
 deliberate: they are the obvious things to optimize, and we want you to
 measure the cost before you fix it.</p>
 <div class="admonition note">
-<p class="admonition-title">The four services are fixed; how they talk is the experiment</p>
+<p class="admonition-title">The four services are fixed</p>
 <p>You keep these four services -- <code>frontend</code>, <code>embedding</code>, <code>vectordb</code>,
-<code>generation</code> -- with these responsibilities, from M1 through M4.
+<code>generation</code> -- with these functionalities throughout the semester.
 <strong>Merging, splitting, or re-decomposing the pipeline is not permitted.</strong>
 You may replicate a service, which is provisioning rather than
 re-decomposition.</p>
-<p>What you <em>do</em> change, all semester, is <strong>the communication between
+<p>What you can change, is <strong>the communication between
 them</strong>: wire format, transport, framing, batching, concurrency,
-connection management. That is the open design space in this project, and
-it is a deeper one than it looks. Everything inside a service --
-languages, libraries, algorithms, threading, memory layout -- is yours
-as well.</p>
-<p>The reason for the constraint is that a boundary you delete is a boundary
-you can no longer measure. This project is about what it costs to move
-data and coordinate work between components that are genuinely separate.
-Keeping the four boundaries in place is also what lets the class compare
-results at the end of the semester and have the numbers mean the same
-thing. See <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">the decomposition is
+connection management. That is the open design space that we explore in this project. </p>
+<p>The reason for the constraint is that service boundaries are often fixed at
+application development time, and are not something a performance engineer
+can change. See <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">the decomposition is
 fixed</a>.</p>
 </div>
 <p>The full contract -- endpoint shapes, request and response schemas, and what
 is fixed versus open -- is on the <a href="../ece6765-project-arch/">Reference Architecture and
-API</a> page. Read it before Milestone 1.</p>
+API</a> page.</p>
 <h2 id="a-note-on-the-end-of-the-semester">A note on the end of the semester<a class="headerlink" href="#a-note-on-the-end-of-the-semester" title="Permanent link">&para;</a></h2>
-<p>The last Milestone is currently planned to include a <strong>performance bake-off</strong>:
+<p>The last Milestone is currently planned to include a <strong>performance contest</strong>:
 every group runs the same trace on identical servers and the results are
 compared. </p>
 <div class="admonition note">
@@ -1223,7 +1214,7 @@ Not Storage</a>.</p>
 </tr>
 <tr>
 <td>Storage</td>
-<td>NVMe and HDD</td>
+<td>NVMe SSD</td>
 </tr>
 <tr>
 <td>Network</td>
