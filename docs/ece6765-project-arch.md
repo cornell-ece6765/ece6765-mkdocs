@@ -4,7 +4,7 @@ Reference Architecture and API
 This page describes **one fixed contract and one suggested starting
 structure**, and it is important not to confuse them.
 
-The **fixed part** is the external interface in Section 2: your pipeline
+The **fixed part** is the external interface: your pipeline
 consumes a **trace file** of requests and writes a results file with answers
 and per-request timings. A single evaluation harness has to drive every
 group's pipeline, and because comparable numbers across groups make a
@@ -17,8 +17,6 @@ decomposition, the internal endpoints, the transport, the repository layout.
 That is a reference structure we provide so you have somewhere to start, not
 a specification you must conform to. **You may change any of it, including
 the decomposition itself**, at any point in the semester.
-
-Read this before starting [Milestone 1](ece6765-project-m1.md).
 
 1. Services
 --------------------------------------------------------------------------
