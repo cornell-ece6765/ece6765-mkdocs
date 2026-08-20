@@ -1,0 +1,4 @@
+# Pinned so that a CI build months from now matches what you see locally.
+# MkDocs 2.0 is expected to be backward-incompatible, so upgrade
+# deliberately rather than letting CI float.
+mkdocs-material==9.7.7
