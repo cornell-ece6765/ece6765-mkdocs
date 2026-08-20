@@ -471,118 +471,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="ece6765-project-m1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Milestone 1: RAG Pipeline Implementation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="ece6765-project-m2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Milestone 2: Profiling and Optimization
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="ece6765-project-m3/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Milestone 3: System Sensitivity Study
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="ece6765-project-m4/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Milestone 4: Contest and Final Report
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -869,12 +757,10 @@ microservices</strong> -- frontend, embedding, vector DB, and generation -- and
 then spend the semester using it to find out how sensitive a real workload
 is to the system underneath it.</p>
 <p>Those four services stay fixed for the semester. What you change is
-everything underneath and between them -- in particular <strong>how the services
-communicate</strong>, which you will re-implement and re-measure from Milestone 2
-onward.</p>
+everything underneath and between them. </p>
 <p>The pipeline is the instrument, not the goal. What you are building is the
 ability to change something about a machine and explain what happened.</p>
-<p>Your pipeline is driven by a <strong>trace file</strong> of requests that are all
+<p>Your pipeline is driven by a trace file of requests that are all
 available to it at time zero -- a server handed a full queue by an upstream
 scheduler. Execution order is entirely yours, and per-request latency is
 measured from t=0, so it includes queuing as well as processing.</p>
@@ -899,6 +785,13 @@ architecture. See <a href="ece6765-project-overview/#what-kind-of-project-this-i
 is</a> before you
 commit to the course.</p>
 </div>
+<div class="admonition info">
+<p class="admonition-title">Milestone handouts are released one at a time</p>
+<p>Each milestone handout is published when that milestone opens, so that
+everyone is working from the same version of it. The pages below become
+links as they are released. Deadlines are on the <a href="https://www.csl.cornell.edu/courses/ece6765/schedule.html">course
+schedule</a>.</p>
+</div>
 <div class="grid cards">
 <ul>
 <li>
@@ -907,22 +800,22 @@ commit to the course.</p>
 how the work is graded. Start here.</p>
 </li>
 <li>
-<p><strong><a href="ece6765-project-m1/">Milestone 1</a></strong></p>
+<p><strong>Milestone 1</strong> &middot; <em>not yet released</em></p>
 <p>Build the four-service pipeline. Get it correct, instrument it, and
 establish a baseline.</p>
 </li>
 <li>
-<p><strong><a href="ece6765-project-m2/">Milestone 2</a></strong></p>
+<p><strong>Milestone 2</strong> &middot; <em>not yet released</em></p>
 <p>Profile with performance counters. Optimize batching, parallelism,
 communication, and algorithms.</p>
 </li>
 <li>
-<p><strong><a href="ece6765-project-m3/">Milestone 3</a></strong></p>
+<p><strong>Milestone 3</strong> &middot; <em>not yet released</em></p>
 <p>Measure sensitivity: NUMA, page size, core allocation, PCIe affinity,
 frequency, vector units, and contention from a noisy neighbor.</p>
 </li>
 <li>
-<p><strong><a href="ece6765-project-m4/">Milestone 4</a></strong></p>
+<p><strong>Milestone 4</strong> &middot; <em>not yet released</em></p>
 <p>Combine everything, measure it, and write the report that explains it.</p>
 </li>
 </ul>
