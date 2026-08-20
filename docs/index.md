@@ -18,14 +18,12 @@ then spend the semester using it to find out how sensitive a real workload
 is to the system underneath it.
 
 Those four services stay fixed for the semester. What you change is
-everything underneath and between them -- in particular **how the services
-communicate**, which you will re-implement and re-measure from Milestone 2
-onward.
+everything underneath and between them. 
 
 The pipeline is the instrument, not the goal. What you are building is the
 ability to change something about a machine and explain what happened.
 
-Your pipeline is driven by a **trace file** of requests that are all
+Your pipeline is driven by a trace file of requests that are all
 available to it at time zero -- a server handed a full queue by an upstream
 scheduler. Execution order is entirely yours, and per-request latency is
 measured from t=0, so it includes queuing as well as processing.
@@ -53,6 +51,13 @@ them.
     is](ece6765-project-overview.md#what-kind-of-project-this-is) before you
     commit to the course.
 
+!!! info "Milestone handouts are released one at a time"
+
+    Each milestone handout is published when that milestone opens, so that
+    everyone is working from the same version of it. The pages below become
+    links as they are released. Deadlines are on the [course
+    schedule](https://www.csl.cornell.edu/courses/ece6765/schedule.html).
+
 <div class="grid cards" markdown>
 
 - **[Project Overview](ece6765-project-overview.md)**
@@ -60,22 +65,22 @@ them.
     What the project is for, the architecture, groups, infrastructure, and
     how the work is graded. Start here.
 
-- **[Milestone 1](ece6765-project-m1.md)**
+- **Milestone 1** &middot; *not yet released*
 
     Build the four-service pipeline. Get it correct, instrument it, and
     establish a baseline.
 
-- **[Milestone 2](ece6765-project-m2.md)**
+- **Milestone 2** &middot; *not yet released*
 
     Profile with performance counters. Optimize batching, parallelism,
     communication, and algorithms.
 
-- **[Milestone 3](ece6765-project-m3.md)**
+- **Milestone 3** &middot; *not yet released*
 
     Measure sensitivity: NUMA, page size, core allocation, PCIe affinity,
     frequency, vector units, and contention from a noisy neighbor.
 
-- **[Milestone 4](ece6765-project-m4.md)**
+- **Milestone 4** &middot; *not yet released*
 
     Combine everything, measure it, and write the report that explains it.
 

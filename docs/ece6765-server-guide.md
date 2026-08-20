@@ -164,7 +164,7 @@ Run each configuration multiple times and report the variation. The number
 required per milestone is _TBD_, but the principle does not change: a single
 run is an anecdote.
 
-For system-level effects in [M3](ece6765-project-m3.md) this matters most --
+For system-level effects in the sensitivity study this matters most --
 many of those knobs produce effects of a few percent, which is the same
 order as run-to-run noise. Before you claim a 3% improvement, establish what
 your noise floor actually is by running the *same* configuration repeatedly.
