@@ -14,23 +14,31 @@ The Course Project
 
 You will build a **retrieval-augmented generation pipeline as four
 microservices** -- frontend, embedding, vector DB, and generation -- and
-then spend the semester making it fast. The application is fixed; the
-engineering is yours.
+then spend the semester using it to find out how sensitive a real workload
+is to the system underneath it.
 
-Because the four services have genuinely different resource profiles, the
-interesting decisions are all about allocation: how many cores each service
-gets, where its memory lives, how requests are batched at each hop, and what
-the interconnect between services costs. Those are datacenter architecture
-decisions, and this project puts you on the other side of them.
+The pipeline is the instrument, not the goal. What you are building is the
+ability to change something about a machine and explain what happened.
 
+Your pipeline is driven by a **trace file** of requests that are all
+available to it at time zero -- a server handed a full queue by an upstream
+scheduler. Execution order is entirely yours, and per-request latency is
+measured from t=0, so it includes queuing as well as processing.
+
+Because the services have genuinely different resource profiles, the
+interesting decisions are about resource allocation and scheduling: for example, how many
+cores each service gets, where its memory lives, how requests are batched at
+each hop, what the interconnect costs, what order you drain the queue
+in, etc. Those are datacenter architecture decisions, and this project puts you
+on the other side of them.
 
 !!! danger "This is an open-ended graduate project"
 
     The handouts here state **what** you must accomplish and what you must
-    report. They do not tell you how. We will give you an starter code template, 
-    but that is neither a solution nor a working application.  
-    Debugging, implementation strategy, tool selection,
-    and project execution are entirely yours.
+    report. They do not tell you how. We will give you a starter code
+    template, but it is neither a solution nor a working application.
+    Debugging, implementation strategy, tool selection, and project
+    execution are entirely yours, and they are graded work.
 
     You are assumed to be fluent with the Linux command line, comfortable
     using AI coding tools well, and solid on low-level systems and
@@ -42,8 +50,8 @@ decisions, and this project puts you on the other side of them.
 
 - **[Project Overview](ece6765-project-overview.md)**
 
-    Architecture, groups, infrastructure, the contest, and how the project is
-    graded. Start here.
+    What the project is for, the architecture, groups, infrastructure, and
+    how the work is graded. Start here.
 
 - **[Milestone 1](ece6765-project-m1.md)**
 
@@ -57,12 +65,12 @@ decisions, and this project puts you on the other side of them.
 
 - **[Milestone 3](ece6765-project-m3.md)**
 
-    Sweep the system: NUMA, page size, core allocation, PCIe affinity,
-    frequency, vector units.
+    Measure sensitivity: NUMA, page size, core allocation, PCIe affinity,
+    frequency, vector units, and contention from a noisy neighbor.
 
 - **[Milestone 4](ece6765-project-m4.md)**
 
-    Performance contest, final report, and presentation.
+    Combine everything, measure it, and write the report that explains it.
 
 </div>
 

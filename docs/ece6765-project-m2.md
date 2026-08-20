@@ -29,7 +29,8 @@ By the end of this milestone your group should have:
    characterization of what each one is actually limited by.
  - A confirmed or refuted M1 bottleneck hypothesis, with the evidence.
  - At least **three** application-level optimizations implemented and
-   measured independently, drawn from different categories in Section 2.3.
+   measured independently, drawn from different categories in Section 2.3,
+   **including at least one scheduling change**.
  - A quantified account of the throughput/tail-latency tradeoff your
    batching strategy makes.
  - A cumulative speedup over the M1 baseline, with an attribution of how
@@ -77,8 +78,34 @@ more interesting result than being right by luck.
 ### 2.3. Optimize
 
 Implement and measure **at least three** optimizations, from at least
-**two** of the following categories. Each must be measured independently
+**two** of the following categories, at least one of which must be a
+scheduling change. Each must be measured independently
 against the M1 baseline, one change at a time.
+
+#### Scheduling and request ordering
+
+The reference implementation processes the trace in order, which is the
+worst reasonable choice. Every request is available at t=0, so the execution
+order is entirely yours, and it determines the whole latency distribution
+without changing a single line of service code.
+
+Things to work out: whether request cost is predictable in advance (from
+query length, or from retrieval results), whether running cheap requests
+first improves p50, whether it costs you makespan, and how to keep every
+service busy rather than letting the pipeline drain between requests.
+
+This is the cheapest large win available in this milestone and the one most
+directly connected to the course material. Groups routinely find that a
+scheduling change moves p50 more than every micro-optimization they made
+combined.
+
+!!! note "Scheduling and makespan are not the same problem"
+
+    Reordering a fixed set of requests on a fixed pipeline cannot change how
+    much total work there is. If reordering alone moves your makespan, it is
+    because it changed *utilization* -- you filled a bubble, or you stopped
+    starving a service. Work out which of the two you did before claiming it
+    in the writeup, because they have different implications for M3.
 
 #### Batching
 
@@ -120,7 +147,8 @@ construction and context length in the generation service.
     Approximate search, aggressive quantization, and reduced `k` all trade
     answer quality for speed. Re-run harness correctness mode after each
     one. An optimization that drops you below the quality threshold is not
-    an optimization, and in the contest it scores zero.
+    an optimization, and a pipeline below the threshold produces
+    performance numbers that mean nothing.
 
 ### 2.4. Attribute the speedup
 
@@ -177,6 +205,7 @@ containing:
 | Optimization breadth | _TBD_ | Three-plus optimizations across two-plus categories, measured in isolation |
 | Explanation | _TBD_ | Results attributed to architectural causes, not just reported |
 | Batching analysis | _TBD_ | The throughput/latency tradeoff is quantified, not asserted |
+| Scheduling analysis | _TBD_ | Effect of execution order on the latency distribution measured and explained |
 | Correctness maintained | _TBD_ | Still clears the quality threshold |
 | Writeup | _TBD_ | Clear figures, honest negative results, claims matching evidence |
 

@@ -130,3 +130,32 @@ th, td {
     background-color: hsla(var(--md-hue),25%,25%,1)
 }
 */
+
+/*----------------------------------------------------------------------*/
+/* Custom "exercise" admonition                                         */
+/*----------------------------------------------------------------------*/
+/* Usage:  !!! exercise "Title"   or   ??? exercise "Title" (collapsible) */
+
+:root {
+  --md-admonition-icon--exercise: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M20.71%207.04c.39-.39.39-1.04%200-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41%200l-1.84%201.83%203.75%203.75M3%2017.25V21h3.75L17.81%209.93l-3.75-3.75L3%2017.25Z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.md-typeset .admonition.exercise,
+.md-typeset details.exercise
+{
+  border-color: rgb(120, 78, 189);
+}
+
+.md-typeset .exercise > .admonition-title,
+.md-typeset .exercise > summary
+{
+  background-color: rgba(120, 78, 189, 0.1);
+}
+
+.md-typeset .exercise > .admonition-title::before,
+.md-typeset .exercise > summary::before
+{
+  background-color: rgb(120, 78, 189);
+  -webkit-mask-image: var(--md-admonition-icon--exercise);
+          mask-image: var(--md-admonition-icon--exercise);
+}

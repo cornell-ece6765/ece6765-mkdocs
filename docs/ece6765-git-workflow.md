@@ -6,6 +6,16 @@ the [cornell-ece6765](https://github.com/cornell-ece6765) GitHub
 organization, where `NN` is your group number. All three members are added
 as collaborators with push access. This page covers how to use it.
 
+!!! danger "The repo is the only copy of your work that survives"
+
+    The course servers can crash at any time, and in the worst case may need
+    to be **reformatted**, destroying everything on them -- code, environment,
+    configuration, and results alike. There is no backup.
+
+    Push early and push often. See [The Server Is Not
+    Storage](ece6765-server-guide.md#2-the-server-is-not-storage) for what
+    that means in practice and what belongs in the repo beyond source code.
+
 1. One-Time Setup
 --------------------------------------------------------------------------
 
@@ -75,7 +85,8 @@ Feedback is pushed back alongside them as `mN-feedback-<DATE>.md`.
 Three people pushing to one branch will conflict. The lightest workflow
 that avoids most of the pain:
 
-**Pull before you start, push when you stop.**
+**Pull before you start, push when you stop.** The push is not optional --
+work that exists only in a local clone on a server is work you can lose.
 
 ```bash
 % git pull --rebase

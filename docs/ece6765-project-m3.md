@@ -1,16 +1,21 @@
-Milestone 3: System-Level Configuration Study
+Milestone 3: System Sensitivity Study
 ==========================================================================
 
 Milestone 2 optimized your application. This milestone leaves the
-application code largely alone and asks a different question: **given a
-fixed program, how much performance is available purely from how you place
-it on the machine?**
+application code largely alone and asks the central question of the project:
+**given a fixed program, how sensitive is its performance to the system
+underneath it?**
 
 This is the part of the project closest to the course material. Every knob
 here -- NUMA placement, page size, core allocation, PCIe affinity, clock
-frequency, vector unit availability -- is a datacenter architecture decision
-that someone makes for real, at scale, with real consequences. You get to
-measure what those decisions are worth.
+frequency, vector unit availability, contention from a co-runner -- is a
+datacenter architecture decision that someone makes for real, at scale, with
+real consequences. You get to measure what those decisions are worth on a
+workload you understand.
+
+The deliverable is not a faster pipeline. It is a defensible account of
+which system properties this workload cares about, which it does not, and
+why -- and the "does not" half carries as much credit as the other.
 
 **See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/index.html)
 or the [Canvas calendar](https://canvas.cornell.edu/calendar) for the
@@ -25,21 +30,25 @@ deadline.**
 
 By the end of this milestone your group should have:
 
- - Systematic sweeps across at least **three** of the four configuration
-   families in Section 2, with results tied back to the service
-   characterizations from M2.
+ - Systematic sweeps across at least **three** of the five configuration
+   families in Section 2 -- including scalability and microarchitectural
+   interference -- with results tied back to the component characterizations
+   from M2.
  - A **core allocation study**: how performance scales with cores per
    service, and where the optimal split lies for your pipeline.
  - An explanation of each significant effect in architectural terms, backed
    by counter data where relevant.
+ - A **sensitivity summary**: for each knob you swept, how much it moved
+   performance, which component it acted on, and the mechanism behind it.
  - A **best-known configuration**, reproducible from a committed config
-   file, and the total speedup it delivers over M2.
+   file, and what it delivers over M2.
 
 2. What to Do
 --------------------------------------------------------------------------
 
-Sweep at least three of the following four families. For each, hold
-everything else fixed and change one variable at a time.
+Sweep at least **three** of the five families below, and the three must
+include **scalability (2.3)** and **microarchitectural interference (2.4)**.
+For each, hold everything else fixed and change one variable at a time.
 
 !!! note "The knobs listed are a starting point"
 
@@ -86,7 +95,41 @@ often do not once they are competing for shared cache and memory bandwidth,
 and the best end-to-end split is rarely the one predicted by the individual
 scaling curves. Report both, and explain the gap.
 
-### 2.4. Processor configuration
+### 2.4. Microarchitectural interference
+
+The "dedicated server" you have been measuring on is a convenient fiction.
+In a real datacenter your workload shares last-level cache, memory
+bandwidth, and interconnect with whatever else the scheduler put on that
+machine -- and in your own pipeline, the components already contend with
+each other.
+
+This family is **required**. It is the one that most directly tests whether
+you understand what your components are bound by.
+
+ - **Self-interference.** Your own components already compete. Which pairs
+   hurt each other when colocated on the same cores, the same LLC slice, or
+   the same memory controller? Isolate them and measure the difference.
+ - **Induced interference.** Run a co-runner alongside your pipeline -- a
+   cache-thrashing loop, a bandwidth hog, a spin loop -- and measure the
+   damage as a function of what it contends for. A component you concluded
+   was compute-bound in M2 should barely notice a bandwidth hog. Check
+   whether that prediction holds.
+ - **Contention-aware placement.** Given what you find, is there a placement
+   that isolates your most sensitive component from the rest? What does that
+   isolation cost in throughput?
+ - **Tail latency under interference.** Interference usually shows up in the
+   tail long before it shows up in the mean. Report distributions.
+
+!!! tip "This is the noisy-neighbor problem"
+
+    You are reproducing, at small scale, the effect that drives a great deal
+    of real datacenter provisioning policy: why operators leave capacity on
+    the floor, why some workloads are marked non-colocatable, and why
+    isolation mechanisms exist in hardware at all. A clean measurement of how
+    much a co-runner costs your p99 is one of the most transferable results
+    you can produce in this project.
+
+### 2.5. Processor configuration
 
  - **Clock frequency.** Sweep it and measure performance and, where the
    platform allows, energy. A service that is memory-bound will barely
@@ -158,7 +201,8 @@ repo root containing:
 
 | Criterion | Weight | What we are looking for |
 |-----------|--------|-------------------------|
-| Breadth | _TBD_ | Three-plus families swept, including scalability |
+| Breadth | _TBD_ | Three-plus families swept, including scalability and interference |
+| Interference study | _TBD_ | Contention effects measured and predicted correctly from the M2 characterization |
 | Experimental control | _TBD_ | One variable at a time; machine state recorded; noise handled honestly |
 | Core allocation study | _TBD_ | Isolated and end-to-end scaling both measured; the gap explained |
 | Architectural explanation | _TBD_ | Effects explained by mechanism, not just reported as numbers |
@@ -186,9 +230,9 @@ repo root containing:
 
 !!! tip "The best configuration is the M4 starting point"
 
-    Whatever you find here is what you carry into the contest. Make sure it
-    is captured in a config file that reproduces it exactly, not in
-    somebody's shell history.
+    Whatever you find here is what you carry into M4. Make sure it is
+    captured in a config file that reproduces it exactly, not in somebody's
+    shell history.
 
 !!! tip "Predict before you measure"
 

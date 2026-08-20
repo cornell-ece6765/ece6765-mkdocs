@@ -23,8 +23,10 @@ By the end of this milestone your group should have:
    an answer. The [reference structure](ece6765-project-arch.md) is four
    services over HTTP; adopting it is the fast path, and departing from it is
    allowed if you can justify the departure.
- - A `POST /query` endpoint conforming to the [API
-   contract](ece6765-project-arch.md), returning answers attributed by `id`.
+ - Conformance to the [trace-in / results-out
+   contract](ece6765-project-arch.md): your pipeline consumes a trace file,
+   answers every request in it, and writes a results file with answers and
+   per-request timings measured from t=0.
  - A passing score on the correctness mode of the [evaluation
    harness](ece6765-eval-harness.md).
  - A one-command launch script that brings the whole pipeline up on a clean
@@ -49,8 +51,8 @@ By the end of this milestone your group should have:
     it is a reasonable place to start and it gives the rest of the handouts a
     shared vocabulary. **You are not required to adopt it.** If you have a
     reason to decompose the pipeline differently, do that instead and explain
-    why in your writeup. The only hard requirement is the `POST /query` and
-    `/health` contract.
+    why in your writeup. The only hard requirement is the trace-in /
+    results-out contract and `/health`.
 
     Most groups should take the reference structure in M1 anyway -- not
     because it is mandated, but because M1 is where you find out how much of
@@ -108,13 +110,16 @@ on in M3.
 
 ### 2.5. Build the frontend
 
-Orchestrate the other three: for each query, embed it, search with the
-resulting vector, generate from the query plus retrieved passages, and
-return the answer tagged with its original `id`.
+The frontend loads the trace file, drives every request through the other
+three services, and writes the results file. For each request: embed it,
+search with the resulting vector, generate from the query plus retrieved
+passages, and record the answer under its original `id`.
 
-Batch size 1, sequential, plain HTTP. Resist the urge to optimize. You need
-a baseline that is obviously correct and obviously naive, because every
-number you report for the rest of the semester is a comparison against it.
+Batch size 1, sequential, plain HTTP, **requests processed in trace order**.
+Resist the urge to optimize. You need a baseline that is obviously correct
+and obviously naive, because every number you report for the rest of the
+semester is a comparison against it -- and processing in trace order gives
+you the worst-case latency distribution to improve on.
 
 Do put the inter-service calls behind a client interface -- one small class
 per service -- rather than scattering HTTP calls through the orchestration
@@ -123,18 +128,31 @@ difference between an afternoon and a week.
 
 ### 2.6. Instrument it
 
-Add timing instrumentation at each service boundary now: how long each
-service took per request, and how long the frontend spent waiting on each.
-You do not need anything sophisticated -- timestamps and a structured log
-line are enough -- but you need it before you can answer Section 2.8.
+Two kinds of timing, and you need both.
+
+**Required by the contract:** `first_token_ms` and `last_token_ms` per
+request, measured from t=0. These go in the results file and the harness
+grades you on them. Get the clock reference right -- t=0 is when the harness
+invoked you, not when your frontend got around to that request.
+
+**Required by you:** where time goes *inside* a request. How long each
+service took, how long the frontend spent waiting on each, and -- once you
+stop processing in trace order -- how long each request sat queued before
+you started it. Timestamps and a structured log line are enough, but you
+need this before you can answer Section 2.8.
 
 ### 2.7. Establish the baseline
 
 Run the harness. Confirm you pass correctness, then measure:
 
- - Time to first token (p50, p95, p99, max)
- - Total generation time and queries per second
- - End-to-end tail latency (p50, p95, p99, p99.9, max)
+ - Per-request latency from t=0 (p50, p95, p99, p99.9, max)
+ - Time to first token from t=0 (p50, p95, p99, max)
+ - Makespan and requests per second
+
+Note that with a sequential, in-trace-order baseline your latency
+distribution will be close to a straight line from "first request" to
+"makespan" -- almost all of it is queuing. That is the expected shape, and
+seeing it clearly is the point of measuring it now.
 
 Repeat the run enough times to report variation, discard warmup, and follow
 the measurement discipline in the [harness
@@ -193,7 +211,7 @@ The submission is the last commit on `main` at or before the deadline.
 | Criterion | Weight | What we are looking for |
 |-----------|--------|-------------------------|
 | Correctness | _TBD_ | Pipeline clears the harness quality threshold |
-| API conformance | _TBD_ | `POST /query` and `/health` match the contract exactly |
+| Interface conformance | _TBD_ | Trace consumed, results file schema correct, timings measured from t=0 and consistent with wall clock |
 | Reproducibility | _TBD_ | Staff can bring up your pipeline and run the harness from your documented commands, unaided |
 | Baseline measurement quality | _TBD_ | Distributions not point values; repetitions reported; warmup handled |
 | Time breakdown and hypothesis | _TBD_ | Instrumentation supports the claim; hypothesis is specific and testable |

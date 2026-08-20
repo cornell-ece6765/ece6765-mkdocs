@@ -1,20 +1,62 @@
 Course Project Overview
 ==========================================================================
 
-The ECE 6765 course project is a semester-long performance engineering
-study built around a single application: a **retrieval-augmented generation
-(RAG) pipeline implemented as four microservices**. You build it once, then
-spend the rest of the semester making it fast.
+The ECE 6765 course project is a semester-long study of **system
+sensitivity**, built around a single application: a **retrieval-augmented
+generation (RAG) pipeline implemented as four microservices**. You build it
+once, then spend the rest of the semester using it to find out how a real
+workload responds to the machine underneath it.
 
+
+What the project is for
+--------------------------------------------------------------------------
+
+The goal is to develop a working understanding of how application
+performance responds to the system underneath it -- to be able to take a
+real workload, change something about the machine, and explain what happened
+and why. By the end of the semester you should be able to answer questions
+like:
+
+ - Which parts of this workload are sensitive to **CPU frequency**, and
+   which are not? What does that tell you about what limits them?
+ - What does **NUMA placement** cost when you get it wrong, and which
+   component pays?
+ - When does **page size** matter, and how would you have predicted it from
+   a TLB miss rate?
+ - What happens to a latency-sensitive component when something else on the
+   machine starts contending for **shared cache and memory bandwidth**? How
+   much of a "dedicated" server is actually dedicated?
+ - How does performance scale with **cores per component**, and why does the
+   end-to-end optimum differ from what the individual scaling curves
+   predict?
+ - What does the **interconnect between components** cost, and how does that
+   change with placement?
+
+These are sensitivity questions, and answering them is the substance of the
+project. A group that measures carefully, finds that a knob does nothing,
+and explains correctly why it does nothing has done the assignment. A group
+that makes the pipeline fast without being able to account for any of it has
+not.
 
 Why this application
 --------------------------------------------------------------------------
 
-RAG serving is a representative modern datacenter workload that you use 
-every day. It is not one program with one bottleneck; it is a set of services 
-with different resource profiles chained together, that makes it a very 
-interesting workload to optimize at system level. In this project you are 
-going to try the decisions datacenter architects make to run workloads faster. 
+RAG serving is not only an extremely important application, it is also
+a good instrument for these questions because it is not one
+program with one bottleneck. It is a set of components with genuinely
+different resource profiles chained together behind a single request:
+
+ - **Embedding** is compute-bound and vectorizable -- sensitive to cores,
+   SIMD width, and frequency.
+ - **Vector DB** is memory-bound -- sensitive to capacity, bandwidth, NUMA
+   locality, and page size.
+ - **Generation** is bound by both compute and memory bandwidth.
+ - **Frontend** is I/O-bound and sensitive to request ordering.
+
+That variety is the point. The same knob moves these four components in
+different directions and by different amounts, so every configuration change
+you make becomes a small experiment with four simultaneous answers. 
+
 
 What kind of project this is
 --------------------------------------------------------------------------
@@ -23,13 +65,19 @@ This is a graduate course, and this is a graduate project. It is open-ended
 research and engineering work, not a guided lab.
 
 Every milestone handout on this site states **what you must accomplish and
-what you must report**. None of them tell you how. There is no starter
-repository, no reference solution, no step-by-step walkthrough, and no
-provided debugging path. Choosing an implementation strategy, finding out
-why your service deadlocks under load, discovering that a library has no
-ARM64 build and deciding what to do about it, and figuring out how to
-measure something the tooling does not measure directly -- **all of that is
-the project.** It is not an obstacle standing between you and the project.
+what you must report**. None of them tell you how.
+
+You will be given a **starter code template**. It is not a solution and it
+is not a working application -- it is a skeleton that shows the shape of the
+interfaces. Making it into something that runs, and then something that runs 
+well, is entirely on you. There is no reference implementation, no 
+step-by-step walkthrough, and no provided debugging path.
+
+Choosing an implementation strategy, finding out why your service deadlocks
+under load, discovering that a library has no ARM64 build and deciding what
+to do about it, and figuring out how to measure something the tooling does
+not measure directly -- **all of that is the project.** It is not an
+obstacle standing between you and the project.
 
 !!! danger "The instructor and staff do not debug your code"
 
@@ -89,30 +137,36 @@ shapes how the project is graded:
 Architecture
 --------------------------------------------------------------------------
 
-Four services, chained behind one HTTP endpoint:
+Four services, driven by a trace file of requests:
 
 ```
-                  ┌────────────┐
-   POST /query    │            │   embed(text)      ┌────────────┐
- ────────────────▶│  frontend  │───────────────────▶│ embedding  │
-                  │            │◀───────────────────│            │
-   {id, answer}   │            │   vector[]         └────────────┘
- ◀────────────────│            │
-                  │            │   search(vector)   ┌────────────┐
-                  │            │───────────────────▶│ vector DB  │
-                  │            │◀───────────────────│            │
-                  │            │   passages[]       └────────────┘
-                  │            │
-                  │            │   generate(query,  ┌────────────┐
-                  │            │      passages)     │ generation │
-                  │            │───────────────────▶│            │
-                  │            │◀───────────────────│            │
-                  └────────────┘   answer text      └────────────┘
+                          ┌──────────────┐      ┌────────────┐
+   trace file             │              │─────▶│ embedding  │
+   all requests at t=0    │              │◀─────│            │
+ ────────────────────────▶│              │      └────────────┘
+                          │   frontend   │
+                          │              │      ┌────────────┐
+                          │   loads      │─────▶│ vector DB  │
+   results file           │   schedules  │◀─────│            │
+   answers + per-request  │   runs it    │      └────────────┘
+   timings from t=0       │              │
+ ◀────────────────────────│              │      ┌────────────┐
+                          │              │─────▶│ generation │
+                          │              │◀─────│            │
+                          └──────────────┘      └────────────┘
 ```
 
-The reference implementation uses **plain HTTP with JSON** between services
-and **batch size 1** end to end. Both are deliberate: they are the obvious
-things to optimize, and we want you to measure the cost before you fix it.
+Your pipeline is driven by a **trace file**: a set of requests that are all
+available to it at time zero, with no arrival process. This models a server
+that an upstream scheduler has already handed a full queue of work. Because
+everything is available immediately, **the execution order is entirely
+yours** -- and per-request latency is measured from t=0, so it includes
+however long a request sat in your queue before you got to it.
+
+The reference implementation uses **plain HTTP with JSON** between services,
+**batch size 1**, and processes the trace in order. All three are
+deliberate: they are the obvious things to optimize, and we want you to
+measure the cost before you fix it.
 
 !!! note "This structure is a starting point, not a specification"
 
@@ -121,11 +175,12 @@ things to optimize, and we want you to measure the cost before you fix it.
     constraint.** You may merge services, split them, or re-decompose the
     pipeline entirely, at any point in the semester.
 
-    Exactly one thing is fixed: the external `POST /query` and `/health`
-    contract, because a single evaluation harness has to drive every group's
-    pipeline for the contest to mean anything. Everything behind that
-    interface -- process structure, transport, languages, libraries,
-    scheduling -- is yours.
+    Exactly one thing is fixed: the trace-in / results-out contract and the
+    `/health` check, because a single evaluation harness has to drive every
+    group's pipeline, and because comparable numbers across groups are
+    what make a class-wide discussion of results possible. Everything
+    behind that interface -- process structure, transport, languages,
+    libraries, scheduling -- is yours.
 
     Changing the structure is a design decision like any other, which means
     it is held to the same standard: justify it and measure it against what
@@ -136,95 +191,103 @@ The full contract -- endpoint shapes, request and response schemas, and what
 is fixed versus suggested -- is on the [Reference Architecture and
 API](ece6765-project-arch.md) page. Read it before Milestone 1.
 
-Milestones
+
+A note on the end of the semester
 --------------------------------------------------------------------------
 
-**See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/schedule.html) for all
-deadlines.**
+The last Milestone is currently planned to include a **performance bake-off**:
+every group runs the same trace on identical servers and the results are
+compared. 
 
-| Milestone | Focus | Deliverable | Weight |
-|-----------|-------|-------------|--------|
-| [M1](ece6765-project-m1.md) | RAG pipeline implementation | Working four-service pipeline, correctness passing, baseline numbers | _TBD_ |
-| [M2](ece6765-project-m2.md) | Profiling and application-level optimization | Performance-counter analysis, batching, parallelism, communication stack | _TBD_ |
-| [M3](ece6765-project-m3.md) | System-level configuration study | Memory, network, scalability, and processor configuration sweeps | _TBD_ |
-| [M4](ece6765-project-m4.md) | Performance contest and final report | Contest submission plus a full writeup | _TBD_ |
+!!! note "This may change"
 
-Each milestone builds on the previous one in the same repository. There is
-no reset -- the code you write in M1 is the code you are still optimizing in
-M4.
+    This is the first offering of this project. Milestones are released
+    gradually, and the shape of Milestones will depend on how the earlier milestones
+    actually go -- both for you and for the server cluster. 
 
-The performance contest
---------------------------------------------------------------------------
-
-The semester ends with a **performance engineering contest**. Every group
-runs the same evaluation harness against the same query set on identical,
-dedicated servers. Your submission is ranked on the harness metrics defined
-on the [Evaluation Harness and Metrics](ece6765-eval-harness.md) page.
-
-!!! danger "Correctness gates the contest"
-
-    A fast pipeline that returns wrong answers scores zero. Your submission
-    must clear the answer-quality threshold on the held-out query set before
-    its performance numbers count for anything. We will also run a query set
-    you have not seen, so tuning that only works on the public queries will
-    not survive.
-
-Contest standing is part of the M4 grade, but it is not the whole grade,
-and it is not winner-take-all. A group that finishes mid-pack with a sharp,
-honest analysis of *why* their pipeline behaves the way it does will
-outscore a group that wins with an unexplained pile of tuning flags.
 
 Infrastructure
 --------------------------------------------------------------------------
 
 Each group is given access to a **dedicated Ampere server**. All groups get
-identical hardware, which is what makes the contest meaningful and what
-makes your measurements comparable to everyone else's.
+identical hardware.
 
 Models are fixed for all groups so that the comparison is about systems, not
-about who found a smaller model:
+about model optimization. 
 
- - **Embedding:** [`jinaai/jina-embeddings-v5-text-nano`](https://huggingface.co/jinaai/jina-embeddings-v5-text-nano)
- - **Generation:** _TBD -- announced before M1 is released_
-
-Server access, the reservation system, and measurement hygiene are covered
+Server accesses are covered
 in the [Server and Measurement Guide](ece6765-server-guide.md).
+
+!!! danger "Keep nothing of value only on the server"
+
+    These machines can crash without warning, and in the worst case may need
+    to be reformatted -- taking your code, environment, configuration, and
+    results with them. There is no backup. Commit and push to your group
+    repository constantly, and make sure the repo contains enough to rebuild
+    the machine from scratch, not just your source files. See [The Server Is
+    Not Storage](ece6765-server-guide.md#2-the-server-is-not-storage).
+
+### Machine topology
+
+
+| Property | Value |
+|----------|-------|
+| Packages (sockets) | 2 |
+| NUMA nodes | 2 -- one per package, 16 GB each, **32 GB total** |
+| Cores | 160 -- 80 per package, one thread per core |
+| L1 (per core) | 64 KB data + 64 KB instruction |
+| L2 (per core) | 1 MB, **private** |
+| Shared LLC | 32 MB SLC per socket |
+| Storage | NVMe and HDD |
+| Network | 2 port 1Gbps Ethernet |
+
+
+??? exercise "Verify this yourself"
+
+    The table above is a summary of the published specification. Confirm it
+    against the machine you are actually given, and pay attention to where the
+    two disagree:
+
+    ```bash
+    % lscpu
+    % lstopo --of txt
+    % numactl --hardware
+    ```
+
+    Start with the cache hierarchy, because that is where the table and the
+    machine disagree. Your tools will report L1 and a private L2 per core,
+    and then **nothing else** -- no last-level cache at all. The table above
+    says 32 MB.
+
+    The table is right. Ampere Altra parts (Arm Neoverse N1 cores) have a
+    **32 MB System Level Cache** that the OS does not expose through the
+    usual interfaces. Its absence from `lscpu` and `lstopo` is an enumeration
+    issue with Linux.
 
 Groups
 --------------------------------------------------------------------------
 
- - Groups are **three students**. Groups of two require instructor approval;
-   groups of four are not allowed.
- - You form your own groups. A partner-matching thread will be posted on the
-   course discussion board.
+ - Groups are **three students**. 
  - Each group gets a private repository `project-gNN` in the
    [cornell-ece6765](https://github.com/cornell-ece6765) GitHub
    organization, with all members as collaborators. See the [Git
    Workflow](ece6765-git-workflow.md) page.
  - All members receive the same milestone scores, adjusted by a peer
-   contribution assessment collected with M4.
-
-!!! tip "Divide by service, not by milestone"
-
-    The most effective split in past performance-engineering projects is by
-    service -- each member owns one or two services across the whole
-    semester and becomes the group's expert on that bottleneck. Splitting by
-    milestone ("you do M2, I'll do M3") means nobody understands the system
-    end to end when the contest arrives.
+   contribution assessment collected with each Milestone report.
+ - Even though you might split the project tasks between each other,
+   all the students within a group should be able to explain the code, 
+   the results, and the take aways from the experiments. 
 
 Grading criteria
 --------------------------------------------------------------------------
 
-Each milestone has its own rubric, published with its handout. Across the
-project, we are looking for:
+Across the project, we are looking for:
 
 **Methodology.** Are experiments controlled? Is the baseline fair? Do you
 run enough repetitions to distinguish a real effect from noise?
 
 **Explanation over tuning.** Can you explain *why* a configuration helped,
-in terms of the architecture? A 20% speedup you can attribute to a specific
-counter is worth more than a 40% speedup you found by grid search and cannot
-account for.
+in terms of the architecture? 
 
 **Rigor in reporting.** Distributions, not single numbers. Named confounds.
 Honest negative results -- an optimization that did not work, clearly
@@ -238,8 +301,10 @@ Academic integrity
 
 Collaboration within your group is unrestricted. Across groups, you may
 discuss ideas and approaches but may **not** share code, configuration
-files, tuning parameters, or measurement data. The contest makes this
-temptation real; treat cross-group code sharing as what it is.
+files, tuning parameters, or measurement data. Comparing findings with
+another group is useful and encouraged; adopting their configuration is not,
+and it also defeats the purpose -- the point is to have measured it
+yourself.
 
 External libraries and open-source components are allowed and encouraged,
 but must be cited in your writeups. AI coding tools are expected -- see the

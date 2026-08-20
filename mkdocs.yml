@@ -46,7 +46,9 @@ markdown_extensions:
       line_spans: __span
       pygments_lang_class: true
   - pymdownx.inlinehilite
-  - pymdownx.snippets
+  - pymdownx.snippets:
+      base_path: ['docs']
+      check_paths: true
   - pymdownx.superfences
   - pymdownx.arithmatex:
       generic: true
@@ -73,7 +75,7 @@ nav:
     - 'Project Overview': ece6765-project-overview.md
     - 'Milestone 1: RAG Pipeline Implementation': ece6765-project-m1.md
     - 'Milestone 2: Profiling and Optimization': ece6765-project-m2.md
-    - 'Milestone 3: System Configuration Study': ece6765-project-m3.md
+    - 'Milestone 3: System Sensitivity Study': ece6765-project-m3.md
     - 'Milestone 4: Contest and Final Report': ece6765-project-m4.md
 
   - 'Reference':

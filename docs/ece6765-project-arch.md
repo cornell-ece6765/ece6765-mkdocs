@@ -4,10 +4,13 @@ Reference Architecture and API
 This page describes **one fixed contract and one suggested starting
 structure**, and it is important not to confuse them.
 
-The **fixed part** is the external interface in Section 2. Every group's
-frontend must expose the same `POST /query` endpoint so that a single
-evaluation harness can drive every pipeline and the contest results mean
-something. That is the whole of what is fixed.
+The **fixed part** is the external interface in Section 2: your pipeline
+consumes a **trace file** of requests and writes a results file with answers
+and per-request timings. A single evaluation harness has to drive every
+group's pipeline, and because comparable numbers across groups make a
+class-wide discussion of results possible. That interface, plus a `/health`
+readiness check, is what cannot change. That is the whole of what is
+fixed.
 
 The **suggested part** is everything else on this page: the four-service
 decomposition, the internal endpoints, the transport, the repository layout.
@@ -25,10 +28,16 @@ communicating over HTTP on localhost.
 
 | Service | Responsibility | Dominant resource |
 |---------|----------------|-------------------|
-| `frontend` | Accepts client queries, orchestrates the other three, returns answers | Network / request overhead |
+| `frontend` | Loads the trace, schedules and orchestrates work across the other three, writes results | Scheduling / request overhead |
 | `embedding` | Encodes query text into a dense vector | CPU, SIMD, cache |
 | `vectordb` | Nearest-neighbor search over the passage index | Memory capacity and bandwidth |
 | `generation` | Produces the answer text from query + retrieved passages | Memory bandwidth, sequential compute |
+
+Note that under the trace-driven model the frontend's job is larger than it
+looks. It is not just a proxy: it is the **scheduler** for the whole
+workload, and it owns the decision of what order several thousand queued
+requests get executed in. That decision is worth more than most of the
+micro-optimizations you will make.
 
 They are split this way because they scale differently. Embedding and
 vector DB in particular look adjacent but are not: one is compute-bound over
@@ -67,70 +76,110 @@ entirely. Some things groups might reasonably try:
     that collapse the pipeline early often find that their profiling gets
     harder, because the boundaries where they used to measure are gone.
 
-2. External API (the one fixed thing)
+2. The Fixed Interface: Trace In, Results Out
 --------------------------------------------------------------------------
 
-Your pipeline must expose a `POST /query` endpoint. This is the only
-interface the evaluation harness touches, and its shape is fixed.
+Your pipeline is driven by a **trace file**. This is the one part of the
+contract that cannot change, because a single evaluation harness has to
+drive every group's pipeline and produce numbers that mean the same thing
+across the class.
 
-Note that this constrains the *interface*, not the *implementation*. Nothing
-requires the thing serving `/query` to be called "frontend" or to be one of
-four services -- only that the endpoint exists, speaks the schema below, and
-is what your launch script brings up.
+### 2.1. The execution model
 
-### 2.1. Request
+The trace file contains a set of requests that are **all available to your
+pipeline at time zero**. There is no arrival process and no request rate.
 
-The harness submits a batch of queries in a single request:
+This models a real situation in a datacenter: a scheduler upstream has
+already assigned a batch of work to this server, and the server has a full
+queue in front of it from the moment it starts. Everything in the trace is
+sitting there, waiting, at t=0.
 
-```json
-{
-  "queries": [
-    { "id": "q-00001", "text": "what is the capital of australia" },
-    { "id": "q-00002", "text": "who wrote the tell tale heart" }
-  ]
-}
-```
+The consequence is worth stating plainly, because it drives most of the
+design decisions in this project: **you have complete freedom over execution
+order.** Nothing forces you to process requests in trace order, one at a
+time, or as they appear. You may reorder, group, batch, and schedule the
+entire workload however you like. How you use that freedom is most of what
+separates a fast pipeline from a slow one.
 
- - `id` is an opaque unique string. It exists for attribution: your response
-   must carry it back unchanged.
- - `text` is the raw query string.
- - The harness may submit anywhere from 1 to several thousand queries in one
-   request. **Do not assume a bound.**
+### 2.2. Trace file format
 
-### 2.2. Response
+_Exact schema TBD -- fixed before M1 is released._ The working format is
+newline-delimited JSON, one request per line:
 
 ```json
-{
-  "responses": [
-    { "id": "q-00001", "answer": "Canberra is the capital of Australia ..." },
-    { "id": "q-00002", "answer": "The Tell-Tale Heart was written by ..." }
-  ]
-}
+{"id": "q-00001", "text": "what is the capital of australia"}
+{"id": "q-00002", "text": "who wrote the tell tale heart"}
 ```
 
- - Every submitted `id` must appear exactly once in the response.
- - Order does not matter -- the harness matches on `id`, not position.
- - `answer` is the generated text, scored for quality as described on the
-   [Evaluation Harness and Metrics](ece6765-eval-harness.md) page.
+ - `id` is an opaque unique string. Results must carry it back unchanged, so
+   answers can be attributed to requests.
+ - `text` is the raw query.
+ - Traces range from a handful of requests to several thousand. **Do not
+   assume a bound**, and do not assume the whole trace fits comfortably
+   anywhere you might want to put it.
 
-### 2.3. Streaming
+### 2.3. Invocation
 
-To let the harness measure **time to first token**, the frontend must also
-support a streaming response mode. The exact wire format
-(newline-delimited JSON over a chunked response, server-sent events, or
-equivalent) is _TBD and will be fixed in the harness specification before M1
-is released_.
+The harness starts your pipeline, waits for it to report ready, and then
+starts the timed run by handing it a trace path and an output path:
 
-### 2.4. Health endpoint
+```bash
+% ./scripts/run.sh --trace <trace-path> --output <results-path>
+```
 
-Your pipeline must expose `GET /health` alongside `/query`, returning HTTP
-200 only once **every** component is ready to serve. The harness polls this
-before starting a timed run, so that model loading and index construction do
-not pollute your latency numbers.
+_Exact invocation TBD._ The timer starts (t=0) when the harness issues this
+command, and stops when your process exits having written the results file.
+
+Everything expensive that can happen before t=0 should happen before t=0:
+loading models, building or memory-mapping the index, spawning workers,
+opening connections. That is what `/health` is for -- see Section 2.5.
+Reading and parsing the trace itself happens **after** t=0 and is on your
+clock.
+
+### 2.4. Results file
+
+One record per request. _Exact schema TBD._
+
+```json
+{"id": "q-00001", "answer": "Canberra is ...", "first_token_ms": 412.7, "last_token_ms": 1893.2}
+```
+
+ - `answer` -- the generated text, scored for quality by the harness.
+ - `first_token_ms` -- milliseconds from **t=0** to the first token emitted
+   for this request.
+ - `last_token_ms` -- milliseconds from **t=0** to the last token emitted for
+   this request.
+
+Both timestamps are measured from the start of the run, **not** from when
+your pipeline happened to start working on that request. A request your
+scheduler leaves until the end has a large `last_token_ms`, and that is the
+point: the number includes however long the request sat in your queue.
+
+Every `id` in the trace must appear exactly once in the results. Order does
+not matter; the harness matches on `id`.
+
+!!! warning "You report your own timestamps, and they are checked"
+
+    Per-request timing has to come from inside your pipeline -- the harness
+    cannot see individual completions from outside. It does independently
+    measure total wall-clock time for the run, and it will cross-check your
+    reported numbers against it. Results whose self-reported timings are
+    inconsistent with the externally observed wall clock are treated as a
+    failed run, not as a fast one.
+
+    Instrument this carefully and early. A pipeline that is genuinely fast
+    but reports its own timing incorrectly scores the same as a slow one.
+
+### 2.5. Readiness
+
+Your pipeline must expose `GET /health` returning HTTP 200 only once
+**every** component is ready to serve. The harness polls this before
+starting the timed run, so that model loading and index construction do not
+land inside your measured time.
 
 How you aggregate readiness across however many processes you end up with is
 your problem. Reporting healthy before you actually are will show up as
-inexplicably terrible first-run numbers.
+inexplicably terrible numbers, because that work moves inside the clock.
 
 3. Internal interfaces (suggested)
 --------------------------------------------------------------------------
@@ -214,4 +263,4 @@ server:
 and a single command that runs the harness against them. The staff will run
 these. If your pipeline only comes up when a specific group member types a
 specific sequence of commands from memory, it does not count as working, and
-in M4 it means your contest entry cannot be reproduced.
+it means your final results cannot be reproduced.
