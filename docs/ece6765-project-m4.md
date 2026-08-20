@@ -87,7 +87,7 @@ The following is advice, not a procedure.
  - **Look at the scheduling.** Since every request is available at t=0, your
    execution order determines the whole latency distribution. Throughput
    tuning that leaves a set of requests until last shows up in p95 and p99
-   even when makespan looks fine.
+   even when throughput looks fine.
  - **Harden the launch path.** Reboot, launch from scratch, run the harness.
    Twice. A pipeline that only comes up on a machine that has been warm for
    a week is not reproducible.
@@ -122,8 +122,7 @@ Guidelines](ece6765-report-guidelines.md):
  - [ ] **System-level configuration** -- the M3 work, condensed to what
        mattered
  - [ ] **End-to-end results** -- the full path from the M1 baseline to your
-       final configuration, with changes attributed across all three metric
-       families
+       final configuration, with changes attributed across both metrics
  - [ ] **Sensitivity analysis** (the core of the report) -- which system
        properties this workload is sensitive to and which it is not; for each
        component, which knobs moved it, by how much, and the mechanism that

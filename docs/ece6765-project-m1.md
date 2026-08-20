@@ -32,8 +32,8 @@ By the end of this milestone your group should have:
    harness](ece6765-eval-harness.md).
  - A one-command launch script that brings the whole pipeline up on a clean
    server.
- - A **baseline measurement** of TTFT, total generation time, and tail
-   latency, with variation reported across repeated runs.
+ - A **baseline measurement** of throughput and the per-request latency
+   distribution, with variation reported across repeated runs.
  - A first hypothesis, backed by a rough measurement, about where the time
    goes.
 
@@ -109,9 +109,12 @@ Wrap the course-specified generation model (_TBD -- announced before this
 milestone is released_) behind `POST /generate`, taking a query and its
 retrieved passages and returning answer text.
 
-This service must support streaming output, since the harness measures time
-to first token. Getting streaming right in M1 is much easier than bolting it
-on in M3.
+This service must support streaming output. Nothing in M1 exploits it --
+the frontend waits for the full answer -- but a generation service that
+returns tokens as it produces them is what later milestones need in order to
+overlap generation with the work behind it, instead of letting the rest of
+the pipeline idle until an answer is complete. Building that in now is much
+easier than bolting it on in M3.
 
 ### 2.5. Build the frontend
 
@@ -135,7 +138,7 @@ difference between an afternoon and a week.
 
 Two kinds of timing, and you need both.
 
-**Required by the contract:** `first_token_ms` and `last_token_ms` per
+**Required by the contract:** `start_time_ms` and `last_token_ms` per
 request, measured from t=0. These go in the results file and the harness
 grades you on them. Get the clock reference right -- t=0 is when the harness
 invoked you, not when your frontend got around to that request.
@@ -151,12 +154,11 @@ need this before you can answer Section 2.8.
 Run the harness. Confirm you pass correctness, then measure:
 
  - Per-request latency from t=0 (p50, p95, p99, p99.9, max)
- - Time to first token from t=0 (p50, p95, p99, max)
- - Makespan and requests per second
+ - Throughput -- requests per second over the run
 
 Note that with a sequential, in-trace-order baseline your latency
 distribution will be close to a straight line from "first request" to
-"makespan" -- almost all of it is queuing. That is the expected shape, and
+"last request" -- almost all of it is queuing. That is the expected shape, and
 seeing it clearly is the point of measuring it now.
 
 Repeat the run enough times to report variation, discard warmup, and follow
@@ -188,8 +190,8 @@ root containing:
        run the harness on a clean server
  - [ ] **Correctness result** -- your harness correctness score and
        confirmation that you clear the threshold
- - [ ] **Baseline measurements** (~1 page) -- the three metric families, as
-       distributions, with number of runs and observed variation
+ - [ ] **Baseline measurements** (~1 page) -- throughput and the latency
+       distribution, with number of runs and observed variation
  - [ ] **Time breakdown** -- a figure showing where wall-clock time goes
        across services and hops
  - [ ] **Bottleneck hypothesis** (~2 paragraphs) -- which service you believe
@@ -254,9 +256,23 @@ None of them are requirements.
 
 !!! tip "Streaming is easier to design in than to add"
 
-    TTFT is one of three headline metrics. A generation service that
-    materializes the full answer before returning it will need restructuring
-    later; doing it as a stream from the start costs almost nothing now.
+    A generation service that materializes the full answer before returning
+    it will need restructuring the moment you want to overlap generation
+    with anything else. Doing it as a stream from the start costs almost
+    nothing now and saves a rewrite in M2 or M3.
+
+!!! tip "Write the template so the protocol can change"
+
+    Put the transport behind an interface now: a client class per service
+    with a single implementation, so that swapping HTTP for gRPC later is a
+    new implementation rather than a rewrite. Groups that hard-code
+    `requests.post(...)` calls throughout the frontend pay for it every
+    milestone after this one, and they pay most in M4 when they want to
+    combine three protocol choices and cannot.
+
+    Being able to select the protocol from a config file -- and therefore
+    run the same trace across protocols back to back -- is worth the hour it
+    costs you here.
 
 !!! tip "Watch the vector serialization"
 

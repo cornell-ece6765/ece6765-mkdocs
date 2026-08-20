@@ -113,14 +113,12 @@ clock.
 One record per request. _Exact schema TBD._
 
 ```json
-{"id": "q-00001", "answer": "Sanae Takaichi", "start_time_ms": 100.8, "first_token_ms": 412.7, "last_token_ms": 1893.2}
+{"id": "q-00001", "answer": "Sanae Takaichi", "start_time_ms": 100.8, "last_token_ms": 1893.2}
 ```
 
  - `answer` -- the generated text, scored for quality by the harness.
  - `start_time_ms` -- milliseconds from **t=0** to when the request is 
    scheduled for execution by the frontend.
- - `first_token_ms` -- milliseconds from **t=0** to the first token emitted
-   for this request.
  - `last_token_ms` -- milliseconds from **t=0** to the last token emitted for
    this request.
 
@@ -187,50 +185,11 @@ frontend ──POST /generate─────▶ generation   {"query": "...", "p
                                              →  {"answer": "..."}
 ```
 
-**Replace any of it.** The axes available to you, roughly in the order
-groups tend to find them:
-
- - **Serialization.** JSON arrays of floats are an expensive way to move
-   embedding vectors. The `frontend ↔ embedding ↔ vectordb` path is the
-   obvious first casualty. Binary encodings, protobuf/FlatBuffers, or a raw
-   length-prefixed float buffer.
- - **Transport.** gRPC, raw TCP sockets, Unix domain sockets, shared memory
-   rings for colocated services. Each has a different cost structure and a
-   different failure mode.
- - **Batching.** The reference implementation processes batch size 1 at
-   every hop. Constructing batches at service boundaries is one of the
-   largest available wins, and it trades throughput against tail latency in
-   a way you should be able to quantify.
- - **Concurrency and call structure.** Synchronous request/response versus
-   pipelined or streaming calls; how many requests are in flight per hop;
-   whether generation can begin before retrieval fully completes.
- - **Connection management.** Pooling, keep-alive, how many connections per
-   service pair, and what happens to tail latency when the pool is too small.
- - **Data movement.** Whether passages are copied through the frontend at all
-   or passed by reference, and who owns the buffer.
-
-Note that these interact. A binary format that halves serialization cost may
-change the batch size at which batching stops paying; a shared-memory ring
-may make copies free but pin two services to the same NUMA node, which M3
-will make you care about.
-
-!!! tip "Write the template so the protocol can change"
-
-    This matters more here than it would in a project where the structure was
-    negotiable. The decomposition is fixed precisely so that the boundary
-    stays a thing you can measure and swap -- so build the boundary as a
-    seam from day one.
-
-    Put the transport behind an interface in M1: a client class per service
-    with a single implementation, so that swapping HTTP for gRPC later is a
-    new implementation rather than a rewrite. Groups that hard-code
-    `requests.post(...)` calls throughout the frontend pay for it every
-    milestone after M1, and they pay most in M4 when they want to combine
-    three protocol choices and cannot.
-
-    Being able to select the protocol from a config file -- and therefore
-    run the same trace across protocols back to back -- is worth the hour it
-    costs you in M1.
+**Replace any of it.** Build this protocol in M1 because it is the fastest
+thing to get correct, then start taking it apart in M2, where the axes open
+to you -- serialization, transport, batching, call structure, connection
+management, who owns the buffer -- are laid out, and where a measured
+protocol change is a required deliverable.
 
 4. Repository layout
 --------------------------------------------------------------------------

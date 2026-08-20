@@ -93,7 +93,7 @@ without changing a single line of service code.
 
 Things to work out: whether request cost is predictable in advance (from
 query length, or from retrieval results), whether running cheap requests
-first improves p50, whether it costs you makespan, and how to keep every
+first improves p50, whether it costs you throughput, and how to keep every
 service busy rather than letting the pipeline drain between requests.
 
 This is the cheapest large win available in this milestone and the one most
@@ -101,11 +101,11 @@ directly connected to the course material. Groups routinely find that a
 scheduling change moves p50 more than every micro-optimization they made
 combined.
 
-!!! note "Scheduling and makespan are not the same problem"
+!!! note "Scheduling and throughput are not the same problem"
 
     Reordering a fixed set of requests on a fixed pipeline cannot change how
-    much total work there is. If reordering alone moves your makespan, it is
-    because it changed *utilization* -- you filled a bubble, or you stopped
+    much total work there is. If reordering alone moves your throughput, it
+    is because it changed *utilization* -- you filled a bubble, or you stopped
     starving a service. Work out which of the two you did before claiming it
     in the writeup, because they have different implications for M3.
 
@@ -117,8 +117,10 @@ particularly at the embedding service where the model is small and
 per-invocation overhead dominates.
 
 Things to work out: where batches are formed, how long you are willing to
-wait to fill one, whether batch size should differ per service, and what it
-does to TTFT. **Report the tradeoff curve, not just your chosen point.**
+wait to fill one, and whether batch size should differ per service.
+**Report the tradeoff curve, not just your chosen point:** a batch that
+raises throughput also makes the requests waiting for it to fill land later
+in the latency distribution.
 
 #### Communication stack (required)
 
@@ -127,16 +129,41 @@ decomposition](ece6765-project-arch.md#11-the-decomposition-is-fixed) is fixed
 precisely so that it stays measurable. You cannot make a hop cheaper by
 deleting it, so make it cheaper on its own terms.
 
-The path that carries full dense vectors as JSON is the obvious first
-candidate. Options include gRPC with protobuf, binary framing over raw
-sockets, Unix domain sockets or shared memory for colocated services,
-pipelined or streaming calls in place of synchronous request/response, or
-simply a more efficient encoding over the existing HTTP transport.
+What M1 leaves you is **plain HTTP with JSON bodies, one query at a time** --
+the [reference protocol](ece6765-project-arch.md#3-internal-interfaces-the-semesters-experiment).
+Only the *semantics* of each hop are fixed. The wire format, the transport,
+the framing, how many requests travel at once, who initiates, and whether the
+call blocks are all yours to change. The axes, roughly in the order groups
+tend to find them:
+
+ - **Serialization.** JSON arrays of floats are an expensive way to move
+   embedding vectors. The `frontend ↔ embedding ↔ vectordb` path is the
+   obvious first casualty. Binary encodings, protobuf/FlatBuffers, or a raw
+   length-prefixed float buffer.
+ - **Transport.** gRPC, raw TCP sockets, Unix domain sockets, shared memory
+   rings for colocated services. Each has a different cost structure and a
+   different failure mode.
+ - **Concurrency and call structure.** Synchronous request/response versus
+   pipelined or streaming calls; how many requests are in flight per hop;
+   whether generation can begin before retrieval fully completes.
+ - **Connection management.** Pooling, keep-alive, how many connections per
+   service pair, and what happens to tail latency when the pool is too small.
+ - **Data movement.** Whether passages are copied through the frontend at all
+   or passed by reference, and who owns the buffer.
+
+Batching is the sixth axis and usually the largest of them, but it is big
+enough to have its own category above.
 
 Measure the cost you are removing before you remove it: how many bytes, how
 much CPU in serialization versus deserialization versus transport. A protocol
 change that you cannot account for in those terms is a guess that happened to
 work.
+
+These axes interact, and so do the categories in this section. A binary
+format that halves serialization cost may change the batch size at which
+batching stops paying; a shared-memory ring may make copies free but pin two
+services to the same NUMA node, which [Milestone
+3](ece6765-project-m3.md) will make you care about.
 
 Keep the old implementation selectable. You will want to re-run against it in
 M3 and M4, and a protocol you can switch at launch time is worth far more
@@ -191,10 +218,10 @@ containing:
  - [ ] **Optimizations** (~2-3 pages) -- for each: what you changed, why you
        expected it to help, the measured effect in isolation, and whether
        the counters explain the result
- - [ ] **Batching tradeoff figure** -- throughput versus TTFT/tail across
-       batch sizes
- - [ ] **Cumulative results** -- speedup over M1 across all three metric
-       families, with attribution
+ - [ ] **Batching tradeoff figure** -- throughput versus tail latency
+       across batch sizes
+ - [ ] **Cumulative results** -- improvement over M1 in both throughput and
+       the latency distribution, with attribution
  - [ ] **Post-optimization profile** -- where the bottleneck moved
  - [ ] **Correctness confirmation** -- harness quality score after all
        changes

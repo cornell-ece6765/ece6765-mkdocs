@@ -183,8 +183,8 @@ repo root containing:
  - [ ] **Connection to M2** -- where the M2 characterizations predicted these
        results, and where they did not
  - [ ] **Best-known configuration** -- the winning config, committed as a
-       file in `config/`, with its speedup over M2 across all three metric
-       families
+       file in `config/`, with its improvement over M2 in both throughput and
+       the latency distribution
  - [ ] **Null and negative results** -- knobs that did not matter, and why
        that is itself informative
  - [ ] **Correctness confirmation**

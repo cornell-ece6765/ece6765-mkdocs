@@ -1,7 +1,7 @@
 Server and Measurement Guide
 ==========================================================================
 
-Every group gets a dedicated Ampere server. This page covers access, the
+Every group gets a dedicated server. This page covers access, the
 tools available for profiling, and the measurement hygiene that makes your
 numbers mean something.
 
@@ -9,7 +9,7 @@ numbers mean something.
 
     Access details, hostnames, the reservation mechanism, and the exact
     tooling available are _TBD_ and will be filled in before Milestone 1 is
-    released. The measurement discipline in Sections 3 and 4 is final.
+    released. 
 
 1. Access
 --------------------------------------------------------------------------
@@ -21,7 +21,7 @@ numbers mean something.
 
 All groups have identical hardware, so your numbers are directly comparable
 with the rest of the class. If another group measures something different
-from you on the same knob, that difference is real and worth chasing down.
+from you on the same knob, that difference is real and worth chasing down. 
 
 !!! danger "The server is shared with your own group"
 
@@ -52,7 +52,7 @@ from you on the same knob, that difference is real and worth chasing down.
 The rule that follows is simple: **the git repository is where your project
 lives, and the server is a place you temporarily run it.** If a server were
 wiped right now, you should be able to get a fresh one, clone your repo, run
-your setup script, and be back where you were.
+your setup script, and be back where you were. 
 
 ### 2.1. What belongs in the repo
 
@@ -113,18 +113,15 @@ The servers are **Ampere (ARM64)**. A few consequences worth knowing before
 you start:
 
  - Python wheels and container images that "just work" on x86 sometimes do
-   not have ARM64 builds. Check early; discovering this the night before M1
-   is due is avoidable.
+   not have ARM64 builds. 
  - Performance counter names, SIMD instruction sets, and profiling tool
    support differ from x86. Guides you find online assume x86 more often
    than not.
  - Vector unit behavior, page size options, and NUMA topology are all
-   platform-specific. Do not assume; check the machine.
+   platform-specific. 
 
-Machine details -- core count, NUMA topology, cache hierarchy, memory
-configuration, available page sizes, frequency range -- are _TBD_ and will
-be documented here. You should also learn to query them yourself; your M3
-sweeps depend on knowing the actual topology.
+*Machine details* (core count, NUMA topology, cache hierarchy, memory
+configuration, available page sizes, frequency range): You should also learn to query them yourself. 
 
 4. Profiling tools
 --------------------------------------------------------------------------

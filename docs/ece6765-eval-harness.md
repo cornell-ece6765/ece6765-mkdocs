@@ -3,15 +3,13 @@ Evaluation Harness and Metrics
 
 The evaluation harness is course-provided. It is the single source of truth
 for both correctness and performance: every milestone number you report
-comes out of it, which is what makes results comparable across groups. This page describes what it does and
-how it scores you.
+comes out of it, which is what makes results comparable across groups. 
 
 !!! warning "Draft"
 
     The harness is under development. Endpoint details, exact metric
     definitions, and score thresholds marked _TBD_ below will be fixed
-    before Milestone 1 is released. The structure described here will not
-    change.
+    before Milestone 1 is released. 
 
 1. What the harness does
 --------------------------------------------------------------------------
@@ -29,8 +27,7 @@ how it scores you.
 The trace contains every request up front: all of them are available to your
 pipeline at t=0, with no arrival process and no rate limit. This models a
 server that has already been handed a full queue of work by an upstream
-scheduler. See [the execution
-model](ece6765-project-arch.md#21-the-execution-model) for the interface.
+scheduler. 
 
 Because everything is available immediately, **you own the scheduling
 decision entirely.** Nothing requires you to run requests in trace order.
@@ -38,18 +35,15 @@ decision entirely.** Nothing requires you to run requests in trace order.
 2. Dataset and answer quality
 --------------------------------------------------------------------------
 
-Queries and ground-truth answers come from **ClapNQ**, a long-form RAG
-benchmark built from Natural Questions, where answers are grounded in
-retrieved passages rather than extracted spans.
+Queries and ground-truth answers come from _TBD_
 
-Answer quality is scored against the ClapNQ reference answers using the
-benchmark's own metrics. _Exact metric set and the passing threshold: TBD._
+Answer quality is scored against _TBD_
 
 Two properties of the scoring matter for how you engineer the pipeline:
 
 **It is a gate, not a gradient.** Above the quality threshold, a better
 answer score does not improve your performance standing. Below it, your
-performance numbers do not count at all.
+performance numbers do not count.
 
 **Held-out traces exist.** The traces you develop against are public, but
 staff evaluation may use a trace you have not seen, drawn from the same
@@ -62,7 +56,7 @@ knowing whether your findings generalize is part of the work.
     Memoizing answers by query text, or precomputing results for the public
     traces, is not an optimization -- it is a way to score zero. Caching
     *within* the serving path (a warmed index, a reused KV cache across a
-    batch, a persistent connection pool) is fine and expected. The line is
+    batch, a persistent connection pool) is fine and encouraged. The line is
     whether your pipeline would still work on a query it has never seen.
 
 3. Performance metrics
@@ -83,52 +77,43 @@ delay of everything you ran before it. Two pipelines with identical
 throughput can have completely different latency distributions purely
 because of the order in which they drained the queue.
 
-### 3.2. Time to first token (TTFT)
+### 3.2. Throughput
 
-For each request: `first_token_ms`, the time from t=0 until its first token
-is emitted. Also reported as a distribution.
+Requests per second over the run: the number of requests in the trace
+divided by the wall-clock time from t=0 until the last one completes.
 
-The gap between TTFT and per-request latency tells you how much of a
-request's life was spent waiting versus generating. Aggressive batching
-tends to widen the queuing portion for the requests that lose the batching
-lottery.
+This is the headline throughput number, and the harness also measures that
+wall clock externally as a check on your self-reported timings.
 
-### 3.3. Makespan (total generation time)
-
-Wall-clock time from t=0 until the last request completes. This is the
-headline throughput number, and it is also measured externally by the
-harness as a check on your self-reported timings.
-
-Also reported normalized as requests per second over the run.
-
-!!! note "Max latency and makespan are the same number"
+!!! note "Max latency and throughput are the same measurement"
 
     Since every request is available at t=0, the request that finishes last
-    finishes at exactly the makespan. **p100 latency and total generation
-    time are mathematically identical here** -- they are not two independent
-    things to optimize.
+    finishes at exactly the total run time -- so **p100 latency and the run
+    time behind your throughput number are mathematically identical here**.
 
     The distinction that survives is between the *tail* and the *body* of
-    the distribution. Makespan tells you how long the whole workload took;
+    the distribution. Throughput tells you how long the whole workload took;
     p50 and p95 tell you how your scheduler distributed waiting across
     requests. A pipeline can improve p50 substantially -- by running short
-    requests first -- without moving its makespan at all, and it can improve
-    makespan while making p50 much worse. Those really are in tension.
-    Do not report them as though they were independent.
+    requests first -- without moving its throughput at all, and it can
+    improve throughput while making p50 much worse.
 
-### 3.4. What this means for optimization
+### 3.3. What this means for optimization
 
-The three metrics push in different directions, and reconciling them is the
-project:
+The two metrics push in different directions:
 
- - **Makespan** rewards keeping every resource busy: large batches, deep
+ - **Throughput** rewards keeping every resource busy: large batches, deep
    pipelining, high utilization, and no idle services.
  - **p50 latency** rewards finishing individual requests quickly once
    started, and running cheap requests early.
- - **TTFT** punishes holding a request while you wait for a batch to fill.
 
-Reporting all three, and being explicit about which you traded away, is
-expected in every milestone writeup.
+The tension between them is the whole point. Large batches raise throughput
+and make the requests that wait for a batch to fill wait longer; a schedule
+that runs cheap requests first improves p50 and can leave a service idle at
+the end of the run.
+
+Reporting both, and being explicit about which you traded away, is expected
+in every milestone writeup.
 
 4. Running the harness yourself
 --------------------------------------------------------------------------
@@ -155,10 +140,9 @@ not a result.
    variation across them, not a single number.
  - **Vary the trace.** A schedule tuned to one trace can fail on another
    with a different mix of query lengths. Check your results across the
-   provided traces, not just your favorite one.
+   provided traces, not just a single one.
  - **Discard warmup.** The first run after a service starts is not
-   representative. The harness supports a warmup pass; use it, and say in
-   your writeup that you did.
+   representative. The harness supports a warmup pass.
  - **Control the machine.** Another group's job is not running on your
    server, but your own stray processes might be. See the [Server and
    Measurement Guide](ece6765-server-guide.md) for a checklist.
@@ -175,9 +159,3 @@ query subset:
 ```bash
 % ece6765-harness check --trace traces/smoke.jsonl   # _exact CLI: TBD_
 ```
-
-Run this after every change. The most expensive failure mode in this project
-is spending a week optimizing a pipeline that has been silently returning
-degraded answers since Tuesday -- especially since most of the optimizations
-you will try (batching, quantization, reduced `k`, transport changes) are
-exactly the kind that can quietly damage answer quality.
