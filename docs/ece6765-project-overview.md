@@ -168,27 +168,31 @@ The reference implementation uses **plain HTTP with JSON** between services,
 deliberate: they are the obvious things to optimize, and we want you to
 measure the cost before you fix it.
 
-!!! note "This structure is a starting point, not a specification"
+!!! note "The four services are fixed; how they talk is the experiment"
 
-    We provide the four-service decomposition so that you have somewhere to
-    begin and so that the milestones have a shared vocabulary. **It is not a
-    constraint.** You may merge services, split them, or re-decompose the
-    pipeline entirely, at any point in the semester.
+    You keep these four services -- `frontend`, `embedding`, `vectordb`,
+    `generation` -- with these responsibilities, from M1 through M4.
+    **Merging, splitting, or re-decomposing the pipeline is not permitted.**
+    You may replicate a service, which is provisioning rather than
+    re-decomposition.
 
-    Exactly one thing is fixed: the trace-in / results-out contract and the
-    `/health` check, because a single evaluation harness has to drive every
-    group's pipeline, and because comparable numbers across groups are
-    what make a class-wide discussion of results possible. Everything
-    behind that interface -- process structure, transport, languages,
-    libraries, scheduling -- is yours.
+    What you *do* change, all semester, is **the communication between
+    them**: wire format, transport, framing, batching, concurrency,
+    connection management. That is the open design space in this project, and
+    it is a deeper one than it looks. Everything inside a service --
+    languages, libraries, algorithms, threading, memory layout -- is yours
+    as well.
 
-    Changing the structure is a design decision like any other, which means
-    it is held to the same standard: justify it and measure it against what
-    it replaced. See [changing the
-    decomposition](ece6765-project-arch.md#11-changing-the-decomposition).
+    The reason for the constraint is that a boundary you delete is a boundary
+    you can no longer measure. This project is about what it costs to move
+    data and coordinate work between components that are genuinely separate.
+    Keeping the four boundaries in place is also what lets the class compare
+    results at the end of the semester and have the numbers mean the same
+    thing. See [the decomposition is
+    fixed](ece6765-project-arch.md#11-the-decomposition-is-fixed).
 
 The full contract -- endpoint shapes, request and response schemas, and what
-is fixed versus suggested -- is on the [Reference Architecture and
+is fixed versus open -- is on the [Reference Architecture and
 API](ece6765-project-arch.md) page. Read it before Milestone 1.
 
 
@@ -233,10 +237,10 @@ in the [Server and Measurement Guide](ece6765-server-guide.md).
 | Property | Value |
 |----------|-------|
 | Packages (sockets) | 2 |
-| NUMA nodes | 2 -- one per package, 16 GB each, **32 GB total** |
+| NUMA nodes | 2 -- one per package, 16 GB each, 32 GB total |
 | Cores | 160 -- 80 per package, one thread per core |
 | L1 (per core) | 64 KB data + 64 KB instruction |
-| L2 (per core) | 1 MB, **private** |
+| L2 (per core) | 1 MB, private |
 | Shared LLC | 32 MB SLC per socket |
 | Storage | NVMe and HDD |
 | Network | 2 port 1Gbps Ethernet |

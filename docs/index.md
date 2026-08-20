@@ -17,6 +17,11 @@ microservices** -- frontend, embedding, vector DB, and generation -- and
 then spend the semester using it to find out how sensitive a real workload
 is to the system underneath it.
 
+Those four services stay fixed for the semester. What you change is
+everything underneath and between them -- in particular **how the services
+communicate**, which you will re-implement and re-measure from Milestone 2
+onward.
+
 The pipeline is the instrument, not the goal. What you are building is the
 ability to change something about a machine and explain what happened.
 
@@ -26,11 +31,13 @@ scheduler. Execution order is entirely yours, and per-request latency is
 measured from t=0, so it includes queuing as well as processing.
 
 Because the services have genuinely different resource profiles, the
-interesting decisions are about resource allocation and scheduling: for example, how many
-cores each service gets, where its memory lives, how requests are batched at
-each hop, what the interconnect costs, what order you drain the queue
-in, etc. Those are datacenter architecture decisions, and this project puts you
-on the other side of them.
+interesting decisions are about communication, resource allocation, and
+scheduling: for example, what protocol carries a dense vector between two
+services and what that costs, how many cores each service gets, where its
+memory lives, how requests are batched at each hop, what the interconnect
+costs, what order you drain the queue in, etc. Those are datacenter
+architecture decisions, and this project puts you on the other side of
+them.
 
 !!! danger "This is an open-ended graduate project"
 

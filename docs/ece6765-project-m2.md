@@ -30,7 +30,8 @@ By the end of this milestone your group should have:
  - A confirmed or refuted M1 bottleneck hypothesis, with the evidence.
  - At least **three** application-level optimizations implemented and
    measured independently, drawn from different categories in Section 2.3,
-   **including at least one scheduling change**.
+   **including at least one scheduling change and at least one change to the
+   communication stack between services**.
  - A quantified account of the throughput/tail-latency tradeoff your
    batching strategy makes.
  - A cumulative speedup over the M1 baseline, with an attribution of how
@@ -78,9 +79,10 @@ more interesting result than being right by luck.
 ### 2.3. Optimize
 
 Implement and measure **at least three** optimizations, from at least
-**two** of the following categories, at least one of which must be a
-scheduling change. Each must be measured independently
-against the M1 baseline, one change at a time.
+**two** of the following categories. Two of them are required: at least one
+**scheduling change**, and at least one change to the **communication stack**
+between services. Each must be measured independently against the M1
+baseline, one change at a time.
 
 #### Scheduling and request ordering
 
@@ -118,16 +120,27 @@ Things to work out: where batches are formed, how long you are willing to
 wait to fill one, whether batch size should differ per service, and what it
 does to TTFT. **Report the tradeoff curve, not just your chosen point.**
 
-#### Communication stack
+#### Communication stack (required)
 
-The `embedding → vectordb` path serializes full dense vectors as JSON. This
-is the obvious candidate. Options include gRPC with protobuf, a binary
-framing over raw sockets, Unix domain sockets or shared memory for
-colocated services, or simply a more efficient encoding over the existing
-HTTP transport.
+This is the axis the project is built around, and the [four-service
+decomposition](ece6765-project-arch.md#11-the-decomposition-is-fixed) is fixed
+precisely so that it stays measurable. You cannot make a hop cheaper by
+deleting it, so make it cheaper on its own terms.
+
+The path that carries full dense vectors as JSON is the obvious first
+candidate. Options include gRPC with protobuf, binary framing over raw
+sockets, Unix domain sockets or shared memory for colocated services,
+pipelined or streaming calls in place of synchronous request/response, or
+simply a more efficient encoding over the existing HTTP transport.
 
 Measure the cost you are removing before you remove it: how many bytes, how
-much CPU in serialization versus deserialization versus transport.
+much CPU in serialization versus deserialization versus transport. A protocol
+change that you cannot account for in those terms is a guess that happened to
+work.
+
+Keep the old implementation selectable. You will want to re-run against it in
+M3 and M4, and a protocol you can switch at launch time is worth far more
+than one you replaced in place.
 
 #### Parallelism and concurrency
 
@@ -202,7 +215,8 @@ containing:
 |-----------|--------|-------------------------|
 | Profiling rigor | _TBD_ | Counters collected correctly under load; conclusions follow from data |
 | Characterization quality | _TBD_ | A defensible, specific claim about what limits each service |
-| Optimization breadth | _TBD_ | Three-plus optimizations across two-plus categories, measured in isolation |
+| Optimization breadth | _TBD_ | Three-plus optimizations across two-plus categories, including the two required ones, measured in isolation |
+| Communication stack | _TBD_ | Protocol change justified by measured serialization/transport cost, not assumed |
 | Explanation | _TBD_ | Results attributed to architectural causes, not just reported |
 | Batching analysis | _TBD_ | The throughput/latency tradeoff is quantified, not asserted |
 | Scheduling analysis | _TBD_ | Effect of execution order on the latency distribution measured and explained |

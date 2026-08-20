@@ -1,28 +1,34 @@
 Reference Architecture and API
 ==========================================================================
 
-This page describes **one fixed contract and one suggested starting
-structure**, and it is important not to confuse them.
+This page describes **what is fixed for the semester and what is yours to
+change**, and it is important not to confuse them.
 
-The **fixed part** is the external interface: your pipeline
+Two things are fixed. The first is the external interface: your pipeline
 consumes a **trace file** of requests and writes a results file with answers
-and per-request timings. A single evaluation harness has to drive every
-group's pipeline, and because comparable numbers across groups make a
-class-wide discussion of results possible. That interface, plus a `/health`
-readiness check, is what cannot change. That is the whole of what is
-fixed.
+and per-request timings, and it exposes a `/health` readiness check. A single
+evaluation harness has to drive every group's pipeline, and comparable
+numbers across groups are what make a class-wide discussion of results
+possible.
 
-The **suggested part** is everything else on this page: the four-service
-decomposition, the internal endpoints, the transport, the repository layout.
-That is a reference structure we provide so you have somewhere to start, not
-a specification you must conform to. **You may change any of it, including
-the decomposition itself**, at any point in the semester.
+The second is the **four-service decomposition** -- `frontend`, `embedding`,
+`vectordb`, and `generation`. You keep these four services, with these
+responsibilities, from M1 through M4. You may not merge them, split them, or
+re-decompose the pipeline. See Section 1.1.
+
+What is open -- and what this project is actually about -- is **how those
+four services talk to each other**. Transport, serialization, framing,
+batching, concurrency, connection management: all of it is yours, and
+changing it is the primary experimental axis of the semester. Everything
+*inside* a service is yours too: languages, libraries, algorithms, threading,
+memory layout.
 
 1. Services
 --------------------------------------------------------------------------
 
-The reference structure is four services, running as separate processes and
-communicating over HTTP on localhost.
+Your pipeline is four services, running as separate processes. In M1 they
+communicate over HTTP on localhost; what they communicate over after that is
+up to you.
 
 | Service | Responsibility | Dominant resource |
 |---------|----------------|-------------------|
@@ -43,36 +49,54 @@ a tiny working set, the other is memory-bound over a large one. Splitting
 them lets you provision each independently, at the cost of a serialization
 hop between them.
 
-That is a tradeoff, not a law -- and you are free to make it differently.
+That serialization hop is not an accident of the reference design. It is the
+thing you will spend the semester attacking.
 
-### 1.1. Changing the decomposition
+### 1.1. The decomposition is fixed
 
-You may merge services, split them further, or re-decompose the pipeline
-entirely. Some things groups might reasonably try:
+**These four services, with these responsibilities, are a constraint for the
+whole semester.** You may not fuse embedding into vectordb, split generation
+into prefill and decode, absorb the frontend's scheduling into another
+service, or otherwise re-cut the boundaries.
 
- - **Fusing embedding and vectordb** to eliminate the hop that serializes
-   full dense vectors -- at the cost of no longer being able to scale
-   compute and memory independently.
- - **Splitting generation** into prefill and decode, which have quite
-   different resource profiles.
- - **Splitting the frontend** into request admission and orchestration.
- - **Replicating one service** many times behind the others while leaving
-   the rest singular.
+Concretely, for the whole semester:
 
-!!! note "Re-decomposition is a design decision, so justify and measure it"
+ - Each of the four services remains a **separately addressable service**
+   that the other services reach through a defined interface.
+ - Each keeps the responsibility given in the table above. Embedding encodes
+   text; vectordb searches the index; generation produces answer text; the
+   frontend loads the trace, schedules, and orchestrates.
+ - Work does not migrate across a boundary to make the boundary cheaper. Do
+   not, for example, move nearest-neighbor search into the embedding service
+   to avoid shipping vectors.
 
-    Changing the structure is allowed and can be a strong result. It is not
-    a free win, and it is not exempt from the standard the rest of the
-    project is held to: if you fuse two services, show what it bought you and
-    what it cost, measured against the version that did not. "We merged them
-    and it got faster" is not a finding. "We merged them, which removed 40%
-    of frontend CPU spent in serialization but cost us the ability to scale
-    the index independently, net X" is.
+You **may replicate** a service -- several instances of `embedding` behind
+the frontend, a sharded `vectordb` -- because that is provisioning, not
+re-decomposition, and the M3 scalability study depends on your being able to
+do it. Replicas of a service still present that service's interface.
 
-    One caveat worth thinking about before you fuse anything: the structure
-    you end up with is also the structure you have to *reason about*. Groups
-    that collapse the pipeline early often find that their profiling gets
-    harder, because the boundaries where they used to measure are gone.
+!!! note "Why we are constraining this"
+
+    Fusing services is a real technique and in a different course it would be
+    a legitimate answer. It is excluded here for two reasons.
+
+    The first is that it is the wrong lesson for this project. Once two
+    services are fused, the communication cost between them stops being a
+    thing you can measure -- the boundary where you used to observe it is
+    gone. This project is about what it costs to move data and coordinate
+    work between components that are genuinely separate, which is the
+    situation an actual datacenter operator is in. Deleting the boundary
+    answers a question nobody asked you.
+
+    The second is comparability. Four fixed services with fixed
+    responsibilities mean that when the class compares results at the end of
+    the semester, "the embedding service is memory-bound at batch size 64"
+    means the same thing in every group's report. That is what makes a
+    class-wide discussion possible.
+
+    The freedom you might have spent on the decomposition is instead spent on
+    the interface between the pieces, which is a considerably deeper design
+    space than it first appears. See Section 3.
 
 2. The Fixed Interface: Trace In, Results Out
 --------------------------------------------------------------------------
@@ -179,13 +203,29 @@ How you aggregate readiness across however many processes you end up with is
 your problem. Reporting healthy before you actually are will show up as
 inexplicably terrible numbers, because that work moves inside the clock.
 
-3. Internal interfaces (suggested)
+3. Internal interfaces: the semester's experiment
 --------------------------------------------------------------------------
 
-The reference structure wires the services together with **plain HTTP and
-JSON bodies**, one query at a time. This is intentionally the naive choice:
-it is easy to get working in M1 and it leaves the obvious wins on the table
-for M2.
+The decomposition is fixed; the way the four services communicate is not.
+This section is the open one, and it is where the design work of this project
+actually lives.
+
+What is fixed here is only the **semantics** of each hop -- which service
+needs what data from which other service:
+
+ - the frontend needs a **vector** for a query from `embedding`
+ - the frontend needs **passages** for a vector from `vectordb`
+ - the frontend needs an **answer** for a query plus passages from
+   `generation`
+
+Everything about *how* that data crosses the boundary is yours: the wire
+format, the transport, the framing, how many requests travel at once, who
+initiates, and whether the call blocks.
+
+The reference implementation wires the services together with **plain HTTP
+and JSON bodies**, one query at a time. This is intentionally the naive
+choice: it is easy to get working in M1, and it leaves the obvious wins on
+the table for the rest of the semester.
 
 ```
 frontend ──POST /embed────────▶ embedding    {"texts": [...]}  →  {"vectors": [[...]]}
@@ -195,36 +235,58 @@ frontend ──POST /generate─────▶ generation   {"query": "...", "p
                                              →  {"answer": "..."}
 ```
 
-You are free to replace any of this. Things groups typically end up
-changing:
+**Replace any of it.** The axes available to you, roughly in the order
+groups tend to find them:
 
  - **Serialization.** JSON arrays of floats are an expensive way to move
-   embedding vectors. The `embedding → vectordb` path is the obvious first
-   casualty.
- - **Transport.** gRPC, raw sockets, shared memory, Unix domain sockets.
+   embedding vectors. The `frontend ↔ embedding ↔ vectordb` path is the
+   obvious first casualty. Binary encodings, protobuf/FlatBuffers, or a raw
+   length-prefixed float buffer.
+ - **Transport.** gRPC, raw TCP sockets, Unix domain sockets, shared memory
+   rings for colocated services. Each has a different cost structure and a
+   different failure mode.
  - **Batching.** The reference implementation processes batch size 1 at
    every hop. Constructing batches at service boundaries is one of the
    largest available wins, and it trades throughput against tail latency in
    a way you should be able to quantify.
- - **Concurrency.** Where requests queue, how many in flight, how work is
-   distributed across cores within a service.
+ - **Concurrency and call structure.** Synchronous request/response versus
+   pipelined or streaming calls; how many requests are in flight per hop;
+   whether generation can begin before retrieval fully completes.
+ - **Connection management.** Pooling, keep-alive, how many connections per
+   service pair, and what happens to tail latency when the pool is too small.
+ - **Data movement.** Whether passages are copied through the frontend at all
+   or passed by reference, and who owns the buffer.
 
-!!! tip "Write the template so it can change"
+Note that these interact. A binary format that halves serialization cost may
+change the batch size at which batching stops paying; a shared-memory ring
+may make copies free but pin two services to the same NUMA node, which M3
+will make you care about.
 
-    In M1 you are building the thing you will spend three more milestones
-    modifying. Put the transport behind an interface now -- a client class
-    per service with a single implementation -- so that swapping HTTP for
-    gRPC in M2 is a new implementation rather than a rewrite. Groups that
-    hard-code `requests.post(...)` calls throughout the frontend pay for it
-    later.
+!!! tip "Write the template so the protocol can change"
+
+    This matters more here than it would in a project where the structure was
+    negotiable. The decomposition is fixed precisely so that the boundary
+    stays a thing you can measure and swap -- so build the boundary as a
+    seam from day one.
+
+    Put the transport behind an interface in M1: a client class per service
+    with a single implementation, so that swapping HTTP for gRPC later is a
+    new implementation rather than a rewrite. Groups that hard-code
+    `requests.post(...)` calls throughout the frontend pay for it every
+    milestone after M1, and they pay most in M4 when they want to combine
+    three protocol choices and cannot.
+
+    Being able to select the protocol from a config file -- and therefore
+    run the same trace across protocols back to back -- is worth the hour it
+    costs you in M1.
 
 4. Repository layout
 --------------------------------------------------------------------------
 
 Milestone writeups are collected automatically, so **the four `mN.md` files
-must sit at the repo root with exactly those names**. The rest of the layout
-below is a suggestion that will stop making sense the moment you change the
-decomposition -- reorganize it as you like.
+must sit at the repo root with exactly those names**. Because the four
+services are fixed, the `src/` layout below should stay recognizable all
+semester; the rest is a suggestion you can reorganize as you like.
 
 ```
 project-gNN/
@@ -237,7 +299,9 @@ project-gNN/
     embedding/
     vectordb/
     generation/
-    common/              shared client/transport code
+    common/              shared client/transport code -- one client class
+                         per service, with a selectable protocol
+                         implementation behind it
   config/                configuration for each experiment you run
   scripts/               launch, sweep, and measurement scripts
   results/               small summarized result files (CSV/JSON)
