@@ -13,13 +13,13 @@ possible.
 
 The second is the **four-service decomposition** -- `frontend`, `embedding`,
 `vectordb`, and `generation`. You keep these four services, with these
-responsibilities, from M1 through M4. You may not merge them, split them, or
-re-decompose the pipeline. See Section 1.1.
+responsibilities, throughout the semester. You may not merge them, split them, or
+re-decompose the pipeline. 
 
-What is open -- and what this project is actually about -- is **how those
+What is open (and what this project is actually about) is **how those
 four services talk to each other**. Transport, serialization, framing,
 batching, concurrency, connection management: all of it is yours, and
-changing it is the primary experimental axis of the semester. Everything
+changing it is one of the experimental axes of the semester. Everything
 *inside* a service is yours too: languages, libraries, algorithms, threading,
 memory layout.
 
@@ -30,73 +30,32 @@ Your pipeline is four services, running as separate processes. In M1 they
 communicate over HTTP on localhost; what they communicate over after that is
 up to you.
 
-| Service | Responsibility | Dominant resource |
-|---------|----------------|-------------------|
-| `frontend` | Loads the trace, schedules and orchestrates work across the other three, writes results | Scheduling / request overhead |
-| `embedding` | Encodes query text into a dense vector | CPU, SIMD, cache |
-| `vectordb` | Nearest-neighbor search over the passage index | Memory capacity and bandwidth |
-| `generation` | Produces the answer text from query + retrieved passages | Memory bandwidth, sequential compute |
+| Service | Responsibility |
+|---------|----------------|
+| `frontend` | Loads the trace, schedules and orchestrates work across the other three, writes results |
+| `embedding` | Encodes query text into a dense vector | 
+| `vectordb` | Nearest-neighbor search over the passage index | 
+| `generation` | Produces the answer text from query + retrieved passages | 
 
 Note that under the trace-driven model the frontend's job is larger than it
 looks. It is not just a proxy: it is the **scheduler** for the whole
-workload, and it owns the decision of what order several thousand queued
-requests get executed in. That decision is worth more than most of the
-micro-optimizations you will make.
-
-They are split this way because they scale differently. Embedding and
-vector DB in particular look adjacent but are not: one is compute-bound over
-a tiny working set, the other is memory-bound over a large one. Splitting
-them lets you provision each independently, at the cost of a serialization
-hop between them.
-
-That serialization hop is not an accident of the reference design. It is the
-thing you will spend the semester attacking.
+workload, and it owns the decision of what order the queued
+requests get executed in. You can start from a first-come-first-serve 
+scheduling algorithm and try other scheduling algorithms later on.
 
 ### 1.1. The decomposition is fixed
 
 **These four services, with these responsibilities, are a constraint for the
-whole semester.** You may not fuse embedding into vectordb, split generation
+whole semester.** Unless explicitly mentioned that you are allowed, you may 
+not fuse embedding into vectordb, split generation
 into prefill and decode, absorb the frontend's scheduling into another
 service, or otherwise re-cut the boundaries.
 
-Concretely, for the whole semester:
-
- - Each of the four services remains a **separately addressable service**
-   that the other services reach through a defined interface.
- - Each keeps the responsibility given in the table above. Embedding encodes
-   text; vectordb searches the index; generation produces answer text; the
-   frontend loads the trace, schedules, and orchestrates.
- - Work does not migrate across a boundary to make the boundary cheaper. Do
-   not, for example, move nearest-neighbor search into the embedding service
-   to avoid shipping vectors.
-
 You **may replicate** a service -- several instances of `embedding` behind
 the frontend, a sharded `vectordb` -- because that is provisioning, not
-re-decomposition, and the M3 scalability study depends on your being able to
-do it. Replicas of a service still present that service's interface.
-
-!!! note "Why we are constraining this"
-
-    Fusing services is a real technique and in a different course it would be
-    a legitimate answer. It is excluded here for two reasons.
-
-    The first is that it is the wrong lesson for this project. Once two
-    services are fused, the communication cost between them stops being a
-    thing you can measure -- the boundary where you used to observe it is
-    gone. This project is about what it costs to move data and coordinate
-    work between components that are genuinely separate, which is the
-    situation an actual datacenter operator is in. Deleting the boundary
-    answers a question nobody asked you.
-
-    The second is comparability. Four fixed services with fixed
-    responsibilities mean that when the class compares results at the end of
-    the semester, "the embedding service is memory-bound at batch size 64"
-    means the same thing in every group's report. That is what makes a
-    class-wide discussion possible.
-
-    The freedom you might have spent on the decomposition is instead spent on
-    the interface between the pieces, which is a considerably deeper design
-    space than it first appears. See Section 3.
+re-decomposition. In fact in some of the milestones you should do this to 
+improve the scalability of the application. Note that replicas of a service 
+still present that service's interface.
 
 2. The Fixed Interface: Trace In, Results Out
 --------------------------------------------------------------------------
@@ -116,29 +75,20 @@ already assigned a batch of work to this server, and the server has a full
 queue in front of it from the moment it starts. Everything in the trace is
 sitting there, waiting, at t=0.
 
-The consequence is worth stating plainly, because it drives most of the
-design decisions in this project: **you have complete freedom over execution
-order.** Nothing forces you to process requests in trace order, one at a
-time, or as they appear. You may reorder, group, batch, and schedule the
-entire workload however you like. How you use that freedom is most of what
-separates a fast pipeline from a slow one.
-
 ### 2.2. Trace file format
 
 _Exact schema TBD -- fixed before M1 is released._ The working format is
 newline-delimited JSON, one request per line:
 
 ```json
-{"id": "q-00001", "text": "what is the capital of australia"}
-{"id": "q-00002", "text": "who wrote the tell tale heart"}
+{"id": "q-00001", "Q": "who is the prime minister of Japan in August 2026?", "A": "Sanae Takaichi"}
+{"id": "q-00002", "Q": "What was the average temperature in Ithaca in August 2026?", "A": "70 degrees fahrenheit"}
 ```
 
  - `id` is an opaque unique string. Results must carry it back unchanged, so
    answers can be attributed to requests.
  - `text` is the raw query.
- - Traces range from a handful of requests to several thousand. **Do not
-   assume a bound**, and do not assume the whole trace fits comfortably
-   anywhere you might want to put it.
+ - Traces range from a handful of requests to several thousand. 
 
 ### 2.3. Invocation
 
@@ -154,7 +104,7 @@ command, and stops when your process exits having written the results file.
 
 Everything expensive that can happen before t=0 should happen before t=0:
 loading models, building or memory-mapping the index, spawning workers,
-opening connections. That is what `/health` is for -- see Section 2.5.
+opening connections. That is what `/health` is for.
 Reading and parsing the trace itself happens **after** t=0 and is on your
 clock.
 
@@ -163,10 +113,12 @@ clock.
 One record per request. _Exact schema TBD._
 
 ```json
-{"id": "q-00001", "answer": "Canberra is ...", "first_token_ms": 412.7, "last_token_ms": 1893.2}
+{"id": "q-00001", "answer": "Sanae Takaichi", "start_time_ms": 100.8, "first_token_ms": 412.7, "last_token_ms": 1893.2}
 ```
 
  - `answer` -- the generated text, scored for quality by the harness.
+ - `start_time_ms` -- milliseconds from **t=0** to when the request is 
+   scheduled for execution by the frontend.
  - `first_token_ms` -- milliseconds from **t=0** to the first token emitted
    for this request.
  - `last_token_ms` -- milliseconds from **t=0** to the last token emitted for

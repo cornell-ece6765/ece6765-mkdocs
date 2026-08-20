@@ -53,10 +53,6 @@ different resource profiles chained together behind a single request:
  - **Generation** is bound by both compute and memory bandwidth.
  - **Frontend** is I/O-bound and sensitive to request ordering.
 
-That variety is the point. The same knob moves these four components in
-different directions and by different amounts, so every configuration change
-you make becomes a small experiment with four simultaneous answers. 
-
 
 What kind of project this is
 --------------------------------------------------------------------------
@@ -168,38 +164,32 @@ The reference implementation uses **plain HTTP with JSON** between services,
 deliberate: they are the obvious things to optimize, and we want you to
 measure the cost before you fix it.
 
-!!! note "The four services are fixed; how they talk is the experiment"
+!!! note "The four services are fixed"
 
     You keep these four services -- `frontend`, `embedding`, `vectordb`,
-    `generation` -- with these responsibilities, from M1 through M4.
+    `generation` -- with these functionalities throughout the semester.
     **Merging, splitting, or re-decomposing the pipeline is not permitted.**
     You may replicate a service, which is provisioning rather than
     re-decomposition.
 
-    What you *do* change, all semester, is **the communication between
+    What you can change, is **the communication between
     them**: wire format, transport, framing, batching, concurrency,
-    connection management. That is the open design space in this project, and
-    it is a deeper one than it looks. Everything inside a service --
-    languages, libraries, algorithms, threading, memory layout -- is yours
-    as well.
+    connection management. That is the open design space that we explore in this project. 
 
-    The reason for the constraint is that a boundary you delete is a boundary
-    you can no longer measure. This project is about what it costs to move
-    data and coordinate work between components that are genuinely separate.
-    Keeping the four boundaries in place is also what lets the class compare
-    results at the end of the semester and have the numbers mean the same
-    thing. See [the decomposition is
+    The reason for the constraint is that service boundaries are often fixed at
+    application development time, and are not something a performance engineer
+    can change. See [the decomposition is
     fixed](ece6765-project-arch.md#11-the-decomposition-is-fixed).
 
 The full contract -- endpoint shapes, request and response schemas, and what
 is fixed versus open -- is on the [Reference Architecture and
-API](ece6765-project-arch.md) page. Read it before Milestone 1.
+API](ece6765-project-arch.md) page.
 
 
 A note on the end of the semester
 --------------------------------------------------------------------------
 
-The last Milestone is currently planned to include a **performance bake-off**:
+The last Milestone is currently planned to include a **performance contest**:
 every group runs the same trace on identical servers and the results are
 compared. 
 
@@ -242,7 +232,7 @@ in the [Server and Measurement Guide](ece6765-server-guide.md).
 | L1 (per core) | 64 KB data + 64 KB instruction |
 | L2 (per core) | 1 MB, private |
 | Shared LLC | 32 MB SLC per socket |
-| Storage | NVMe and HDD |
+| Storage | NVMe SSD |
 | Network | 2 port 1Gbps Ethernet |
 
 
