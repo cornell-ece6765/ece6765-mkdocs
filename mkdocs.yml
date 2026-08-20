@@ -4,6 +4,7 @@
 
 site_name:   'ECE 6765 Modern Datacenter Architecture'
 site_author: 'Mohammad Alian'
+site_url:    'https://cornell-ece6765.github.io/ece6765-mkdocs/'
 
 # Repository
 

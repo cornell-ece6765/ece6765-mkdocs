@@ -1,0 +1,6 @@
+# Built site (produced by `mkdocs build`; deployed from the gh-pages branch)
+site/
+
+# Local preview environment
+.venv/
+__pycache__/

@@ -7,8 +7,8 @@ Source for the ECE 6765 Modern Datacenter Architecture documentation site
 Status
 ------
 
-This repo is **private** and the site is **not published yet**. Build and
-preview it locally while the project handouts are still being written.
+This repo is **public** and the site is published at
+<https://cornell-ece6765.github.io/ece6765-mkdocs/>.
 
 Local preview
 -------------
@@ -43,16 +43,18 @@ which is worth running before you publish.
 Publishing
 ----------
 
-`.github/workflows/run-mkdocs.yml` is set to `workflow_dispatch` (manual)
-because GitHub Pages is not available on private repos under the org's
-Free plan. When the site is ready to release:
+The site is deployed to GitHub Pages from the `gh-pages` branch. To publish
+the current state of `main`:
 
 ```bash
-gh repo edit cornell-ece6765/ece6765-mkdocs --visibility public
+source .venv/bin/activate
+mkdocs gh-deploy --strict
 ```
 
-then uncomment the `push:` trigger in the workflow and push. The site will
-be served at <https://cornell-ece6765.github.io/ece6765-mkdocs>.
+That builds `docs/` and force-pushes the result to `gh-pages`; GitHub Pages
+serves it at <https://cornell-ece6765.github.io/ece6765-mkdocs/> within a
+minute or so. Never edit `gh-pages` by hand -- it is regenerated on every
+deploy.
 
 Layout
 ------
