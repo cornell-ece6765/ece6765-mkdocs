@@ -35,7 +35,7 @@ decision entirely.** Nothing requires you to run requests in trace order.
 2. Dataset and answer quality
 --------------------------------------------------------------------------
 
-Queries and ground-truth answers come from _TBD_
+Queries and staff-held ground-truth answers come from **ClapNQ**.
 
 Answer quality is scored against _TBD_
 

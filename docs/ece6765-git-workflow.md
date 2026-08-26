@@ -64,7 +64,7 @@ project-gNN/
   m4.md              milestone 4 submission
   img/               figures referenced from the milestone files
   src/               your code
-  data/              small result files (CSV, JSON) -- not raw datasets
+  results/           small result files (CSV, JSON) -- not raw datasets
   README-data.md     where large datasets live and how to regenerate them
 ```
 
