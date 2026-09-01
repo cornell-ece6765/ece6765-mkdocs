@@ -4,7 +4,8 @@ Reference Architecture and API
 This page describes **what is fixed for the semester and what is yours to
 change**, and it is important not to confuse them.
 
-Two things are fixed. The first is the external interface: your pipeline
+Three things are fixed for the semester. The first is the external interface:
+your pipeline
 consumes a **trace file** of requests and writes a results file with answers
 and per-request timings, and it exposes a `/health` readiness check. A single
 evaluation harness has to drive every group's pipeline, and comparable
@@ -16,12 +17,21 @@ The second is the **four-service decomposition** -- `frontend`, `embedding`,
 responsibilities, throughout the semester. You may not merge them, split them, or
 re-decompose the pipeline. 
 
+The third is the **workload**: all groups use the course-specified embedding
+model, generation model, and ClapNQ dataset. These are fixed so that the
+comparison is about systems rather than differences in models or data.
+
+M1 additionally fixes the baseline communication protocol: plain HTTP with
+JSON, batch size 1, and requests processed in trace order. This is an M1-only
+constraint; after M1, the communication protocol and scheduling policy are
+part of the experimental design space.
+
 What is open (and what this project is actually about) is **how those
 four services talk to each other**. Transport, serialization, framing,
 batching, concurrency, connection management: all of it is yours, and
 changing it is one of the experimental axes of the semester. Everything
-*inside* a service is yours too: languages, libraries, algorithms, threading,
-memory layout.
+*inside* a service, except the fixed models and dataset, is yours too:
+languages, libraries, algorithms, threading, memory layout.
 
 1. Services
 --------------------------------------------------------------------------
@@ -81,13 +91,14 @@ _Exact schema TBD -- fixed before M1 is released._ The working format is
 newline-delimited JSON, one request per line:
 
 ```json
-{"id": "q-00001", "Q": "who is the prime minister of Japan in August 2026?", "A": "Sanae Takaichi"}
-{"id": "q-00002", "Q": "What was the average temperature in Ithaca in August 2026?", "A": "70 degrees fahrenheit"}
+{"id": "q-00001", "Q": "who is the prime minister of Japan in August 2026?"}
+{"id": "q-00002", "Q": "What was the average temperature in Ithaca in August 2026?"}
 ```
 
  - `id` is an opaque unique string. Results must carry it back unchanged, so
    answers can be attributed to requests.
- - `text` is the raw query.
+ - `Q` is the raw query. Ground-truth answers are held by the evaluation
+   harness and are not included in the trace given to the pipeline.
  - Traces range from a handful of requests to several thousand. 
 
 ### 2.3. Invocation

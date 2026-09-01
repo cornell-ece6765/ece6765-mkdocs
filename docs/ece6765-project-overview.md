@@ -66,8 +66,8 @@ what you must report**. None of them tell you how.
 You will be given a **starter code template**. It is not a solution and it
 is not a working application -- it is a skeleton that shows the shape of the
 interfaces. Making it into something that runs, and then something that runs 
-well, is entirely on you. There is no reference implementation, no 
-step-by-step walkthrough, and no provided debugging path.
+well, is entirely on you. There is no step-by-step walkthrough or provided
+debugging path.
 
 Choosing an implementation strategy, finding out why your service deadlocks
 under load, discovering that a library has no ARM64 build and deciding what
