@@ -7,17 +7,47 @@ numbers mean something.
 
 !!! warning "Draft"
 
-    Access details, hostnames, the reservation mechanism, and the exact
-    tooling available are _TBD_ and will be filled in before Milestone 1 is
-    released. 
+    The reservation mechanism and the exact tooling available are _TBD_ and
+    will be filled in before Milestone 1 is released. 
 
 1. Access
 --------------------------------------------------------------------------
 
- - **Hostnames and accounts:** _TBD_
- - **Authentication:** _TBD_
- - **VPN requirement:** _TBD_
- - **Reservation / scheduling:** _TBD_
+Each group has its own dedicated server. The hostname follows your group
+number, zero-padded to two digits:
+
+```
+altra-<NN>.ece.cornell.edu        NN = 01 through 15
+```
+
+Log in over SSH with your NetID and your Cornell password:
+
+```bash
+% ssh <netid>@altra-<NN>.ece.cornell.edu
+```
+
+So a student with NetID `ma2222` in group 1 would run:
+
+```bash
+% ssh ma2222@altra-01.ece.cornell.edu
+```
+
+Whether the servers are reachable from off campus without the Cornell VPN
+is _TBD_. If you do need it, set it up ahead of time rather than at a
+deadline: see [CU VPN](https://it.cornell.edu/cuvpn) at IT@Cornell, which
+has per-platform instructions for Windows, macOS, Linux, and mobile. It
+requires the Cisco Secure Client and Two-Step Login, and a session expires
+after 10 hours, so expect to reconnect during long experiments.
+
+**If you cannot log in, contact the course staff immediately.** Do not wait
+until the milestone deadline to discover you have no access. Before you
+write to us, rule out the three things that account for nearly every failed
+login:
+
+ - Your **NetID** is spelled correctly.
+ - The **hostname** is correct -- your group number, with the leading zero
+   for groups 1 through 9, and the full `.ece.cornell.edu` suffix.
+ - Your **password** is your Cornell password, typed correctly.
 
 All groups have identical hardware, so your numbers are directly comparable
 with the rest of the class. If another group measures something different

@@ -23,7 +23,7 @@ If you have not used GitHub from the command line before, first make sure
 you have an SSH key registered with your GitHub account:
 
 ```bash
-% ls ~/.ssh/id_ed25519.pub || ssh-keygen -t ed25519 -C "netid@cornell.edu"
+% ls ~/.ssh/id_ed25519.pub || ssh-keygen -t ed25519
 % cat ~/.ssh/id_ed25519.pub
 ```
 
@@ -108,9 +108,13 @@ Then open a pull request on GitHub and have another group member review it
 before merging to `main`. This is also the easiest way for your group to
 keep track of what everyone else is doing.
 
-**Split the writeup by section.** Merge conflicts in prose are more painful
-than in code. Agree on who owns which section of `mN.md`, or draft sections
-in separate files and concatenate them near the deadline.
+**Divide the work by file, not by line.** Two people editing the same file
+at the same time is how conflicts happen. Agree up front on who owns which
+service, script, or section, and keep those in separate files where you
+can. This matters most for prose -- merge conflicts in a writeup are more
+painful to resolve than in code -- so either assign sections of `mN.md` to
+individual authors or draft them separately and combine them near the
+deadline.
 
 4. How Submissions Are Collected
 --------------------------------------------------------------------------

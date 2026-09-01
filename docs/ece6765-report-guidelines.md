@@ -63,6 +63,12 @@ Figures do most of the work in a systems paper. Treat them accordingly.
 ```
 
  - Do not screenshot a table of numbers. Write it as a Markdown table.
+ - **Let an AI assistant do the formatting.** Turning raw benchmark output
+   into a well-aligned Markdown table, or a pile of numbers into plotting
+   code, is exactly the kind of mechanical work these tools are good at.
+   Paste in the output and ask. Check the result against the source numbers
+   -- transcription errors are yours either way -- and see [Use of AI
+   Assistants](#7-use-of-ai-assistants).
 
 4. Reporting Measurements
 --------------------------------------------------------------------------
@@ -82,8 +88,6 @@ This is the section where most projects lose points, so read it carefully.
  - For latency, report a **distribution**, not just a mean. Tail latency is
    a central theme of this course; p50/p99/p99.9 is the normal reporting
    convention.
- - Distinguish what you **measured** from what you **modeled** or
-   **simulated**. Both are legitimate; conflating them is not.
  - Identify **confounds** you could not eliminate. Noisy neighbors, thermal
    throttling, cold caches, and background daemons are all fair game, and
    naming them is a sign of rigor rather than weakness.
@@ -94,15 +98,29 @@ This is the section where most projects lose points, so read it carefully.
 5. Citations
 --------------------------------------------------------------------------
 
-Cite inline with a bracketed number and list references at the end:
+Cite inline with a short **author-year key**, and list references under the
+same keys at the end:
 
 ```markdown
-Tail latency compounds across fan-out services [1].
+Tail latency compounds across fan-out services [Dean13].
 
 ## References
 
-[1] J. Dean and L. A. Barroso. "The Tail at Scale."
-    Communications of the ACM, 56(2):74-80, 2013.
+**[Dean13]** J. Dean and L. A. Barroso. "The Tail at Scale."
+Communications of the ACM, 56(2):74-80, 2013.
+```
+
+Do not number your references. Numbers have to be renumbered by hand every
+time you insert a source, and in a report three people are editing at once
+the numbering will silently go wrong. Keys never change, so a citation is
+correct wherever it ends up.
+
+If you want citations to be clickable on GitHub, define each key once as a
+link at the bottom of the file and the inline `[Dean13]` becomes a link
+automatically:
+
+```markdown
+[Dean13]: https://doi.org/10.1145/2408776.2408794
 ```
 
 Include authors, title, venue, and year. A bare URL is acceptable only for
@@ -114,16 +132,13 @@ software and documentation that has no paper.
  - Prefer the active voice and concrete subjects. "We ran the workload on
    16 cores" beats "the workload was run."
  - Define every acronym on first use.
- - Do not pad. A tight three pages is better than a loose six, and the
-   staff can tell the difference.
  - Proofread. Run a spell checker over the file before you commit it.
 
 7. Use of AI Assistants
 --------------------------------------------------------------------------
 
-AI coding tools are **expected** in this project, not merely tolerated. A
-four-service pipeline plus a semester of measurement work is more than a
-group of three can hand-write, and using these tools well is a professional
+AI coding tools are **expected** in this project, not merely tolerated. 
+Using these tools well is a professional
 skill this course assumes you have or will acquire on your own.
 
 Using them well includes knowing where they fail. In this project that
