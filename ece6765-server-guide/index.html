@@ -1024,16 +1024,35 @@ tools available for profiling, and the measurement hygiene that makes your
 numbers mean something.</p>
 <div class="admonition warning">
 <p class="admonition-title">Draft</p>
-<p>Access details, hostnames, the reservation mechanism, and the exact
-tooling available are <em>TBD</em> and will be filled in before Milestone 1 is
-released. </p>
+<p>The reservation mechanism and the exact tooling available are <em>TBD</em> and
+will be filled in before Milestone 1 is released. </p>
 </div>
 <h2 id="1-access">1. Access<a class="headerlink" href="#1-access" title="Permanent link">&para;</a></h2>
+<p>Each group has its own dedicated server. The hostname follows your group
+number, zero-padded to two digits:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>altra-&lt;NN&gt;.ece.cornell.edu        NN = 01 through 15
+</span></code></pre></div>
+<p>Log in over SSH with your NetID and your Cornell password:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>%<span class="w"> </span>ssh<span class="w"> </span>&lt;netid&gt;@altra-&lt;NN&gt;.ece.cornell.edu
+</span></code></pre></div>
+<p>So a student with NetID <code>ma2222</code> in group 1 would run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>%<span class="w"> </span>ssh<span class="w"> </span>ma2222@altra-01.ece.cornell.edu
+</span></code></pre></div>
+<p>Whether the servers are reachable from off campus without the Cornell VPN
+is <em>TBD</em>. If you do need it, set it up ahead of time rather than at a
+deadline: see <a href="https://it.cornell.edu/cuvpn">CU VPN</a> at IT@Cornell, which
+has per-platform instructions for Windows, macOS, Linux, and mobile. It
+requires the Cisco Secure Client and Two-Step Login, and a session expires
+after 10 hours, so expect to reconnect during long experiments.</p>
+<p><strong>If you cannot log in, contact the course staff immediately.</strong> Do not wait
+until the milestone deadline to discover you have no access. Before you
+write to us, rule out the three things that account for nearly every failed
+login:</p>
 <ul>
-<li><strong>Hostnames and accounts:</strong> <em>TBD</em></li>
-<li><strong>Authentication:</strong> <em>TBD</em></li>
-<li><strong>VPN requirement:</strong> <em>TBD</em></li>
-<li><strong>Reservation / scheduling:</strong> <em>TBD</em></li>
+<li>Your <strong>NetID</strong> is spelled correctly.</li>
+<li>The <strong>hostname</strong> is correct -- your group number, with the leading zero
+   for groups 1 through 9, and the full <code>.ece.cornell.edu</code> suffix.</li>
+<li>Your <strong>password</strong> is your Cornell password, typed correctly.</li>
 </ul>
 <p>All groups have identical hardware, so your numbers are directly comparable
 with the rest of the class. If another group measures something different

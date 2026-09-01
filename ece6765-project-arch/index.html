@@ -977,7 +977,8 @@
 <h1 id="reference-architecture-and-api">Reference Architecture and API<a class="headerlink" href="#reference-architecture-and-api" title="Permanent link">&para;</a></h1>
 <p>This page describes <strong>what is fixed for the semester and what is yours to
 change</strong>, and it is important not to confuse them.</p>
-<p>Two things are fixed. The first is the external interface: your pipeline
+<p>Three things are fixed for the semester. The first is the external interface:
+your pipeline
 consumes a <strong>trace file</strong> of requests and writes a results file with answers
 and per-request timings, and it exposes a <code>/health</code> readiness check. A single
 evaluation harness has to drive every group's pipeline, and comparable
@@ -987,12 +988,19 @@ possible.</p>
 <code>vectordb</code>, and <code>generation</code>. You keep these four services, with these
 responsibilities, throughout the semester. You may not merge them, split them, or
 re-decompose the pipeline. </p>
+<p>The third is the <strong>workload</strong>: all groups use the course-specified embedding
+model, generation model, and ClapNQ dataset. These are fixed so that the
+comparison is about systems rather than differences in models or data.</p>
+<p>M1 additionally fixes the baseline communication protocol: plain HTTP with
+JSON, batch size 1, and requests processed in trace order. This is an M1-only
+constraint; after M1, the communication protocol and scheduling policy are
+part of the experimental design space.</p>
 <p>What is open (and what this project is actually about) is <strong>how those
 four services talk to each other</strong>. Transport, serialization, framing,
 batching, concurrency, connection management: all of it is yours, and
 changing it is one of the experimental axes of the semester. Everything
-<em>inside</em> a service is yours too: languages, libraries, algorithms, threading,
-memory layout.</p>
+<em>inside</em> a service, except the fixed models and dataset, is yours too:
+languages, libraries, algorithms, threading, memory layout.</p>
 <h2 id="1-services">1. Services<a class="headerlink" href="#1-services" title="Permanent link">&para;</a></h2>
 <p>Your pipeline is four services, running as separate processes. In M1 they
 communicate over HTTP on localhost; what they communicate over after that is
@@ -1054,13 +1062,14 @@ sitting there, waiting, at t=0.</p>
 <h3 id="22-trace-file-format">2.2. Trace file format<a class="headerlink" href="#22-trace-file-format" title="Permanent link">&para;</a></h3>
 <p><em>Exact schema TBD -- fixed before M1 is released.</em> The working format is
 newline-delimited JSON, one request per line:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Q"</span><span class="p">:</span><span class="w"> </span><span class="s2">"who is the prime minister of Japan in August 2026?"</span><span class="p">,</span><span class="w"> </span><span class="nt">"A"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sanae Takaichi"</span><span class="p">}</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Q"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What was the average temperature in Ithaca in August 2026?"</span><span class="p">,</span><span class="w"> </span><span class="nt">"A"</span><span class="p">:</span><span class="w"> </span><span class="s2">"70 degrees fahrenheit"</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Q"</span><span class="p">:</span><span class="w"> </span><span class="s2">"who is the prime minister of Japan in August 2026?"</span><span class="p">}</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Q"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What was the average temperature in Ithaca in August 2026?"</span><span class="p">}</span>
 </span></code></pre></div>
 <ul>
 <li><code>id</code> is an opaque unique string. Results must carry it back unchanged, so
    answers can be attributed to requests.</li>
-<li><code>text</code> is the raw query.</li>
+<li><code>Q</code> is the raw query. Ground-truth answers are held by the evaluation
+   harness and are not included in the trace given to the pipeline.</li>
 <li>Traces range from a handful of requests to several thousand. </li>
 </ul>
 <h3 id="23-invocation">2.3. Invocation<a class="headerlink" href="#23-invocation" title="Permanent link">&para;</a></h3>

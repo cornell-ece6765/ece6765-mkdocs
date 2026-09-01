@@ -912,6 +912,12 @@ would you do next?</p>
 </span></code></pre></div>
 <ul>
 <li>Do not screenshot a table of numbers. Write it as a Markdown table.</li>
+<li><strong>Let an AI assistant do the formatting.</strong> Turning raw benchmark output
+   into a well-aligned Markdown table, or a pile of numbers into plotting
+   code, is exactly the kind of mechanical work these tools are good at.
+   Paste in the output and ask. Check the result against the source numbers
+   -- transcription errors are yours either way -- and see <a href="#7-use-of-ai-assistants">Use of AI
+   Assistants</a>.</li>
 </ul>
 <h2 id="4-reporting-measurements">4. Reporting Measurements<a class="headerlink" href="#4-reporting-measurements" title="Permanent link">&para;</a></h2>
 <p>This is the section where most projects lose points, so read it carefully.</p>
@@ -929,8 +935,6 @@ evidence of anything.</p>
 <li>For latency, report a <strong>distribution</strong>, not just a mean. Tail latency is
    a central theme of this course; p50/p99/p99.9 is the normal reporting
    convention.</li>
-<li>Distinguish what you <strong>measured</strong> from what you <strong>modeled</strong> or
-   <strong>simulated</strong>. Both are legitimate; conflating them is not.</li>
 <li>Identify <strong>confounds</strong> you could not eliminate. Noisy neighbors, thermal
    throttling, cold caches, and background daemons are all fair game, and
    naming them is a sign of rigor rather than weakness.</li>
@@ -939,13 +943,23 @@ evidence of anything.</p>
    up under questioning.</li>
 </ul>
 <h2 id="5-citations">5. Citations<a class="headerlink" href="#5-citations" title="Permanent link">&para;</a></h2>
-<p>Cite inline with a bracketed number and list references at the end:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Tail latency compounds across fan-out services [1].
+<p>Cite inline with a short <strong>author-year key</strong>, and list references under the
+same keys at the end:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Tail latency compounds across fan-out services [Dean13].
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gu">## References</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>[1] J. Dean and L. A. Barroso. "The Tail at Scale."
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    Communications of the ACM, 56(2):74-80, 2013.
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="gs">**[Dean13]**</span> J. Dean and L. A. Barroso. "The Tail at Scale."
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Communications of the ACM, 56(2):74-80, 2013.
+</span></code></pre></div>
+<p>Do not number your references. Numbers have to be renumbered by hand every
+time you insert a source, and in a report three people are editing at once
+the numbering will silently go wrong. Keys never change, so a citation is
+correct wherever it ends up.</p>
+<p>If you want citations to be clickable on GitHub, define each key once as a
+link at the bottom of the file and the inline <code>[Dean13]</code> becomes a link
+automatically:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[<span class="nl">Dean13</span>]: <span class="na">https://doi.org/10.1145/2408776.2408794</span>
 </span></code></pre></div>
 <p>Include authors, title, venue, and year. A bare URL is acceptable only for
 software and documentation that has no paper.</p>
@@ -954,14 +968,11 @@ software and documentation that has no paper.</p>
 <li>Prefer the active voice and concrete subjects. "We ran the workload on
    16 cores" beats "the workload was run."</li>
 <li>Define every acronym on first use.</li>
-<li>Do not pad. A tight three pages is better than a loose six, and the
-   staff can tell the difference.</li>
 <li>Proofread. Run a spell checker over the file before you commit it.</li>
 </ul>
 <h2 id="7-use-of-ai-assistants">7. Use of AI Assistants<a class="headerlink" href="#7-use-of-ai-assistants" title="Permanent link">&para;</a></h2>
-<p>AI coding tools are <strong>expected</strong> in this project, not merely tolerated. A
-four-service pipeline plus a semester of measurement work is more than a
-group of three can hand-write, and using these tools well is a professional
+<p>AI coding tools are <strong>expected</strong> in this project, not merely tolerated. 
+Using these tools well is a professional
 skill this course assumes you have or will acquire on your own.</p>
 <p>Using them well includes knowing where they fail. In this project that
 matters concretely: generated code that looks plausible and silently
