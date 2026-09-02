@@ -122,7 +122,7 @@ You run the same harness the staff runs, on your own server, as often as you
 like:
 
 ```bash
-% ece6765-harness run --trace traces/public-1k.jsonl   # _exact CLI: TBD_
+% ece6765-harness run --trace traces/short-query-answerable.jsonl   # _exact CLI: TBD_
 ```
 
 The harness handles launching your pipeline, waiting for `/health`, timing
@@ -153,9 +153,9 @@ not a result.
 --------------------------------------------------------------------------
 
 Before running timed experiments, check that your pipeline is actually
-correct. The harness supports a fast correctness-only mode over a small
-query subset:
+correct. The harness supports a correctness-only mode over a selected
+public trace:
 
 ```bash
-% ece6765-harness check --trace traces/smoke.jsonl   # _exact CLI: TBD_
+% ece6765-harness check --trace traces/short-query-answerable.jsonl   # _exact CLI: TBD_
 ```

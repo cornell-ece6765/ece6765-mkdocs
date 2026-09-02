@@ -91,13 +91,13 @@ _Exact schema TBD -- fixed before M1 is released._ The working format is
 newline-delimited JSON, one request per line:
 
 ```json
-{"id": "q-00001", "Q": "who is the prime minister of Japan in August 2026?"}
-{"id": "q-00002", "Q": "What was the average temperature in Ithaca in August 2026?"}
+{"id": "q-00001", "text": "who is the prime minister of Japan in August 2026?"}
+{"id": "q-00002", "text": "What was the average temperature in Ithaca in August 2026?"}
 ```
 
  - `id` is an opaque unique string. Results must carry it back unchanged, so
    answers can be attributed to requests.
- - `Q` is the raw query. Ground-truth answers are held by the evaluation
+ - `text` is the raw query. Ground-truth answers are held by the evaluation
    harness and are not included in the trace given to the pipeline.
  - Traces range from a handful of requests to several thousand. 
 
