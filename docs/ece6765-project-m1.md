@@ -75,6 +75,9 @@ and API](ece6765-project-arch.md) page carefully. The external interface is
 fixed; building something that almost matches it means the harness cannot
 grade you.
 
+Follow the setup instructions in the [project template
+README](https://github.com/cornell-ece6765/ece6765-project/blob/main/template/README.md).
+
 ### 2.2. Build the embedding service
 
 Wrap

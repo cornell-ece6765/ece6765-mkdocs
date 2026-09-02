@@ -123,20 +123,12 @@ The frontend returns:
 `queries` must be nonempty, IDs must be unique, and every requested ID must
 appear exactly once in `responses`. Response order does not matter. Both
 timestamps are nonnegative milliseconds measured from the start of frontend
-processing for the `/query` request, and `last_token_ms` must not precede
+processing for the `/query` request. `last_token_ms` is when the completed
+answer is available at the frontend, and it must not precede
 `start_time_ms`.
 
-!!! warning "You report your own timestamps, and they are checked"
-
-    Per-request timing has to come from inside your pipeline -- the harness
-    cannot see individual completions from outside. It does independently
-    measure total wall-clock time for the run, and it will cross-check your
-    reported numbers against it. Results whose self-reported timings are
-    inconsistent with the externally observed wall clock are treated as a
-    failed run, not as a fast one.
-
-    Instrument this carefully and early. A pipeline that is genuinely fast
-    but reports its own timing incorrectly scores the same as a slow one.
+The frontend reports these per-query timestamps. The evaluator separately
+measures the complete HTTP request to calculate throughput.
 
 ### 2.5. Readiness
 

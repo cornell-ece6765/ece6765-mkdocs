@@ -18,8 +18,7 @@ comes out of it, which is what makes results comparable across groups.
    Model loading and index construction happen here and are **not** timed.
 2. Loads the selected trace and submits its queries to `POST /query`,
    measuring total wall-clock time externally.
-3. Scores answer quality against the reference answers, cross-checks your
-   self-reported timings against the wall clock, and computes the
+3. Scores answer quality against the reference answers and computes the
    performance metrics.
 4. Writes a JSON report and prints a summary table.
 
@@ -58,14 +57,15 @@ knowing whether your findings generalize is part of the work.
 3. Performance metrics
 --------------------------------------------------------------------------
 
-All per-request times are measured **from t=0**, not from when your pipeline
-chose to start working on a given request. Every number below therefore
-includes queuing delay as well as processing time.
+For each `POST /query` request, the frontend uses the start of its request
+processing as t=0. All per-query timestamps are measured from that origin,
+so they include time spent waiting inside the pipeline.
 
 ### 3.1. Per-request latency
 
-For each request: `last_token_ms`, the time from t=0 until its final token
-is generated. Reported as a distribution -- p50, p95, p99, p99.9, and max.
+For each query, `last_token_ms` is the time from t=0 until its completed
+answer is available at the frontend. It is reported as a distribution --
+p50, p95, p99, p99.9, and max.
 
 The distribution captures both processing time and time spent waiting for
 resources inside the pipeline.
@@ -73,20 +73,10 @@ resources inside the pipeline.
 ### 3.2. Throughput
 
 Requests per second over the run: the number of requests in the trace
-divided by the wall-clock time from t=0 until the last one completes.
+divided by the externally measured wall-clock duration of `POST /query`.
 
-This is the headline throughput number, and the harness also measures that
-wall clock externally as a check on your self-reported timings.
-
-!!! note "Max latency and throughput are the same measurement"
-
-    Since every request is available at t=0, the request that finishes last
-    finishes at exactly the total run time -- so **p100 latency and the run
-    time behind your throughput number are mathematically identical here**.
-
-    The distinction that survives is between the *tail* and the *body* of
-    the distribution. Throughput tells you how long the whole workload took;
-    p50 and p95 describe the experience of individual requests.
+This is the headline throughput number. It uses the harness's external wall
+clock rather than the frontend's per-query timestamps.
 
 ### 3.3. What this means for optimization
 
