@@ -51,7 +51,7 @@ different resource profiles chained together behind a single request:
  - **Vector DB** is memory-bound -- sensitive to capacity, bandwidth, NUMA
    locality, and page size.
  - **Generation** is bound by both compute and memory bandwidth.
- - **Frontend** is I/O-bound and sensitive to request ordering.
+ - **Frontend** is I/O-bound and coordinates the other services.
 
 
 What kind of project this is
@@ -63,11 +63,10 @@ research and engineering work, not a guided lab.
 Every milestone handout on this site states **what you must accomplish and
 what you must report**. None of them tell you how.
 
-You will be given a **starter code template**. It is not a solution and it
-is not a working application -- it is a skeleton that shows the shape of the
-interfaces. Making it into something that runs, and then something that runs 
-well, is entirely on you. There is no step-by-step walkthrough or provided
-debugging path.
+You will be given a **working starter code template**. It is a baseline, not
+a solution: understanding it, modifying it, and measuring it well are
+entirely on you. There is no step-by-step walkthrough or provided debugging
+path.
 
 Choosing an implementation strategy, finding out why your service deadlocks
 under load, discovering that a library has no ARM64 build and deciding what
@@ -133,36 +132,30 @@ shapes how the project is graded:
 Architecture
 --------------------------------------------------------------------------
 
-Four services, driven by a trace file of requests:
+Four services behind a frontend query API:
 
 ```
                           ┌──────────────┐      ┌────────────┐
-   trace file             │              │─────▶│ embedding  │
-   all requests at t=0    │              │◀─────│            │
- ────────────────────────▶│              │      └────────────┘
-                          │   frontend   │
-                          │              │      ┌────────────┐
-                          │   loads      │─────▶│ vector DB  │
-   results file           │   schedules  │◀─────│            │
-   answers + per-request  │   runs it    │      └────────────┘
-   timings from t=0       │              │
- ◀────────────────────────│              │      ┌────────────┐
-                          │              │─────▶│ generation │
-                          │              │◀─────│            │
-                          └──────────────┘      └────────────┘
+ evaluation harness      │              │─────▶│ embedding  │
+ ───── POST /query ─────▶│              │◀─────│            │
+                         │   frontend   │      └────────────┘
+                         │              │      ┌────────────┐
+                         │ orchestrates │─────▶│ vector DB  │
+ ◀──── responses ────────│              │◀─────│            │
+                         │              │      └────────────┘
+                         │              │      ┌────────────┐
+                         │              │─────▶│ generation │
+                         │              │◀─────│            │
+                         └──────────────┘      └────────────┘
 ```
 
-Your pipeline is driven by a **trace file**: a set of requests that are all
-available to it at time zero, with no arrival process. This models a server
-that an upstream scheduler has already handed a full queue of work. Because
-everything is available immediately, **the execution order is entirely
-yours** -- and per-request latency is measured from t=0, so it includes
-however long a request sat in your queue before you got to it.
+The evaluation harness reads the trace and sends its queries to the frontend
+through `POST /query`. The frontend returns answers and per-request timing
+information.
 
 The reference implementation uses **plain HTTP with JSON** between services,
-**batch size 1**, and processes the trace in order. All three are
-deliberate: they are the obvious things to optimize, and we want you to
-measure the cost before you fix it.
+with straightforward blocking orchestration. This is a deliberately simple
+baseline whose costs you can measure before changing it.
 
 !!! note "The four services are fixed"
 
@@ -278,7 +271,7 @@ Grading criteria
 Across the project, we are looking for:
 
 **Methodology.** Are experiments controlled? Is the baseline fair? Do you
-run enough repetitions to distinguish a real effect from noise?
+characterize run-to-run noise before claiming an effect?
 
 **Explanation over tuning.** Can you explain *why* a configuration helped,
 in terms of the architecture? 

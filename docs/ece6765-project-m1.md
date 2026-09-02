@@ -6,7 +6,7 @@ semester optimizing: a four-service RAG pipeline that answers queries
 correctly. Performance is explicitly **not** the goal here. A correct,
 clean, well-instrumented baseline is.
 
-**See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/index.html)
+**See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/schedule.html)
 or the [Canvas calendar](https://canvas.cornell.edu/calendar) for the
 deadline.**
 
@@ -24,16 +24,16 @@ By the end of this milestone your group should have:
    services](ece6765-project-arch.md#11-the-decomposition-is-fixed) --
    `frontend`, `embedding`, `vectordb`, `generation` -- communicating over
    HTTP.
- - Conformance to the [trace-in / results-out
-   contract](ece6765-project-arch.md): your pipeline consumes a trace file,
-   answers every request in it, and writes a results file with answers and
-   per-request timings measured from t=0.
- - A passing score on the correctness mode of the [evaluation
+ - Conformance to the [query
+   contract](ece6765-project-arch.md#24-query-api): your frontend accepts
+   `POST /query` and returns an answer and per-request timings for every
+   query.
+ - A passing score from the [evaluation
    harness](ece6765-eval-harness.md).
  - A one-command launch script that brings the whole pipeline up on a clean
    server.
  - A **baseline measurement** of throughput and the per-request latency
-   distribution, with variation reported across repeated runs.
+   distribution, with observed variation reported.
  - A first hypothesis, backed by a rough measurement, about where the time
    goes.
 
@@ -49,9 +49,9 @@ By the end of this milestone your group should have:
 
     Two things are not open. The [four-service
     decomposition](ece6765-project-arch.md#11-the-decomposition-is-fixed) is
-    required and stays fixed for the whole semester, and the trace-in /
-    results-out contract plus `/health` must be met exactly. Build the four
-    services with the responsibilities given in the reference architecture.
+    required and stays fixed for the whole semester, and the `POST /query`
+    contract plus `/health` must be met exactly. Build the four services
+    with the responsibilities given in the reference architecture.
 
     Use **plain HTTP with JSON** for M1. It is the naive choice on purpose:
     it is quick to get working, and the cost it leaves on the table is what
@@ -82,14 +82,12 @@ Wrap
 behind a `POST /embed` endpoint that takes a list of texts and returns a
 list of vectors. The model is fixed for all groups.
 
-Note that the endpoint takes a *list* even though the reference
-implementation will only ever pass one element. Design the interface for
-batching now even though you are not using it yet -- retrofitting a batch
-dimension through a service that assumed one input is unpleasant.
+The endpoint takes a list of texts. Preserve that interface even if your
+initial implementation handles requests simply.
 
 ### 2.3. Build the vector DB service
 
-Index the ClapNQ passage corpus and expose `POST /search`, taking query
+Index the CLAPNQ passage corpus and expose `POST /search`, taking query
 vectors and a `k`, returning the top-`k` passages.
 
 You may use an existing vector index library or write your own. Both are
@@ -105,29 +103,18 @@ start timing until `/health` reports ready.
 
 ### 2.4. Build the generation service
 
-Wrap the course-specified generation model (_TBD -- announced before this
-milestone is released_) behind `POST /generate`, taking a query and its
+Wrap `Qwen/Qwen3-0.6B` behind `POST /generate`, taking a query and its
 retrieved passages and returning answer text.
-
-This service must support streaming output. Nothing in M1 exploits it --
-the frontend waits for the full answer -- but a generation service that
-returns tokens as it produces them is what later milestones need in order to
-overlap generation with the work behind it, instead of letting the rest of
-the pipeline idle until an answer is complete. Building that in now is much
-easier than bolting it on in M3.
 
 ### 2.5. Build the frontend
 
-The frontend loads the trace file, drives every request through the other
-three services, and writes the results file. For each request: embed it,
-search with the resulting vector, generate from the query plus retrieved
-passages, and record the answer under its original `id`.
+The frontend accepts `POST /query` and drives each query through the other
+three services. It embeds the text, searches with the resulting vector,
+generates from the query plus retrieved passages, and returns the answer
+under the original `id`.
 
-Batch size 1, sequential, plain HTTP, **requests processed in trace order**.
-Resist the urge to optimize. You need a baseline that is obviously correct
-and obviously naive, because every number you report for the rest of the
-semester is a comparison against it -- and processing in trace order gives
-you the worst-case latency distribution to improve on.
+Use plain HTTP with JSON in M1. Resist the urge to optimize: you need a
+baseline that is obviously correct and easy to compare against later.
 
 Do put the inter-service calls behind a client interface -- one small class
 per service -- rather than scattering HTTP calls through the orchestration
@@ -139,15 +126,13 @@ difference between an afternoon and a week.
 Two kinds of timing, and you need both.
 
 **Required by the contract:** `start_time_ms` and `last_token_ms` per
-request, measured from t=0. These go in the results file and the harness
-grades you on them. Get the clock reference right -- t=0 is when the harness
-invoked you, not when your frontend got around to that request.
+request. These go in the `POST /query` response and the harness grades you
+on them.
 
 **Required by you:** where time goes *inside* a request. How long each
-service took, how long the frontend spent waiting on each, and -- once you
-stop processing in trace order -- how long each request sat queued before
-you started it. Timestamps and a structured log line are enough, but you
-need this before you can answer Section 2.8.
+service took and how long the frontend spent waiting on each. Timestamps
+and a structured log line are enough, but you need this before you can
+answer Section 2.8.
 
 ### 2.7. Establish the baseline
 
@@ -156,14 +141,8 @@ Run the harness. Confirm you pass correctness, then measure:
  - Per-request latency from t=0 (p50, p95, p99, p99.9, max)
  - Throughput -- requests per second over the run
 
-Note that with a sequential, in-trace-order baseline your latency
-distribution will be close to a straight line from "first request" to
-"last request" -- almost all of it is queuing. That is the expected shape, and
-seeing it clearly is the point of measuring it now.
-
-Repeat the run enough times to report variation, discard warmup, and follow
-the measurement discipline in the [harness
-guide](ece6765-eval-harness.md#41-measurement-discipline).
+Report observed variation and follow the measurement discipline in the
+[harness guide](ece6765-eval-harness.md#41-measurement-discipline).
 
 ### 2.8. Form a hypothesis
 
@@ -191,7 +170,7 @@ root containing:
  - [ ] **Correctness result** -- your harness correctness score and
        confirmation that you clear the threshold
  - [ ] **Baseline measurements** (~1 page) -- throughput and the latency
-       distribution, with number of runs and observed variation
+       distribution, with observed variation
  - [ ] **Time breakdown** -- a figure showing where wall-clock time goes
        across services and hops
  - [ ] **Bottleneck hypothesis** (~2 paragraphs) -- which service you believe
@@ -204,10 +183,10 @@ root containing:
 Figures go in `img/`; result summaries go in `results/`.
 
 ```bash
-% cd ${HOME}/ece6765/project-gNN
-% git add m1.md img/ results/ src/ scripts/
-% git commit -m "Milestone 1 submission"
-% git push
+cd ${HOME}/ece6765/project-gNN
+git add m1.md img/ results/ src/ scripts/
+git commit -m "Milestone 1 submission"
+git push
 ```
 
 The submission is the last commit on `main` at or before the deadline.
@@ -218,9 +197,9 @@ The submission is the last commit on `main` at or before the deadline.
 | Criterion | Weight | What we are looking for |
 |-----------|--------|-------------------------|
 | Correctness | _TBD_ | Pipeline clears the harness quality threshold |
-| Interface conformance | _TBD_ | Trace consumed, results file schema correct, timings measured from t=0 and consistent with wall clock |
+| Interface conformance | _TBD_ | `POST /query` and `/health` contracts implemented correctly |
 | Reproducibility | _TBD_ | Staff can bring up your pipeline and run the harness from your documented commands, unaided |
-| Baseline measurement quality | _TBD_ | Distributions not point values; repetitions reported; warmup handled |
+| Baseline measurement quality | _TBD_ | Distributions and observed variation reported |
 | Time breakdown and hypothesis | _TBD_ | Instrumentation supports the claim; hypothesis is specific and testable |
 | Writeup | _TBD_ | Clear, correctly labeled figures, claims matching evidence |
 
@@ -244,7 +223,7 @@ None of them are requirements.
 
 !!! tip "Correctness first, and keep checking it"
 
-    Run the harness in correctness mode after every substantive change. Most
+    Run the harness after every substantive change. Most
     of what you do in later milestones can silently degrade answer quality,
     and the earlier you build the habit the less rework you do.
 
@@ -253,13 +232,6 @@ None of them are requirements.
     Groups that arrive at M2 with an already-tuned pipeline have no baseline
     to compare against and consistently write weaker reports. The naive
     version is an asset. Tag the commit.
-
-!!! tip "Streaming is easier to design in than to add"
-
-    A generation service that materializes the full answer before returning
-    it will need restructuring the moment you want to overlap generation
-    with anything else. Doing it as a stream from the start costs almost
-    nothing now and saves a rewrite in M2 or M3.
 
 !!! tip "Write the template so the protocol can change"
 
@@ -276,6 +248,6 @@ None of them are requirements.
 
 !!! tip "Watch the vector serialization"
 
-    The `embedding → vectordb` hop moves full dense vectors as JSON arrays
-    of floats. You are not asked to fix this in M1 -- but instrument it, so
-    that when you do fix it in M2 you can quantify what it cost.
+    The frontend's vector-search request moves a full dense vector as a JSON
+    array of floats. You are not asked to fix this in M1 -- but instrument
+    it, so that when you do fix it in M2 you can quantify what it cost.

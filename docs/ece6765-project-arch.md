@@ -5,12 +5,10 @@ This page describes **what is fixed for the semester and what is yours to
 change**, and it is important not to confuse them.
 
 Three things are fixed for the semester. The first is the external interface:
-your pipeline
-consumes a **trace file** of requests and writes a results file with answers
-and per-request timings, and it exposes a `/health` readiness check. A single
-evaluation harness has to drive every group's pipeline, and comparable
-numbers across groups are what make a class-wide discussion of results
-possible.
+the evaluation harness sends queries to your frontend with `POST /query`, and
+your pipeline exposes a `/health` readiness check. A single evaluation harness
+has to drive every group's pipeline, and comparable numbers across groups are
+what make a class-wide discussion of results possible.
 
 The second is the **four-service decomposition** -- `frontend`, `embedding`,
 `vectordb`, and `generation`. You keep these four services, with these
@@ -18,13 +16,12 @@ responsibilities, throughout the semester. You may not merge them, split them, o
 re-decompose the pipeline. 
 
 The third is the **workload**: all groups use the course-specified embedding
-model, generation model, and ClapNQ dataset. These are fixed so that the
+model, generation model, and CLAPNQ dataset. These are fixed so that the
 comparison is about systems rather than differences in models or data.
 
 M1 additionally fixes the baseline communication protocol: plain HTTP with
-JSON, batch size 1, and requests processed in trace order. This is an M1-only
-constraint; after M1, the communication protocol and scheduling policy are
-part of the experimental design space.
+JSON. After M1, the communication protocol and scheduling policy are part of
+the experimental design space.
 
 What is open (and what this project is actually about) is **how those
 four services talk to each other**. Transport, serialization, framing,
@@ -42,16 +39,13 @@ up to you.
 
 | Service | Responsibility |
 |---------|----------------|
-| `frontend` | Loads the trace, schedules and orchestrates work across the other three, writes results |
+| `frontend` | Accepts queries and orchestrates work across the other three services |
 | `embedding` | Encodes query text into a dense vector | 
 | `vectordb` | Nearest-neighbor search over the passage index | 
 | `generation` | Produces the answer text from query + retrieved passages | 
 
-Note that under the trace-driven model the frontend's job is larger than it
-looks. It is not just a proxy: it is the **scheduler** for the whole
-workload, and it owns the decision of what order the queued
-requests get executed in. You can start from a first-come-first-serve 
-scheduling algorithm and try other scheduling algorithms later on.
+The frontend is not just a proxy: it coordinates the other services and is
+the natural place to implement scheduling policy.
 
 ### 1.1. The decomposition is fixed
 
@@ -67,18 +61,17 @@ re-decomposition. In fact in some of the milestones you should do this to
 improve the scalability of the application. Note that replicas of a service 
 still present that service's interface.
 
-2. The Fixed Interface: Trace In, Results Out
+2. The Fixed Evaluation Interface
 --------------------------------------------------------------------------
 
-Your pipeline is driven by a **trace file**. This is the one part of the
-contract that cannot change, because a single evaluation harness has to
-drive every group's pipeline and produce numbers that mean the same thing
-across the class.
+The evaluation harness reads a **trace file** and submits its queries to the
+frontend. This interface cannot change because one harness has to drive every
+group's pipeline and produce comparable numbers.
 
 ### 2.1. The execution model
 
-The trace file contains a set of requests that are **all available to your
-pipeline at time zero**. There is no arrival process and no request rate.
+The trace file contains a set of requests that are **all available at time
+zero**. There is no arrival process and no request rate.
 
 This models a real situation in a datacenter: a scheduler upstream has
 already assigned a batch of work to this server, and the server has a full
@@ -87,8 +80,7 @@ sitting there, waiting, at t=0.
 
 ### 2.2. Trace file format
 
-_Exact schema TBD -- fixed before M1 is released._ The working format is
-newline-delimited JSON, one request per line:
+The format is newline-delimited JSON, one request per line:
 
 ```json
 {"id": "q-00001", "text": "who is the prime minister of Japan in August 2026?"}
@@ -99,47 +91,40 @@ newline-delimited JSON, one request per line:
    answers can be attributed to requests.
  - `text` is the raw query. Ground-truth answers are held by the evaluation
    harness and are not included in the trace given to the pipeline.
- - Traces range from a handful of requests to several thousand. 
+ - Each public trace contains 100 requests.
 
 ### 2.3. Invocation
 
-The harness starts your pipeline, waits for it to report ready, and then
-starts the timed run by handing it a trace path and an output path:
+From the `evaluation/` directory, run:
 
 ```bash
-% ./scripts/run.sh --trace <trace-path> --output <results-path>
+EMBEDDINGS_PATH=/team-XX/embeddings.npy pixi run evaluate \
+  --trace traces/short-query-answerable.jsonl
 ```
 
-_Exact invocation TBD._ The timer starts (t=0) when the harness issues this
-command, and stops when your process exits having written the results file.
+The evaluator launches the reference pipeline, waits for `/health`, submits
+the workload through `POST /query`, scores the response, and writes a report.
+Use `--output <results-path>` to choose the report path.
 
-Everything expensive that can happen before t=0 should happen before t=0:
-loading models, building or memory-mapping the index, spawning workers,
-opening connections. That is what `/health` is for.
-Reading and parsing the trace itself happens **after** t=0 and is on your
-clock.
+### 2.4. Query API
 
-### 2.4. Results file
-
-One record per request. _Exact schema TBD._
+The harness sends a JSON request to `POST /query`:
 
 ```json
-{"id": "q-00001", "answer": "Sanae Takaichi", "start_time_ms": 100.8, "last_token_ms": 1893.2}
+{"queries":[{"id":"query-id","text":"question text"}]}
 ```
 
- - `answer` -- the generated text, scored for quality by the harness.
- - `start_time_ms` -- milliseconds from **t=0** to when the request is 
-   scheduled for execution by the frontend.
- - `last_token_ms` -- milliseconds from **t=0** to the last token emitted for
-   this request.
+The frontend returns:
 
-Both timestamps are measured from the start of the run, **not** from when
-your pipeline happened to start working on that request. A request your
-scheduler leaves until the end has a large `last_token_ms`, and that is the
-point: the number includes however long the request sat in your queue.
+```json
+{"responses":[{"id":"query-id","answer":"answer text","start_time_ms":0.0,"last_token_ms":100.0}]}
+```
 
-Every `id` in the trace must appear exactly once in the results. Order does
-not matter; the harness matches on `id`.
+`queries` must be nonempty, IDs must be unique, and every requested ID must
+appear exactly once in `responses`. Response order does not matter. Both
+timestamps are nonnegative milliseconds measured from the start of frontend
+processing for the `/query` request, and `last_token_ms` must not precede
+`start_time_ms`.
 
 !!! warning "You report your own timestamps, and they are checked"
 
@@ -180,13 +165,13 @@ needs what data from which other service:
    `generation`
 
 Everything about *how* that data crosses the boundary is yours: the wire
-format, the transport, the framing, how many requests travel at once, who
-initiates, and whether the call blocks.
+format, the transport, the framing, who initiates, and whether the call
+blocks.
 
 The reference implementation wires the services together with **plain HTTP
-and JSON bodies**, one query at a time. This is intentionally the naive
-choice: it is easy to get working in M1, and it leaves the obvious wins on
-the table for the rest of the semester.
+and JSON bodies**. This is intentionally the naive choice: it is easy to get
+working in M1, and it leaves obvious wins on the table for the rest of the
+semester.
 
 ```
 frontend ──POST /embed────────▶ embedding    {"texts": [...]}  →  {"vectors": [[...]]}
@@ -236,15 +221,9 @@ Workflow](ece6765-git-workflow.md) page for size limits.
 5. Reproducibility requirement
 --------------------------------------------------------------------------
 
-From M1 onward, your repository must contain a single documented command
-that brings up your entire pipeline, whatever it consists of, on a clean
-server:
-
-```bash
-% ./scripts/launch.sh
-```
-
-and a single command that runs the harness against them. The staff will run
-these. If your pipeline only comes up when a specific group member types a
-specific sequence of commands from memory, it does not count as working, and
-it means your final results cannot be reproduced.
+From M1 onward, your repository must document one command that brings up the
+entire pipeline on a clean server and one command that runs the harness
+against it. The staff will run these. If your pipeline only comes up when a
+specific group member types a specific sequence of commands from memory, it
+does not count as working, and it means your final results cannot be
+reproduced.
