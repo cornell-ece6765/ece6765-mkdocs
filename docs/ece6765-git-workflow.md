@@ -23,30 +23,30 @@ If you have not used GitHub from the command line before, first make sure
 you have an SSH key registered with your GitHub account:
 
 ```bash
-% ls ~/.ssh/id_ed25519.pub || ssh-keygen -t ed25519
-% cat ~/.ssh/id_ed25519.pub
+ls ~/.ssh/id_ed25519.pub || ssh-keygen -t ed25519
+cat ~/.ssh/id_ed25519.pub
 ```
 
 Paste that public key into <https://github.com/settings/keys>. Then verify:
 
 ```bash
-% ssh -T git@github.com
+ssh -T git@github.com
 ```
 
 Clone your group repository:
 
 ```bash
-% mkdir -p ${HOME}/ece6765
-% cd ${HOME}/ece6765
-% git clone git@github.com:cornell-ece6765/project-gNN
-% cd project-gNN
+mkdir -p ${HOME}/ece6765
+cd ${HOME}/ece6765
+git clone git@github.com:cornell-ece6765/project-gNN
+cd project-gNN
 ```
 
 Set your identity so commits are attributed correctly:
 
 ```bash
-% git config user.name  "Your Name"
-% git config user.email "netid@cornell.edu"
+git config user.name  "Your Name"
+git config user.email "netid@cornell.edu"
 ```
 
 2. Repository Layout
@@ -89,19 +89,19 @@ that avoids most of the pain:
 work that exists only in a local clone on a server is work you can lose.
 
 ```bash
-% git pull --rebase
+git pull --rebase
 # ... do work ...
-% git add -A
-% git commit -m "Describe what changed"
-% git push
+git add -A
+git commit -m "Describe what changed"
+git push
 ```
 
 **Use branches for anything that takes more than a session.**
 
 ```bash
-% git checkout -b experiment-tail-latency
+git checkout -b experiment-tail-latency
 # ... work, commit ...
-% git push -u origin experiment-tail-latency
+git push -u origin experiment-tail-latency
 ```
 
 Then open a pull request on GitHub and have another group member review it
@@ -124,7 +124,7 @@ After each deadline, the course staff fetch your repository and take the
 the equivalent of:
 
 ```bash
-% git rev-list -1 --before="<deadline>" origin/main
+git rev-list -1 --before="<deadline>" origin/main
 ```
 
 Practical consequences:
@@ -136,7 +136,7 @@ Practical consequences:
  - Committing locally is not enough. **You must push.** Verify with:
 
 ```bash
-% git log origin/main -1 --format='%h %ci %s'
+git log origin/main -1 --format='%h %ci %s'
 ```
 
 If that command shows the commit you expect, your submission is in.

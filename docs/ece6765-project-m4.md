@@ -9,7 +9,7 @@ The final report is the deliverable that matters most in this project. It is
 where the sensitivity studies from M2 and M3 stop being a pile of sweeps and
 become an argument.
 
-**See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/index.html)
+**See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/schedule.html)
 or the [Canvas calendar](https://canvas.cornell.edu/calendar) for all
 deadlines.**
 
@@ -37,20 +37,20 @@ properly.
 
 This is more than concatenating your best settings. Your application-level
 work and your system-level configuration were tuned separately, and they
-interact: the best batch size under your M3 core allocation is probably not
-the one you found in M2. Re-tune the combination, and report what the
-interaction cost you relative to the sum of the parts.
+interact. Re-tune the combination, and report what the interaction cost you
+relative to the sum of the parts.
 
 Tag the commit you want treated as final:
 
 ```bash
-% git tag -a final -m "Final configuration"
-% git push origin final
+git tag -a final -m "Final configuration"
+git push origin final
 ```
 
-The tagged commit must contain the launch script, the configuration, and
+The `final` tag must contain the launch script, the configuration, and
 everything needed to reproduce the run. Staff will bring it up from your
-documented commands on a clean server. _Exact tag name and deadline: TBD._
+documented commands on a clean server. The deadline is on the course
+schedule.
 
 !!! warning "Correctness still gates everything"
 
@@ -71,11 +71,11 @@ something none of you could have learned alone.
 Two rules apply either way, because they are what make cross-group numbers
 mean anything:
 
- - **The trace-in / results-out contract is unchanged**, including honest
-   per-request timings measured from t=0.
+ - **The `POST /query` contract is unchanged**, including honest
+   per-request timings.
  - **No caching of answers across runs**, and nothing precomputed against a
-   specific trace. Warm indexes, connection pools, and within-batch reuse
-   are fine.
+   specific trace. Loaded indexes, connection pools, and runtime reuse are
+   fine.
 
 3. Practical Advice
 --------------------------------------------------------------------------
@@ -84,13 +84,11 @@ The following is advice, not a procedure.
 
  - **Combine, do not just accumulate.** Covered in Section 2 -- your M2 and
    M3 results interact, and the combination needs its own tuning pass.
- - **Look at the scheduling.** Since every request is available at t=0, your
-   execution order determines the whole latency distribution. Throughput
-   tuning that leaves a set of requests until last shows up in p95 and p99
-   even when throughput looks fine.
- - **Harden the launch path.** Reboot, launch from scratch, run the harness.
-   Twice. A pipeline that only comes up on a machine that has been warm for
-   a week is not reproducible.
+ - **Look at the scheduling.** Check how your scheduling policy affects
+   resource utilization and the latency distribution.
+ - **Harden the launch path.** Reboot, launch from scratch, and run the
+   harness. A pipeline that only comes up on a machine that has been running
+   for a week is not reproducible.
  - **Freeze early.** Tag a working configuration well before the deadline,
    then keep improving. A tagged adequate configuration beats an untagged
    good one.

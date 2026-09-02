@@ -35,7 +35,7 @@ already been answered.
 
 **Methodology.** What did you actually do? Enough detail that another group
 in this class could repeat it: hardware, software versions, workload
-configuration, how many runs, what you varied and what you held fixed.
+configuration, observed variation, what you varied and what you held fixed.
 
 **Results.** What did you observe? Figures and tables with prose that
 interprets them.
@@ -77,10 +77,9 @@ This is the section where most projects lose points, so read it carefully.
 
 !!! danger "A single number is not a measurement"
 
-    Report how many runs you did and the variation across them -- standard
-    deviation, min/max, or a confidence interval. A speedup reported to
-    three significant figures from one run of each configuration is not
-    evidence of anything.
+    Report observed variation -- standard deviation, min/max, or a
+    confidence interval. A speedup reported to three significant figures
+    without accounting for variation is not evidence of anything.
 
  - State your **baseline** explicitly and justify that it is fair. An
    optimized version of your system compared against an unoptimized

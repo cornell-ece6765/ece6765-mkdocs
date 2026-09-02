@@ -7,7 +7,7 @@ ECE 6765 Modern Datacenter Architecture
 
 This is the ECE 6765 Modern Datacenter Architecture documentation site. It
 hosts the handouts for the semester-long course project. If you find any
-bugs or errors in this documentation, please contant the instructor.
+bugs or errors in this documentation, please contact the instructor.
 
 The Course Project
 --------------------------------------------------------------------------
@@ -23,27 +23,25 @@ everything underneath and between them.
 The pipeline is the instrument, not the goal. What you are building is the
 ability to change something about a machine and explain what happened.
 
-Your pipeline is driven by a trace file of requests that are all
-available to it at time zero -- a server handed a full queue by an upstream
-scheduler. Execution order is entirely yours, and per-request latency is
-measured from t=0, so it includes queuing as well as processing.
+The evaluation harness reads a trace whose requests are all available at
+time zero and sends them to your frontend through `POST /query`.
+Per-request latency includes queuing as well as processing.
 
 Because the services have genuinely different resource profiles, the
 interesting decisions are about communication, resource allocation, and
 scheduling: for example, what protocol carries a dense vector between two
 services and what that costs, how many cores each service gets, where its
 memory lives, how requests are batched at each hop, what the interconnect
-costs, what order you drain the queue in, etc. Those are datacenter
-architecture decisions, and this project puts you on the other side of
-them.
+costs, etc. Those are datacenter architecture decisions, and this project
+puts you on the other side of them.
 
 !!! danger "This is an open-ended graduate project"
 
     The handouts here state **what** you must accomplish and what you must
-    report. They do not tell you how. We will give you a starter code
-    template, but it is neither a solution nor a working application.
-    Debugging, implementation strategy, tool selection, and project
-    execution are entirely yours, and they are graded work.
+    report. They do not tell you how. We will give you a working starter
+    template, but it is a baseline rather than a solution. Debugging,
+    implementation strategy, tool selection, and project execution are
+    entirely yours, and they are graded work.
 
     You are assumed to be fluent with the Linux command line, comfortable
     using AI coding tools well, and solid on low-level systems and

@@ -17,7 +17,7 @@ The deliverable is not a faster pipeline. It is a defensible account of
 which system properties this workload cares about, which it does not, and
 why -- and the "does not" half carries as much credit as the other.
 
-**See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/index.html)
+**See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/schedule.html)
 or the [Canvas calendar](https://canvas.cornell.edu/calendar) for the
 deadline.**
 
@@ -63,8 +63,8 @@ For each, hold everything else fixed and change one variable at a time.
 
  - **NUMA placement.** Which node each service's memory is allocated on,
    whether its threads run on the same node, and what a deliberately remote
-   placement costs. The vector DB is the obvious subject -- it has the
-   largest working set -- but the generation service's weights matter too.
+   placement costs. The vector index and generation weights are both
+   substantial working sets worth investigating.
  - **Page size.** Huge pages versus base pages, for the vector index and for
    model weights. Tie the result back to the TLB miss data from M2: if a
    service was TLB-bound, this is where you find out how much that cost.
@@ -156,10 +156,10 @@ failure is a pile of numbers with no controlled comparison behind them.
 
  - **One variable at a time.** Every reported effect must come from a
    comparison where only that variable changed.
- - **Repetitions and variance.** System-level effects are often small
-   relative to run-to-run noise. If you cannot distinguish a 3% effect from
-   noise, either run more repetitions or report it as indistinguishable --
-   do not report it as a 3% improvement.
+ - **Run-to-run variance.** System-level effects are often small relative to
+   measurement noise. If you cannot distinguish a 3% effect from noise,
+   collect more data or report it as indistinguishable -- do not report it
+   as a 3% improvement.
  - **Record the whole configuration.** Every result needs the full machine
    state it was taken under. A number without its configuration is not
    reproducible.
@@ -172,8 +172,8 @@ Commit your sweep infrastructure, configs, and a file named `m3.md` at the
 repo root containing:
 
  - [ ] **Title and group members**
- - [ ] **Experimental setup** -- machine state, what was held fixed, how many
-       repetitions, how you handled noise
+ - [ ] **Experimental setup** -- machine state, what was held fixed,
+       observed variation, and how you handled noise
  - [ ] **Per-family results** (~1 page each, three-plus families) -- sweep
        figures with an explanation of each significant effect in
        architectural terms
@@ -191,9 +191,9 @@ repo root containing:
  - [ ] **Status and blockers**
 
 ```bash
-% git add m3.md img/ results/ config/ scripts/
-% git commit -m "Milestone 3 submission"
-% git push
+git add m3.md img/ results/ config/ scripts/
+git commit -m "Milestone 3 submission"
+git push
 ```
 
 5. Grading Rubric
@@ -223,9 +223,9 @@ repo root containing:
 
 !!! tip "Start the sweeps early"
 
-    A full sweep across several families with adequate repetitions takes
+    A full sweep across several families with adequate measurements takes
     real wall-clock time on one server. Groups that start the week before
-    the deadline end up reporting single runs and lose most of the
+    the deadline often cannot characterize noise and lose most of the
     methodology credit.
 
 !!! tip "The best configuration is the M4 starting point"

@@ -17,19 +17,19 @@ Each group has its own dedicated server. The hostname follows your group
 number, zero-padded to two digits:
 
 ```
-altra-<NN>.ece.cornell.edu        NN = 01 through 15
+altra-<NN>.ece.cornell.edu        NN = 01 through 14
 ```
 
 Log in over SSH with your NetID and your Cornell password:
 
 ```bash
-% ssh <netid>@altra-<NN>.ece.cornell.edu
+ssh <netid>@altra-<NN>.ece.cornell.edu
 ```
 
 So a student with NetID `ma2222` in group 1 would run:
 
 ```bash
-% ssh ma2222@altra-01.ece.cornell.edu
+ssh ma2222@altra-01.ece.cornell.edu
 ```
 
 Whether the servers are reachable from off campus without the Cornell VPN
@@ -181,37 +181,25 @@ This section is not optional advice. Milestone rubrics grade it directly.
  - [ ] No other group member is running anything on the machine
  - [ ] No leftover processes from your last run -- check, do not assume
  - [ ] Services report ready via `/health` before timing starts
- - [ ] Warmup pass completed and discarded
  - [ ] The machine state you intend to test is actually set (verify, do not
        trust that the script applied it)
 
-### 5.2. Repetitions
+### 5.2. Run-to-run variation
 
-Run each configuration multiple times and report the variation. The number
-required per milestone is _TBD_, but the principle does not change: a single
-run is an anecdote.
-
-For system-level effects in the sensitivity study this matters most --
-many of those knobs produce effects of a few percent, which is the same
-order as run-to-run noise. Before you claim a 3% improvement, establish what
-your noise floor actually is by running the *same* configuration repeatedly.
-Report that noise floor in your writeup.
+Characterize run-to-run variation before claiming a small improvement. For
+system-level effects in the sensitivity study, many knobs produce effects
+of the same order as measurement noise. Report that noise floor in your
+writeup.
 
 ### 5.3. Record the machine state
 
 Every result needs the configuration it was produced under: core allocation,
-NUMA policy, page size, frequency setting, batch sizes, service versions,
-and the commit hash. Automate this -- have your sweep script write the state
-into the results file alongside the numbers.
+NUMA policy, page size, frequency setting, request-processing configuration,
+service versions, and the commit hash. Automate this -- have your sweep
+script write the state into the results file alongside the numbers.
 
 A result you cannot reproduce because you do not know what state produced it
 is worse than no result, because you will trust it.
-
-### 5.4. Warmup and steady state
-
-First runs after service start are not representative: caches are cold,
-allocators have not settled, JITs have not warmed, and page tables are being
-built. Discard warmup explicitly and say that you did.
 
 6. Scope of Staff Support
 --------------------------------------------------------------------------
