@@ -1,8 +1,8 @@
 Milestone 2: Profiling and Application-Level Optimization
 ==========================================================================
 
-In Milestone 1 you built a correct, naive pipeline and guessed at its
-bottleneck. In this milestone you find out whether you were right, using
+In Milestone 1 you instrumented the supplied baseline and identified its
+likely bottleneck. In this milestone you find out whether you were right, using
 hardware performance counters, and then you fix what you find -- staying
 entirely above the operating system. Everything here is a change to *your
 application*: how it batches, how it parallelizes, how its services talk to
@@ -17,7 +17,7 @@ or the [Canvas calendar](https://canvas.cornell.edu/calendar) for the
 deadline.**
 
  - **Submitted by:** the group, one submission per group
- - **Submit via:** GitHub, as `m2.md` plus code in your `project-gNN` repo
+ - **Submit via:** GitHub, as `m2.md` plus code in your `team-XX` repo
  - **Weight:** _TBD_ of the project grade
 
 1. Goals

@@ -3,9 +3,9 @@ Course Project Overview
 
 The ECE 6765 course project is a semester-long study of **system
 sensitivity**, built around a single application: a **retrieval-augmented
-generation (RAG) pipeline implemented as four microservices**. You build it
-once, then spend the rest of the semester using it to find out how a real
-workload responds to the machine underneath it.
+generation (RAG) pipeline implemented as four microservices**. You begin with
+a working baseline, then spend the rest of the semester using it to find out
+how a real workload responds to the machine underneath it.
 
 
 What the project is for
@@ -64,8 +64,8 @@ Every milestone handout on this site states **what you must accomplish and
 what you must report**. None of them tell you how.
 
 You will be given a **working starter code template**. It is a baseline, not
-a solution: understanding it, modifying it, and measuring it well are
-entirely on you. There is no step-by-step walkthrough or provided debugging
+a solution: understanding it, measuring it, and making permitted modifications
+are entirely on you. There is no step-by-step walkthrough or provided debugging
 path.
 
 Choosing an implementation strategy, finding out why your service deadlocks
@@ -162,10 +162,10 @@ baseline whose costs you can measure before changing it.
     You keep these four services -- `frontend`, `embedding`, `vectordb`,
     `generation` -- with these functionalities throughout the semester.
     **Merging, splitting, or re-decomposing the pipeline is not permitted.**
-    You may replicate a service, which is provisioning rather than
-    re-decomposition.
+    When a milestone permits it, you may replicate a service, which is
+    provisioning rather than re-decomposition.
 
-    What you can change, is **the communication between
+    What you can change in later milestones is **the communication between
     them**: wire format, transport, framing, batching, concurrency,
     connection management. That is the open design space that we explore in this project. 
 
@@ -255,7 +255,7 @@ Groups
 --------------------------------------------------------------------------
 
  - Groups are **three students**. 
- - Each group gets a private repository `project-gNN` in the
+ - Each group gets a private repository `team-XX` in the
    [cornell-ece6765](https://github.com/cornell-ece6765) GitHub
    organization, with all members as collaborators. See the [Git
    Workflow](ece6765-git-workflow.md) page.

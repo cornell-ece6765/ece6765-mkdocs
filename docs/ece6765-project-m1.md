@@ -1,17 +1,16 @@
-Milestone 1: RAG Pipeline Implementation
+Milestone 1: Baseline Instrumentation and Characterization
 ==========================================================================
 
-In this milestone you build the application you will spend the rest of the
-semester optimizing: a four-service RAG pipeline that answers queries
-correctly. Performance is explicitly **not** the goal here. A correct,
-clean, well-instrumented baseline is.
+In this milestone you start from the course-provided four-service RAG
+pipeline, add observability, and characterize the frozen baseline. Your central
+question is: **where does the time go?** Performance optimization is explicitly
+not the goal yet.
 
-**See the [course schedule](https://www.csl.cornell.edu/courses/ece6765/schedule.html)
-or the [Canvas calendar](https://canvas.cornell.edu/calendar) for the
-deadline.**
-
+ - **Deadline:** _TBD_
  - **Submitted by:** the group, one submission per group
- - **Submit via:** GitHub, as `m1.md` plus code in your `project-gNN` repo
+ - **Submit via:** GitHub, as `m1.md` plus code in your private `team-XX`
+   repository
+ - **Server checkout:** `/team-XX/ece6765-project/`
  - **Weight:** _TBD_ of the project grade
 
 1. Goals
@@ -19,175 +18,126 @@ deadline.**
 
 By the end of this milestone your group should have:
 
- - A working pipeline that embeds a query, retrieves passages, and generates
-   an answer, built as the [four required
-   services](ece6765-project-arch.md#11-the-decomposition-is-fixed) --
-   `frontend`, `embedding`, `vectordb`, `generation` -- communicating over
-   HTTP.
- - Conformance to the [query
-   contract](ece6765-project-arch.md#24-query-api): your frontend accepts
-   `POST /query` and returns an answer and per-request timings for every
-   query.
- - A passing score from the [evaluation
-   harness](ece6765-eval-harness.md).
- - A one-command launch script that brings the whole pipeline up on a clean
+ - A working copy of the released [four-service
+   pipeline](ece6765-project-arch.md#11-the-decomposition-is-fixed) that
+   preserves the external [query contract](ece6765-project-arch.md#24-query-api).
+ - Enough internal timing instrumentation to give a quantitative, defensible
+   answer to **where does time go in this pipeline?**
+ - One public harness report for each of the four provided traces, including
+   answer quality, throughput, and the required latency percentiles.
+ - A detailed time breakdown for at least one identified public trace.
+ - Exact commands that let staff reproduce the measurements on your team's
    server.
- - A **baseline measurement** of throughput and the per-request latency
-   distribution, with observed variation reported.
- - A first hypothesis, backed by a rough measurement, about where the time
-   goes.
 
-2. What to Build
+2. What to Do
 --------------------------------------------------------------------------
 
-!!! note "Requirements, not instructions"
+### 2.1. Set up the released baseline
 
-    What follows describes **what must exist** at the end of this milestone.
-    It does not prescribe how to build it. Language, frameworks, libraries,
-    algorithms, threading, and serving strategy are yours to choose and yours
-    to justify.
+Log in to your assigned server (see the [Server and Measurement
+Guide](ece6765-server-guide.md)), clone your private repository at
+`/team-XX/ece6765-project/` (see the [Git
+Workflow](ece6765-git-workflow.md)), and follow `template/README.md` in that
+repository.
 
-    Two things are not open. The [four-service
-    decomposition](ece6765-project-arch.md#11-the-decomposition-is-fixed) is
-    required and stays fixed for the whole semester, and the `POST /query`
-    contract plus `/health` must be met exactly. Build the four services
-    with the responsibilities given in the reference architecture.
+Before adding instrumentation, confirm that the released implementation
+starts, reports healthy, answers a small request, and passes its tests.
 
-    Use **plain HTTP with JSON** for M1. It is the naive choice on purpose:
-    it is quick to get working, and the cost it leaves on the table is what
-    you spend M2 onward measuring and removing. Do not optimize the
-    communication path in M1 -- you need the slow baseline to measure
-    against, and you need M1 to be about finding out how much of your
-    semester the toolchain intends to consume.
+### 2.2. Preserve the baseline
 
-    Do build the transport as a **seam** from the start, though: one client
-    class per service, with the protocol behind an interface. Swapping it out
-    is the recurring activity of this project, and groups that hard-code HTTP
-    calls throughout the frontend pay for it in every later milestone.
+The released implementation is the M1 baseline. Do not change its application
+logic, configuration, dependency versions, or `evaluation/` code.
 
+You may add instrumentation, observability dependencies and their lockfile
+entries, and internal correlation metadata. These additions must not change
+the external `POST /query` or `/health` contracts or the answers produced.
 
-### 2.1. Get access and read the contract
+### 2.3. Instrument the pipeline
 
-Claim your server (see the [Server and Measurement
-Guide](ece6765-server-guide.md)), clone your group repo (see the [Git
-Workflow](ece6765-git-workflow.md)), and read the [Reference Architecture
-and API](ece6765-project-arch.md) page carefully. The external interface is
-fixed; building something that almost matches it means the harness cannot
-grade you.
+Add an observability layer that lets you answer quantitatively:
 
-Follow the setup instructions in the [project template
-README](https://github.com/cornell-ece6765/ece6765-project/blob/main/template/README.md).
+> **Where does time go in this pipeline?**
 
-### 2.2. Build the embedding service
+At minimum, distinguish embedding, vector search, generation, and any material
+remaining overhead. You choose the timer placement, telemetry format, and
+analysis method. No particular aggregation script, notebook, profiler, or
+dashboard is required.
 
-Wrap
-[`jinaai/jina-embeddings-v5-text-nano`](https://huggingface.co/jinaai/jina-embeddings-v5-text-nano)
-behind a `POST /embed` endpoint that takes a list of texts and returns a
-list of vectors. The model is fixed for all groups.
+In the report, define where each measured interval begins and ends, identify
+any overlap, and quantify any end-to-end time your categories do not explain.
+The existing response timing fields remain part of the fixed [query
+contract](ece6765-project-arch.md#24-query-api).
 
-The endpoint takes a list of texts. Preserve that interface even if your
-initial implementation handles requests simply.
+The evaluator compares its external wall clock with the maximum reported
+`last_token_ms`. That consistency check is diagnostic only in M1; it is not a
+separate grading threshold.
 
-### 2.3. Build the vector DB service
+### 2.4. Measure the four public traces
 
-Index the CLAPNQ passage corpus and expose `POST /search`, taking query
-vectors and a `k`, returning the top-`k` passages.
+Run each public 100-query trace **once** with the released [evaluation
+harness](ece6765-eval-harness.md):
 
-You may use an existing vector index library or write your own. Both are
-legitimate, and they lead to different projects: an off-the-shelf index gets
-you to a baseline faster, while your own gives you more to optimize later.
-Whichever you choose, record in your writeup **which index algorithm and
-parameters** you used, since exact versus approximate search is a
-correctness/performance tradeoff you will revisit.
+ - `short-query-answerable.jsonl`
+ - `long-query-answerable.jsonl`
+ - `short-query-unanswerable.jsonl`
+ - `long-query-unanswerable.jsonl`
 
-Index construction happens before the timed run and is not measured -- but
-it does need to happen inside your launch script, and the harness will not
-start timing until `/health` reports ready.
+The evaluator performs an unmeasured warm-up using the first trace record.
+Exclude the warm-up invocation from the detailed breakdown, not that query ID;
+the same record appears again in the measured batch.
 
-### 2.4. Build the generation service
+For every trace, report:
 
-Wrap `Qwen/Qwen3-0.6B` behind `POST /generate`, taking a query and its
-retrieved passages and returning answer text.
+ - the applicable public answer-quality score;
+ - throughput in requests per second; and
+ - completion-latency p50, p95, p99, and maximum.
 
-### 2.5. Build the frontend
+The public quality scores are descriptive in M1. There is no score threshold
+to clear and no credit for changing the frozen baseline to raise them.
 
-The frontend accepts `POST /query` and drives each query through the other
-three services. It embeds the text, searches with the resulting vector,
-generates from the query plus retrieved passages, and returns the answer
-under the original `id`.
+Staff will launch the submitted application using your documented command,
+then send a small batch of unseen queries to the frontend. This checks startup
+and health, the API, response IDs and cardinality, nonempty answers, valid
+timestamps, and obviously broken or workload-specific behavior. It is not a
+hidden accuracy test and produces no private accuracy grade; ambiguous
+semantic behavior is reviewed by a person rather than a hidden score cutoff.
 
-Use plain HTTP with JSON in M1. Resist the urge to optimize: you need a
-baseline that is obviously correct and easy to compare against later.
+### 2.5. Answer the measurement question
 
-Do put the inter-service calls behind a client interface -- one small class
-per service -- rather than scattering HTTP calls through the orchestration
-logic. M2 asks you to change the transport, and this decision is the
-difference between an afternoon and a week.
-
-### 2.6. Instrument it
-
-Two kinds of timing, and you need both.
-
-**Required by the contract:** `start_time_ms` and `last_token_ms` per
-request. These go in the `POST /query` response and the harness grades you
-on them.
-
-**Required by you:** where time goes *inside* a request. How long each
-service took and how long the frontend spent waiting on each. Timestamps
-and a structured log line are enough, but you need this before you can
-answer Section 2.8.
-
-### 2.7. Establish the baseline
-
-Run the harness. Confirm you pass correctness, then measure:
-
- - Per-request latency from t=0 (p50, p95, p99, p99.9, max)
- - Throughput -- requests per second over the run
-
-Report observed variation and follow the measurement discipline in the
-[harness guide](ece6765-eval-harness.md#41-measurement-discipline).
-
-### 2.8. Form a hypothesis
-
-Using your instrumentation, produce a breakdown of where wall-clock time
-goes across the stages of your pipeline and the hops between them. Then
-answer, in prose: **which stage is the bottleneck, and what evidence
-supports that?**
-
-You are not expected to be right. You are expected to have a defensible
-first answer and to know what measurement would confirm or refute it. M2
-will test it.
+For at least one identified public trace, present a figure or table showing
+where end-to-end time goes. Explain the measurement method, identify the
+dominant stage or stages, and support that conclusion with the data.
 
 3. What to Submit
 --------------------------------------------------------------------------
 
-Commit working code to your repository and a file named `m1.md` at the repo
+Commit your instrumentation changes and a file named `m1.md` at the repository
 root containing:
 
  - [ ] **Title and group members** -- project title, all three names and
        NetIDs
- - [ ] **Implementation overview** (~1 page) -- what each service does, what
-       libraries and index algorithm you chose, and why
- - [ ] **How to run it** -- the exact commands to bring up the pipeline and
-       run the harness on a clean server
- - [ ] **Correctness result** -- your harness correctness score and
-       confirmation that you clear the threshold
- - [ ] **Baseline measurements** (~1 page) -- throughput and the latency
-       distribution, with observed variation
- - [ ] **Time breakdown** -- a figure showing where wall-clock time goes
-       across services and hops
- - [ ] **Bottleneck hypothesis** (~2 paragraphs) -- which service you believe
-       is the bottleneck, the evidence, and the experiment that would confirm
-       it
+ - [ ] **Baseline confirmation** -- released version and confirmation that
+       the frozen functional configuration was preserved
+ - [ ] **Instrumentation and methodology** -- measurement boundaries,
+       overlap, and any unattributed time
+ - [ ] **How to run it** -- exact commands to launch the pipeline and run the
+       harness on a clean server
+ - [ ] **Public results** -- quality, throughput, and p50/p95/p99/maximum
+       completion latency for one run of each public trace
+ - [ ] **Time breakdown** -- a figure or table for at least one identified
+       public trace
+ - [ ] **Interpretation** -- which stage or stages dominate and what evidence
+       supports that conclusion
  - [ ] **Division of labor** -- who owns which service going forward
  - [ ] **Status and blockers** -- what is not working and what you are stuck
        on
 
-Figures go in `img/`; result summaries go in `results/`.
+Figures go in `img/`; harness reports and small result summaries go in
+`results/`.
 
 ```bash
-cd ${HOME}/ece6765/project-gNN
-git add m1.md img/ results/ src/ scripts/
+cd /team-XX/ece6765-project
+git add -A
 git commit -m "Milestone 1 submission"
 git push
 ```
@@ -199,12 +149,12 @@ The submission is the last commit on `main` at or before the deadline.
 
 | Criterion | Weight | What we are looking for |
 |-----------|--------|-------------------------|
-| Correctness | _TBD_ | Pipeline clears the harness quality threshold |
-| Interface conformance | _TBD_ | `POST /query` and `/health` contracts implemented correctly |
-| Reproducibility | _TBD_ | Staff can bring up your pipeline and run the harness from your documented commands, unaided |
-| Baseline measurement quality | _TBD_ | Distributions and observed variation reported |
-| Time breakdown and hypothesis | _TBD_ | Instrumentation supports the claim; hypothesis is specific and testable |
-| Writeup | _TBD_ | Clear, correctly labeled figures, claims matching evidence |
+| Functional behavior and interface conformance | _TBD_ | The frozen pipeline runs on unseen queries and preserves the external contracts |
+| Reproducibility | _TBD_ | Staff can launch the pipeline and run the harness from the documented commands |
+| Instrumentation | _TBD_ | Measurements attribute time and define their boundaries, overlap, and remainder |
+| Public baseline measurements | _TBD_ | All four traces include descriptive quality, throughput, and p50/p95/p99/maximum latency |
+| Time breakdown and interpretation | _TBD_ | At least one detailed breakdown supports a defensible answer to "where does the time go?" |
+| Writeup | _TBD_ | Figures and tables are labeled and claims match the evidence |
 
 Feedback will be pushed to your group repository as
 `m1-feedback-<DATE>.md` after the deadline.
@@ -215,42 +165,25 @@ Feedback will be pushed to your group repository as
 These are offered as engineering judgment from past performance projects.
 None of them are requirements.
 
-!!! tip "Budget for friction, not just for coding"
+!!! tip "Budget for friction"
 
-    The dominant cost in M1 is rarely writing the services. It is dependency
-    hell, ARM64 wheels that do not exist, models that will not load, and
-    services that will not stay up. This is normal, it is the work, and no
-    one is going to clear it for you. Start early enough that a lost week
-    does not sink the milestone.
+    The dominant cost may be understanding unfamiliar code, getting
+    dependencies and models running on ARM64, and deciding where a timer
+    belongs. Start early enough to distinguish an instrumentation problem
+    from an environment problem.
 
+!!! tip "Keep checking behavior"
 
-!!! tip "Correctness first, and keep checking it"
-
-    Run the harness after every substantive change. Most
-    of what you do in later milestones can silently degrade answer quality,
-    and the earlier you build the habit the less rework you do.
+    Instrumentation can accidentally change ordering, data flow, or answers.
+    Run the tests and a small request after every substantive change.
 
 !!! tip "Do not optimize in M1"
 
     Groups that arrive at M2 with an already-tuned pipeline have no baseline
-    to compare against and consistently write weaker reports. The naive
-    version is an asset. Tag the commit.
-
-!!! tip "Write the template so the protocol can change"
-
-    Put the transport behind an interface now: a client class per service
-    with a single implementation, so that swapping HTTP for gRPC later is a
-    new implementation rather than a rewrite. Groups that hard-code
-    `requests.post(...)` calls throughout the frontend pay for it every
-    milestone after this one, and they pay most in M4 when they want to
-    combine three protocol choices and cannot.
-
-    Being able to select the protocol from a config file -- and therefore
-    run the same trace across protocols back to back -- is worth the hour it
-    costs you here.
+    to compare against. The naive version is an asset.
 
 !!! tip "Watch the vector serialization"
 
     The frontend's vector-search request moves a full dense vector as a JSON
-    array of floats. You are not asked to fix this in M1 -- but instrument
-    it, so that when you do fix it in M2 you can quantify what it cost.
+    array of floats. You are not asked to fix this in M1, but instrument it so
+    that a later change can quantify what it cost.

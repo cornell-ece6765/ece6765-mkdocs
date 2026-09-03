@@ -35,7 +35,8 @@ already been answered.
 
 **Methodology.** What did you actually do? Enough detail that another group
 in this class could repeat it: hardware, software versions, workload
-configuration, observed variation, what you varied and what you held fixed.
+configuration, what you varied and what you held fixed, and observed variation
+when comparing configurations.
 
 **Results.** What did you observe? Figures and tables with prose that
 interprets them.
@@ -75,17 +76,18 @@ Figures do most of the work in a systems paper. Treat them accordingly.
 
 This is the section where most projects lose points, so read it carefully.
 
-!!! danger "A single number is not a measurement"
+!!! danger "A comparative claim needs uncertainty"
 
-    Report observed variation -- standard deviation, min/max, or a
-    confidence interval. A speedup reported to three significant figures
-    without accounting for variation is not evidence of anything.
+    When comparing configurations, report observed run-to-run variation --
+    standard deviation, min/max, or a confidence interval. A speedup reported
+    to three significant figures without accounting for variation is not
+    evidence of anything.
 
  - State your **baseline** explicitly and justify that it is fair. An
    optimized version of your system compared against an unoptimized
    baseline you wrote yourself is not a result.
  - For latency, report a **distribution**, not just a mean. Tail latency is
-   a central theme of this course; p50/p99/p99.9 is the normal reporting
+   a central theme of this course; p50/p95/p99/max is the normal reporting
    convention.
  - Identify **confounds** you could not eliminate. Noisy neighbors, thermal
    throttling, cold caches, and background daemons are all fair game, and

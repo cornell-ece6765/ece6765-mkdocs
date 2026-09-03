@@ -19,33 +19,28 @@ The third is the **workload**: all groups use the course-specified embedding
 model, generation model, and CLAPNQ dataset. These are fixed so that the
 comparison is about systems rather than differences in models or data.
 
-M1 additionally fixes the baseline communication protocol: plain HTTP with
-JSON. After M1, the communication protocol and scheduling policy are part of
-the experimental design space.
-
-What is open (and what this project is actually about) is **how those
-four services talk to each other**. Transport, serialization, framing,
-batching, concurrency, connection management: all of it is yours, and
-changing it is one of the experimental axes of the semester. Everything
-*inside* a service, except the fixed models and dataset, is yours too:
-languages, libraries, algorithms, threading, memory layout.
+The released implementation is frozen for M1. Do not change its application
+logic or configuration, or upgrade or replace released dependencies. You may
+add instrumentation, observability dependencies and their lockfile entries,
+and internal correlation metadata if they do not change its answers or
+external API. Later milestone handouts state which implementation choices are
+open for experimentation.
 
 1. Services
 --------------------------------------------------------------------------
 
 Your pipeline is four services, running as separate processes. In M1 they
-communicate over HTTP on localhost; what they communicate over after that is
-up to you.
+communicate over HTTP on localhost.
 
-| Service | Responsibility |
-|---------|----------------|
-| `frontend` | Accepts queries and orchestrates work across the other three services |
-| `embedding` | Encodes query text into a dense vector | 
-| `vectordb` | Nearest-neighbor search over the passage index | 
-| `generation` | Produces the answer text from query + retrieved passages | 
+| Service | Baseline port | Responsibility |
+|---------|-----:|----------------|
+| `frontend` | 8000 | Accepts queries and orchestrates work across the other three services |
+| `embedding` | 8001 | Encodes query text into a dense vector |
+| `vectordb` | 8002 | Nearest-neighbor search over the passage index |
+| `generation` | 8003 | Produces the answer text from query + retrieved passages |
 
 The frontend is not just a proxy: it coordinates the other services and is
-the natural place to implement scheduling policy.
+the natural place to implement scheduling policy when a milestone permits it.
 
 ### 1.1. The decomposition is fixed
 
@@ -55,11 +50,8 @@ not fuse embedding into vectordb, split generation
 into prefill and decode, absorb the frontend's scheduling into another
 service, or otherwise re-cut the boundaries.
 
-You **may replicate** a service -- several instances of `embedding` behind
-the frontend, a sharded `vectordb` -- because that is provisioning, not
-re-decomposition. In fact in some of the milestones you should do this to 
-improve the scalability of the application. Note that replicas of a service 
-still present that service's interface.
+Replicate a service only when a milestone explicitly permits it. Replicas
+must still present that service's interface.
 
 2. The Fixed Evaluation Interface
 --------------------------------------------------------------------------
@@ -78,6 +70,10 @@ already assigned a batch of work to this server, and the server has a full
 queue in front of it from the moment it starts. Everything in the trace is
 sitting there, waiting, at t=0.
 
+The released frontend processes queries sequentially in input order. For each
+query it calls embedding, vector search, and generation before moving to the
+next query.
+
 ### 2.2. Trace file format
 
 The format is newline-delimited JSON, one request per line:
@@ -89,20 +85,24 @@ The format is newline-delimited JSON, one request per line:
 
  - `id` is an opaque unique string. Results must carry it back unchanged, so
    answers can be attributed to requests.
- - `text` is the raw query. Ground-truth answers are held by the evaluation
-   harness and are not included in the trace given to the pipeline.
+ - `text` is the raw query. Public reference answers are not included in the
+   request sent to the pipeline.
  - Each public trace contains 100 requests.
+
+The pipeline API must continue to accept arbitrary unseen IDs and query text;
+the public evaluator's trace validation does not narrow that interface.
 
 ### 2.3. Invocation
 
 From the `evaluation/` directory, run:
 
 ```bash
-EMBEDDINGS_PATH=/team-XX/embeddings.npy pixi run evaluate \
-  --trace traces/short-query-answerable.jsonl
+pixi run evaluate \
+  --trace traces/short-query-answerable.jsonl \
+  --output ../results/short-query-answerable.json
 ```
 
-The evaluator launches the reference pipeline, waits for `/health`, submits
+The evaluator launches the pipeline, waits for `/health`, submits
 the workload through `POST /query`, scores the response, and writes a report.
 Use `--output <results-path>` to choose the report path.
 
@@ -122,20 +122,23 @@ The frontend returns:
 
 `queries` must be nonempty, IDs must be unique, and every requested ID must
 appear exactly once in `responses`. Response order does not matter. Both
-timestamps are nonnegative milliseconds measured from the start of frontend
-processing for the `/query` request. `last_token_ms` is when the completed
-answer is available at the frontend, and it must not precede
-`start_time_ms`.
+timestamps are nonnegative milliseconds from a common origin at the start of
+frontend processing for the `/query` request. `start_time_ms` is recorded
+immediately before that query's embedding call. `last_token_ms` is recorded
+immediately after its blocking generation call returns, and it must not
+precede `start_time_ms`.
 
 The frontend reports these per-query timestamps. The evaluator separately
 measures the complete HTTP request to calculate throughput.
 
 ### 2.5. Readiness
 
-Your pipeline must expose `GET /health` returning HTTP 200 only once
-**every** component is ready to serve. The harness polls this before
-starting the timed run, so that model loading and index construction do not
-land inside your measured time.
+Your pipeline must expose `GET /health`, returning HTTP 200 with
+`{"status":"ok"}` only once **every** component is ready to serve. When
+reachable but not ready, the released frontend returns HTTP 503 with
+`{"status":"unavailable"}`. The harness polls this before starting the timed
+run, so that model loading and index construction do not land inside your
+measured time.
 
 How you aggregate readiness across however many processes you end up with is
 your problem. Reporting healthy before you actually are will show up as
@@ -144,26 +147,23 @@ inexplicably terrible numbers, because that work moves inside the clock.
 3. Internal interfaces: the semester's experiment
 --------------------------------------------------------------------------
 
-The decomposition is fixed; the way the four services communicate is not.
-This section is the open one, and it is where the design work of this project
-actually lives.
+The decomposition is fixed. The released internal protocol is also fixed for
+M1; later handouts state when these choices become experimental.
 
-What is fixed here is only the **semantics** of each hop -- which service
-needs what data from which other service:
+The **semantics** of each hop remain fixed -- which service needs what data
+from which other service:
 
  - the frontend needs a **vector** for a query from `embedding`
  - the frontend needs **passages** for a vector from `vectordb`
  - the frontend needs an **answer** for a query plus passages from
    `generation`
 
-Everything about *how* that data crosses the boundary is yours: the wire
-format, the transport, the framing, who initiates, and whether the call
-blocks.
+How that data crosses the boundary may become part of the later design space:
+the wire format, transport, framing, initiator, and whether the call blocks.
 
 The reference implementation wires the services together with **plain HTTP
-and JSON bodies**. This is intentionally the naive choice: it is easy to get
-working in M1, and it leaves obvious wins on the table for the rest of the
-semester.
+and JSON bodies**. It is intentionally naive and serves as the common released
+baseline.
 
 ```
 frontend ──POST /embed────────▶ embedding    {"texts": [...]}  →  {"vectors": [[...]]}
@@ -173,38 +173,27 @@ frontend ──POST /generate─────▶ generation   {"query": "...", "p
                                              →  {"answer": "..."}
 ```
 
-**Replace any of it.** Build this protocol in M1 because it is the fastest
-thing to get correct, then start taking it apart in M2, where the axes open
-to you -- serialization, transport, batching, call structure, connection
-management, who owns the buffer -- are laid out, and where a measured
-protocol change is a required deliverable.
+Starting in M2, follow the active milestone's instructions about which protocol
+axes you may change and measure.
 
 4. Repository layout
 --------------------------------------------------------------------------
 
-Milestone writeups are collected automatically, so **the four `mN.md` files
-must sit at the repo root with exactly those names**. Because the four
-services are fixed, the `src/` layout below should stay recognizable all
-semester; the rest is a suggestion you can reorganize as you like.
+Your private repository is named `team-XX` and its canonical checkout is
+`/team-XX/ece6765-project/`. Milestone writeups are collected automatically,
+so **the four `mN.md` files must sit at the repository root with exactly those
+names**.
 
 ```
-project-gNN/
-  README.md              project description + group members
-  m1.md  m2.md           milestone writeups (root level, exact names)
-  m3.md  m4.md
-  img/                   figures referenced from the writeups
-  src/
-    frontend/
-    embedding/
-    vectordb/
-    generation/
-    common/              shared client/transport code -- one client class
-                         per service, with a selectable protocol
-                         implementation behind it
-  config/                configuration for each experiment you run
-  scripts/               launch, sweep, and measurement scripts
-  results/               small summarized result files (CSV/JSON)
-  README-data.md         where large artifacts live, how to regenerate
+/team-XX/
+  embeddings.npy             provided artifact; do not commit
+  ece6765-project/
+    README.md                 project description + group members
+    m1.md  m2.md  m3.md  m4.md
+    img/                      figures referenced from the writeups
+    results/                  small summarized result files
+    template/                 pipeline source and launch scripts
+    evaluation/               course-provided evaluator; do not modify
 ```
 
 `results/` should hold summarized numbers, not raw traces. See the [Git
@@ -213,8 +202,8 @@ Workflow](ece6765-git-workflow.md) page for size limits.
 5. Reproducibility requirement
 --------------------------------------------------------------------------
 
-From M1 onward, your repository must document one command that brings up the
-entire pipeline on a clean server and one command that runs the harness
+From M1 onward, your repository must document the exact commands that bring up
+the entire pipeline from `/team-XX/ece6765-project/` and run the harness
 against it. The staff will run these. If your pipeline only comes up when a
 specific group member types a specific sequence of commands from memory, it
 does not count as working, and it means your final results cannot be
