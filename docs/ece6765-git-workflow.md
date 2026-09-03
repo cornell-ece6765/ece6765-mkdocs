@@ -1,10 +1,11 @@
 Git Workflow for Group Repos
 ==========================================================================
 
-Every project group is given a private repository named `project-gNN` in
+Every project group is given a private repository named `team-XX` in
 the [cornell-ece6765](https://github.com/cornell-ece6765) GitHub
-organization, where `NN` is your group number. All three members are added
-as collaborators with push access. This page covers how to use it.
+organization, where `XX` is your zero-padded team number. It is preloaded with
+the released project starter, and all three members are added as collaborators
+with push access. This page covers how to use it.
 
 !!! danger "The repo is the only copy of your work that survives"
 
@@ -33,43 +34,44 @@ Paste that public key into <https://github.com/settings/keys>. Then verify:
 ssh -T git@github.com
 ```
 
-Clone your group repository:
+Clone your group repository into the assigned shared team directory:
 
 ```bash
-mkdir -p ${HOME}/ece6765
-cd ${HOME}/ece6765
-git clone git@github.com:cornell-ece6765/project-gNN
-cd project-gNN
+cd /team-XX
+git clone git@github.com:cornell-ece6765/team-XX.git ece6765-project
+cd /team-XX/ece6765-project
 ```
 
 Set your identity so commits are attributed correctly:
 
 ```bash
-git config user.name  "Your Name"
-git config user.email "netid@cornell.edu"
+git config --global user.name  "Your Name"
+git config --global user.email "netid@cornell.edu"
 ```
 
 2. Repository Layout
 --------------------------------------------------------------------------
 
-Keep the top level of the repo predictable, since the milestone files are
-collected automatically:
+The shared team directory contains the repository checkout and the
+course-provided embeddings artifact:
 
 ```
-project-gNN/
-  README.md          one-line project description + group members
-  m1.md              milestone 1 submission
-  m2.md              milestone 2 submission
-  m3.md              milestone 3 submission
-  m4.md              milestone 4 submission
-  img/               figures referenced from the milestone files
-  src/               your code
-  results/           small result files (CSV, JSON) -- not raw datasets
-  README-data.md     where large datasets live and how to regenerate them
+/team-XX/
+  embeddings.npy             provided artifact; do not commit
+  ece6765-project/           clone of the private team-XX repository
+    README.md                 project description + group members
+    template/                 pipeline source and launch scripts
+    evaluation/               course evaluation harness
+    m1.md  m2.md  m3.md  m4.md
+    img/                      figures referenced from milestone files
+    results/                  small result files (CSV, JSON)
+    README-data.md            how large artifacts can be regenerated
 ```
 
 The milestone files must sit at the repo root with exactly those names.
-Feedback is pushed back alongside them as `mN-feedback-<DATE>.md`.
+Feedback is pushed back alongside them as `mN-feedback-<DATE>.md`. The
+canonical launcher finds `/team-XX/embeddings.npy` automatically; set
+`EMBEDDINGS_PATH` only for a nonstandard checkout or artifact location.
 
 !!! warning "Do not commit large files"
 
@@ -77,7 +79,8 @@ Feedback is pushed back alongside them as `mN-feedback-<DATE>.md`.
     storage quota. Commit the scripts that produce your data and a small
     summarized result file, not multi-gigabyte traces or checkpoints. If you
     need to share large artifacts within your group, use Cornell Box and
-    link to it from `README-data.md`.
+    link to it from `README-data.md`. Do not move `/team-XX/embeddings.npy`
+    into the repository.
 
 3. Working Together
 --------------------------------------------------------------------------

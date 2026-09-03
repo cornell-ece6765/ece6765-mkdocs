@@ -12,13 +12,13 @@ bugs or errors in this documentation, please contact the instructor.
 The Course Project
 --------------------------------------------------------------------------
 
-You will build a **retrieval-augmented generation pipeline as four
-microservices** -- frontend, embedding, vector DB, and generation -- and
-then spend the semester using it to find out how sensitive a real workload
-is to the system underneath it.
+You will begin with a working **retrieval-augmented generation pipeline as
+four microservices** -- frontend, embedding, vector DB, and generation -- and
+then spend the semester using it to find out how sensitive a real workload is
+to the system underneath it.
 
-Those four services stay fixed for the semester. What you change is
-everything underneath and between them. 
+Those four services stay fixed for the semester. Each milestone handout states
+what you may change underneath and between them.
 
 The pipeline is the instrument, not the goal. What you are building is the
 ability to change something about a machine and explain what happened.
@@ -63,10 +63,11 @@ puts you on the other side of them.
     What the project is for, the architecture, groups, infrastructure, and
     how the work is graded. Start here.
 
-- **Milestone 1** &middot; *not yet released*
+- **[Milestone 1: Baseline Instrumentation and Characterization](ece6765-project-m1.md)**
+  &middot; *released*
 
-    Build the four-service pipeline. Get it correct, instrument it, and
-    establish a baseline.
+    Instrument the supplied four-service baseline and establish where its
+    time goes.
 
 - **Milestone 2** &middot; *not yet released*
 
@@ -89,8 +90,8 @@ Reference
 
  - **[Reference Architecture and API](ece6765-project-arch.md)** -- the
    service contract. Read before M1.
- - **[Evaluation Harness and Metrics](ece6765-eval-harness.md)** -- how
-   correctness and performance are scored.
+ - **[Evaluation Harness and Metrics](ece6765-eval-harness.md)** -- how public
+   answer quality and performance are reported.
  - **[Server and Measurement Guide](ece6765-server-guide.md)** -- server
    access, profiling tools, measurement hygiene.
  - **[Project Report Guidelines](ece6765-report-guidelines.md)** -- writeup

@@ -22,7 +22,7 @@ or the [Canvas calendar](https://canvas.cornell.edu/calendar) for the
 deadline.**
 
  - **Submitted by:** the group, one submission per group
- - **Submit via:** GitHub, as `m3.md` plus code in your `project-gNN` repo
+ - **Submit via:** GitHub, as `m3.md` plus code in your `team-XX` repo
  - **Weight:** _TBD_ of the project grade
 
 1. Goals

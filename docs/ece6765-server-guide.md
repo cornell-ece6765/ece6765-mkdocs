@@ -5,39 +5,31 @@ Every group gets a dedicated server. This page covers access, the
 tools available for profiling, and the measurement hygiene that makes your
 numbers mean something.
 
-!!! warning "Draft"
-
-    The reservation mechanism and the exact tooling available are _TBD_ and
-    will be filled in before Milestone 1 is released. 
-
 1. Access
 --------------------------------------------------------------------------
 
-Each group has its own dedicated server. The hostname follows your group
+Each group has its own dedicated server. The hostname follows your team
 number, zero-padded to two digits:
 
 ```
-altra-<NN>.ece.cornell.edu        NN = 01 through 14
+altra-<XX>.ece.cornell.edu        XX = 01 through 14
 ```
 
 Log in over SSH with your NetID and your Cornell password:
 
 ```bash
-ssh <netid>@altra-<NN>.ece.cornell.edu
+ssh <netid>@altra-<XX>.ece.cornell.edu
 ```
 
-So a student with NetID `ma2222` in group 1 would run:
+So a student with NetID `ma2222` in team 1 would run:
 
 ```bash
 ssh ma2222@altra-01.ece.cornell.edu
 ```
 
-Whether the servers are reachable from off campus without the Cornell VPN
-is _TBD_. If you do need it, set it up ahead of time rather than at a
-deadline: see [CU VPN](https://it.cornell.edu/cuvpn) at IT@Cornell, which
-has per-platform instructions for Windows, macOS, Linux, and mobile. It
-requires the Cisco Secure Client and Two-Step Login, and a session expires
-after 10 hours, so expect to reconnect during long experiments.
+Your team's shared directory is `/team-XX/`. Clone the private `team-XX`
+repository at `/team-XX/ece6765-project/`; the course-provided embeddings
+artifact lives at `/team-XX/embeddings.npy` outside the repository.
 
 **If you cannot log in, contact the course staff immediately.** Do not wait
 until the milestone deadline to discover you have no access. Before you
@@ -45,7 +37,7 @@ write to us, rule out the three things that account for nearly every failed
 login:
 
  - Your **NetID** is spelled correctly.
- - The **hostname** is correct -- your group number, with the leading zero
+ - The **hostname** is correct -- your team number, with the leading zero
    for groups 1 through 9, and the full `.ece.cornell.edu` suffix.
  - Your **password** is your Cornell password, typed correctly.
 
@@ -100,7 +92,7 @@ like source code:
        allocation, NUMA policy, page-size setup, frequency governor, and
        anything else you tuned. This is the part groups most often lose,
        because it lives in shell history rather than in a file.
- - [ ] **Sweep and measurement scripts**
+ - [ ] **Measurement scripts you create**
  - [ ] **Results** -- your summarized numbers, committed as you collect them,
        not at the end of the milestone
  - [ ] **Notes** -- what you tried, what the machine state was, what you
@@ -195,8 +187,8 @@ writeup.
 
 Every result needs the configuration it was produced under: core allocation,
 NUMA policy, page size, frequency setting, request-processing configuration,
-service versions, and the commit hash. Automate this -- have your sweep
-script write the state into the results file alongside the numbers.
+service versions, and the commit hash. For configuration sweeps, automate this
+by writing the state into the results file alongside the numbers.
 
 A result you cannot reproduce because you do not know what state produced it
 is worse than no result, because you will trust it.
@@ -208,7 +200,7 @@ Course staff own the infrastructure. You own everything you build on it.
 
 **Ask staff about**, and ask early:
 
- - Server access, accounts, and reservations
+ - Server access, accounts, and your assigned team directory
  - A machine that is broken, unreachable, or in a bad state
  - Performance counters or platform features that are unavailable or require
    permissions you do not have
