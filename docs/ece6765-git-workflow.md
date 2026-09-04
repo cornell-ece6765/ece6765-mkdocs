@@ -4,8 +4,8 @@ Git Workflow for Group Repos
 Every project group is given a private repository named `team-XX` in
 the [cornell-ece6765](https://github.com/cornell-ece6765) GitHub
 organization, where `XX` is your zero-padded team number. It is preloaded with
-the released project starter, and all three members are added as collaborators
-with push access. This page covers how to use it.
+the released project starter, and every group member is added as a
+collaborator with push access. This page covers how to use it.
 
 !!! danger "The repo is the only copy of your work that survives"
 
@@ -85,7 +85,7 @@ canonical launcher finds `/team-XX/embeddings.npy` automatically; set
 3. Working Together
 --------------------------------------------------------------------------
 
-Three people pushing to one branch will conflict. The lightest workflow
+Three or four people pushing to one branch will conflict. The lightest workflow
 that avoids most of the pain:
 
 **Pull before you start, push when you stop.** The push is not optional --
@@ -165,7 +165,7 @@ If that command shows the commit you expect, your submission is in.
     rewrite -- `git filter-repo` on a shared repo needs everyone to
     re-clone, and it is easy to lose work.
 
-??? question "We want to add a fourth collaborator / change groups"
+??? question "We want to add a collaborator / change groups"
 
     Group changes must be approved by the instructor. Post privately on the
     course discussion board.

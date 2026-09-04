@@ -254,7 +254,7 @@ in the [Server and Measurement Guide](ece6765-server-guide.md).
 Groups
 --------------------------------------------------------------------------
 
- - Groups are **three students**. 
+ - Groups are **three or four students**. 
  - Each group gets a private repository `team-XX` in the
    [cornell-ece6765](https://github.com/cornell-ece6765) GitHub
    organization, with all members as collaborators. See the [Git

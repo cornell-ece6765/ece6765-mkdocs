@@ -1,9 +1,8 @@
 Server and Measurement Guide
 ==========================================================================
 
-Every group gets a dedicated server. This page covers access, the
-tools available for profiling, and the measurement hygiene that makes your
-numbers mean something.
+Every group gets a dedicated server. This page covers access, platform
+notes, and the measurement hygiene that makes your numbers mean something.
 
 1. Access
 --------------------------------------------------------------------------
@@ -12,7 +11,7 @@ Each group has its own dedicated server. The hostname follows your team
 number, zero-padded to two digits:
 
 ```
-altra-<XX>.ece.cornell.edu        XX = 01 through 14
+altra-<XX>.ece.cornell.edu        XX = 01 through 15
 ```
 
 Log in over SSH with your NetID and your Cornell password:
@@ -47,8 +46,8 @@ from you on the same knob, that difference is real and worth chasing down.
 
 !!! danger "The server is shared with your own group"
 
-    Three people running timed experiments on one machine at the same time
-    will produce three sets of meaningless numbers. Agree on a protocol
+    Several people running timed experiments on one machine at the same time
+    will produce several sets of meaningless numbers. Agree on a protocol
     within your group -- a shared calendar, a lock file, anything -- before
     you start measuring. This is the single most common source of
     unexplainable variance in this project.
@@ -145,30 +144,12 @@ you start:
 *Machine details* (core count, NUMA topology, cache hierarchy, memory
 configuration, available page sizes, frequency range): You should also learn to query them yourself. 
 
-4. Profiling tools
---------------------------------------------------------------------------
-
-_Exact tool availability and any required permissions: TBD._
-
-You will need, at minimum, the ability to:
-
- - Sample hardware performance counters per process
- - Read cache and TLB miss rates at each level
- - Measure memory bandwidth consumption
- - Attribute stall cycles
- - Observe NUMA-local versus remote memory access
- - Control thread and memory placement
-
-Counter access on some platforms requires elevated permissions or a sysctl
-change. If a counter you need is unavailable, ask on the course discussion
-board rather than working around it with a worse proxy.
-
-5. Measurement hygiene
+4. Measurement hygiene
 --------------------------------------------------------------------------
 
 This section is not optional advice. Milestone rubrics grade it directly.
 
-### 5.1. Before every timed run
+### 4.1. Before every timed run
 
  - [ ] No other group member is running anything on the machine
  - [ ] No leftover processes from your last run -- check, do not assume
@@ -176,14 +157,14 @@ This section is not optional advice. Milestone rubrics grade it directly.
  - [ ] The machine state you intend to test is actually set (verify, do not
        trust that the script applied it)
 
-### 5.2. Run-to-run variation
+### 4.2. Run-to-run variation
 
 Characterize run-to-run variation before claiming a small improvement. For
 system-level effects in the sensitivity study, many knobs produce effects
 of the same order as measurement noise. Report that noise floor in your
 writeup.
 
-### 5.3. Record the machine state
+### 4.3. Record the machine state
 
 Every result needs the configuration it was produced under: core allocation,
 NUMA policy, page size, frequency setting, request-processing configuration,
@@ -193,7 +174,7 @@ by writing the state into the results file alongside the numbers.
 A result you cannot reproduce because you do not know what state produced it
 is worse than no result, because you will trust it.
 
-6. Scope of Staff Support
+5. Scope of Staff Support
 --------------------------------------------------------------------------
 
 Course staff own the infrastructure. You own everything you build on it.

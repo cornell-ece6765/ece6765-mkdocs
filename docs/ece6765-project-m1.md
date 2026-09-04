@@ -6,12 +6,12 @@ pipeline, add observability, and characterize the frozen baseline. Your central
 question is: **where does the time go?** Performance optimization is explicitly
 not the goal yet.
 
- - **Deadline:** _TBD_
+ - **Deadline:** see the [course
+   schedule](https://www.csl.cornell.edu/courses/ece6765/schedule.html)
  - **Submitted by:** the group, one submission per group
  - **Submit via:** GitHub, as `m1.md` plus code in your private `team-XX`
    repository
  - **Server checkout:** `/team-XX/ece6765-project/`
- - **Weight:** _TBD_ of the project grade
 
 1. Goals
 --------------------------------------------------------------------------
@@ -114,8 +114,8 @@ dominant stage or stages, and support that conclusion with the data.
 Commit your instrumentation changes and a file named `m1.md` at the repository
 root containing:
 
- - [ ] **Title and group members** -- project title, all three names and
-       NetIDs
+ - [ ] **Title and group members** -- project title, plus the name and
+       NetID of every group member
  - [ ] **Baseline confirmation** -- released version and confirmation that
        the frozen functional configuration was preserved
  - [ ] **Instrumentation and methodology** -- measurement boundaries,
@@ -144,22 +144,10 @@ git push
 
 The submission is the last commit on `main` at or before the deadline.
 
-4. Grading Rubric
---------------------------------------------------------------------------
-
-| Criterion | Weight | What we are looking for |
-|-----------|--------|-------------------------|
-| Functional behavior and interface conformance | _TBD_ | The frozen pipeline runs on unseen queries and preserves the external contracts |
-| Reproducibility | _TBD_ | Staff can launch the pipeline and run the harness from the documented commands |
-| Instrumentation | _TBD_ | Measurements attribute time and define their boundaries, overlap, and remainder |
-| Public baseline measurements | _TBD_ | All four traces include descriptive quality, throughput, and p50/p95/p99/maximum latency |
-| Time breakdown and interpretation | _TBD_ | At least one detailed breakdown supports a defensible answer to "where does the time go?" |
-| Writeup | _TBD_ | Figures and tables are labeled and claims match the evidence |
-
 Feedback will be pushed to your group repository as
 `m1-feedback-<DATE>.md` after the deadline.
 
-5. Tips
+4. Tips
 --------------------------------------------------------------------------
 
 These are offered as engineering judgment from past performance projects.

@@ -112,7 +112,7 @@ Communications of the ACM, 56(2):74-80, 2013.
 ```
 
 Do not number your references. Numbers have to be renumbered by hand every
-time you insert a source, and in a report three people are editing at once
+time you insert a source, and in a report several people are editing at once
 the numbering will silently go wrong. Keys never change, so a citation is
 correct wherever it ends up.
 

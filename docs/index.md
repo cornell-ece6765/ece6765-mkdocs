@@ -93,7 +93,7 @@ Reference
  - **[Evaluation Harness and Metrics](ece6765-eval-harness.md)** -- how public
    answer quality and performance are reported.
  - **[Server and Measurement Guide](ece6765-server-guide.md)** -- server
-   access, profiling tools, measurement hygiene.
+   access, platform notes, measurement hygiene.
  - **[Project Report Guidelines](ece6765-report-guidelines.md)** -- writeup
    format and how to report measurements.
  - **[Git Workflow for Group Repos](ece6765-git-workflow.md)** -- repo setup
