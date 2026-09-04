@@ -980,6 +980,10 @@ Guide</a>), clone your private repository at
 <code>/team-XX/ece6765-project/</code> (see the <a href="../ece6765-git-workflow/">Git
 Workflow</a>), and follow <code>template/README.md</code> in that
 repository.</p>
+<p>The starter preloaded into your repository is tagged <code>m1-release</code>. Confirm
+you are on it before you start:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>describe<span class="w"> </span>--tags
+</span></code></pre></div>
 <p>Before adding instrumentation, confirm that the released implementation
 starts, reports healthy, answers a small request, and passes its tests.</p>
 <h3 id="22-preserve-the-baseline">2.2. Preserve the baseline<a class="headerlink" href="#22-preserve-the-baseline" title="Permanent link">&para;</a></h3>
@@ -1040,8 +1044,9 @@ root containing:</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Title and group members</strong> -- project title, plus the name and
        NetID of every group member</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Baseline confirmation</strong> -- released version and confirmation that
-       the frozen functional configuration was preserved</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Baseline confirmation</strong> -- the released version you started from
+       (the <code>m1-release</code> tag, or the commit hash it points at) and
+       confirmation that the frozen functional configuration was preserved</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Instrumentation and methodology</strong> -- measurement boundaries,
        overlap, and any unattributed time</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>How to run it</strong> -- exact commands to launch the pipeline and run the
@@ -1058,10 +1063,10 @@ root containing:</p>
 </ul>
 <p>Figures go in <code>img/</code>; harness reports and small result summaries go in
 <code>results/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>/team-XX/ece6765-project
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>add<span class="w"> </span>-A
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Milestone 1 submission"</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>git<span class="w"> </span>push
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>/team-XX/ece6765-project
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>add<span class="w"> </span>-A
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Milestone 1 submission"</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>git<span class="w"> </span>push
 </span></code></pre></div>
 <p>The submission is the last commit on <code>main</code> at or before the deadline.</p>
 <p>Feedback will be pushed to your group repository as
