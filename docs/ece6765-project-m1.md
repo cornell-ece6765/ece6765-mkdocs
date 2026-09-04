@@ -40,6 +40,13 @@ Guide](ece6765-server-guide.md)), clone your private repository at
 Workflow](ece6765-git-workflow.md)), and follow `template/README.md` in that
 repository.
 
+The starter preloaded into your repository is tagged `m1-release`. Confirm
+you are on it before you start:
+
+```bash
+git describe --tags
+```
+
 Before adding instrumentation, confirm that the released implementation
 starts, reports healthy, answers a small request, and passes its tests.
 
@@ -116,8 +123,9 @@ root containing:
 
  - [ ] **Title and group members** -- project title, plus the name and
        NetID of every group member
- - [ ] **Baseline confirmation** -- released version and confirmation that
-       the frozen functional configuration was preserved
+ - [ ] **Baseline confirmation** -- the released version you started from
+       (the `m1-release` tag, or the commit hash it points at) and
+       confirmation that the frozen functional configuration was preserved
  - [ ] **Instrumentation and methodology** -- measurement boundaries,
        overlap, and any unattributed time
  - [ ] **How to run it** -- exact commands to launch the pipeline and run the
