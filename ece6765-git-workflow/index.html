@@ -402,6 +402,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: Baseline Instrumentation and Characterization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -817,10 +845,11 @@
 
 
 <h1 id="git-workflow-for-group-repos">Git Workflow for Group Repos<a class="headerlink" href="#git-workflow-for-group-repos" title="Permanent link">&para;</a></h1>
-<p>Every project group is given a private repository named <code>project-gNN</code> in
+<p>Every project group is given a private repository named <code>team-XX</code> in
 the <a href="https://github.com/cornell-ece6765">cornell-ece6765</a> GitHub
-organization, where <code>NN</code> is your group number. All three members are added
-as collaborators with push access. This page covers how to use it.</p>
+organization, where <code>XX</code> is your zero-padded team number. It is preloaded with
+the released project starter, and every group member is added as a
+collaborator with push access. This page covers how to use it.</p>
 <div class="admonition danger">
 <p class="admonition-title">The repo is the only copy of your work that survives</p>
 <p>The course servers can crash at any time, and in the worst case may need
@@ -833,61 +862,63 @@ that means in practice and what belongs in the repo beyond source code.</p>
 <h2 id="1-one-time-setup">1. One-Time Setup<a class="headerlink" href="#1-one-time-setup" title="Permanent link">&para;</a></h2>
 <p>If you have not used GitHub from the command line before, first make sure
 you have an SSH key registered with your GitHub account:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>%<span class="w"> </span>ls<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span><span class="o">||</span><span class="w"> </span>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>%<span class="w"> </span>cat<span class="w"> </span>~/.ssh/id_ed25519.pub
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ls<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span><span class="o">||</span><span class="w"> </span>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cat<span class="w"> </span>~/.ssh/id_ed25519.pub
 </span></code></pre></div>
 <p>Paste that public key into <a href="https://github.com/settings/keys">https://github.com/settings/keys</a>. Then verify:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>%<span class="w"> </span>ssh<span class="w"> </span>-T<span class="w"> </span>git@github.com
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>-T<span class="w"> </span>git@github.com
 </span></code></pre></div>
-<p>Clone your group repository:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>%<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/ece6765
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>%<span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/ece6765
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>%<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:cornell-ece6765/project-gNN
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>%<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>project-gNN
+<p>Clone your group repository into the assigned shared team directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>/team-XX
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:cornell-ece6765/team-XX.git<span class="w"> </span>ece6765-project
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">cd</span><span class="w"> </span>/team-XX/ece6765-project
 </span></code></pre></div>
 <p>Set your identity so commits are attributed correctly:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>%<span class="w"> </span>git<span class="w"> </span>config<span class="w"> </span>user.name<span class="w">  </span><span class="s2">"Your Name"</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>%<span class="w"> </span>git<span class="w"> </span>config<span class="w"> </span>user.email<span class="w"> </span><span class="s2">"netid@cornell.edu"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.name<span class="w">  </span><span class="s2">"Your Name"</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.email<span class="w"> </span><span class="s2">"netid@cornell.edu"</span>
 </span></code></pre></div>
 <h2 id="2-repository-layout">2. Repository Layout<a class="headerlink" href="#2-repository-layout" title="Permanent link">&para;</a></h2>
-<p>Keep the top level of the repo predictable, since the milestone files are
-collected automatically:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>project-gNN/
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  README.md          one-line project description + group members
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  m1.md              milestone 1 submission
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  m2.md              milestone 2 submission
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  m3.md              milestone 3 submission
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  m4.md              milestone 4 submission
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  img/               figures referenced from the milestone files
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  src/               your code
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  results/           small result files (CSV, JSON) -- not raw datasets
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  README-data.md     where large datasets live and how to regenerate them
+<p>The shared team directory contains the repository checkout and the
+course-provided embeddings artifact:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/team-XX/
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  embeddings.npy             provided artifact; do not commit
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  ece6765-project/           clone of the private team-XX repository
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    README.md                 project description + group members
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    template/                 pipeline source and launch scripts
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    evaluation/               course evaluation harness
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    m1.md  m2.md  m3.md  m4.md
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    img/                      figures referenced from milestone files
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    results/                  small result files (CSV, JSON)
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    README-data.md            how large artifacts can be regenerated
 </span></code></pre></div>
 <p>The milestone files must sit at the repo root with exactly those names.
-Feedback is pushed back alongside them as <code>mN-feedback-&lt;DATE&gt;.md</code>.</p>
+Feedback is pushed back alongside them as <code>mN-feedback-&lt;DATE&gt;.md</code>. The
+canonical launcher finds <code>/team-XX/embeddings.npy</code> automatically; set
+<code>EMBEDDINGS_PATH</code> only for a nonstandard checkout or artifact location.</p>
 <div class="admonition warning">
 <p class="admonition-title">Do not commit large files</p>
 <p>GitHub rejects individual files over 100 MB and the org has a shared
 storage quota. Commit the scripts that produce your data and a small
 summarized result file, not multi-gigabyte traces or checkpoints. If you
 need to share large artifacts within your group, use Cornell Box and
-link to it from <code>README-data.md</code>.</p>
+link to it from <code>README-data.md</code>. Do not move <code>/team-XX/embeddings.npy</code>
+into the repository.</p>
 </div>
 <h2 id="3-working-together">3. Working Together<a class="headerlink" href="#3-working-together" title="Permanent link">&para;</a></h2>
-<p>Three people pushing to one branch will conflict. The lightest workflow
+<p>Three or four people pushing to one branch will conflict. The lightest workflow
 that avoids most of the pain:</p>
 <p><strong>Pull before you start, push when you stop.</strong> The push is not optional --
 work that exists only in a local clone on a server is work you can lose.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>%<span class="w"> </span>git<span class="w"> </span>pull<span class="w"> </span>--rebase
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>pull<span class="w"> </span>--rebase
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># ... do work ...</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>%<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>-A
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>%<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Describe what changed"</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>%<span class="w"> </span>git<span class="w"> </span>push
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>add<span class="w"> </span>-A
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Describe what changed"</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>git<span class="w"> </span>push
 </span></code></pre></div>
 <p><strong>Use branches for anything that takes more than a session.</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>%<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>experiment-tail-latency
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>experiment-tail-latency
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># ... work, commit ...</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>%<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>experiment-tail-latency
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>experiment-tail-latency
 </span></code></pre></div>
 <p>Then open a pull request on GitHub and have another group member review it
 before merging to <code>main</code>. This is also the easiest way for your group to
@@ -903,7 +934,7 @@ deadline.</p>
 <p>After each deadline, the course staff fetch your repository and take the
 <strong>last commit on <code>main</code> at or before the deadline timestamp</strong>. Concretely,
 the equivalent of:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>%<span class="w"> </span>git<span class="w"> </span>rev-list<span class="w"> </span>-1<span class="w"> </span>--before<span class="o">=</span><span class="s2">"&lt;deadline&gt;"</span><span class="w"> </span>origin/main
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git<span class="w"> </span>rev-list<span class="w"> </span>-1<span class="w"> </span>--before<span class="o">=</span><span class="s2">"&lt;deadline&gt;"</span><span class="w"> </span>origin/main
 </span></code></pre></div>
 <p>Practical consequences:</p>
 <ul>
@@ -913,7 +944,7 @@ the equivalent of:</p>
    commit is what gets graded, and the late push is recorded.</li>
 <li>Committing locally is not enough. <strong>You must push.</strong> Verify with:</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>%<span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>origin/main<span class="w"> </span>-1<span class="w"> </span>--format<span class="o">=</span><span class="s1">'%h %ci %s'</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>log<span class="w"> </span>origin/main<span class="w"> </span>-1<span class="w"> </span>--format<span class="o">=</span><span class="s1">'%h %ci %s'</span>
 </span></code></pre></div>
 <p>If that command shows the commit you expect, your submission is in.</p>
 <h2 id="5-common-problems">5. Common Problems<a class="headerlink" href="#5-common-problems" title="Permanent link">&para;</a></h2>
@@ -936,7 +967,7 @@ rewrite -- <code>git filter-repo</code> on a shared repo needs everyone to
 re-clone, and it is easy to lose work.</p>
 </details>
 <details class="question">
-<summary>We want to add a fourth collaborator / change groups</summary>
+<summary>We want to add a collaborator / change groups</summary>
 <p>Group changes must be approved by the instructor. Post privately on the
 course discussion board.</p>
 </details>

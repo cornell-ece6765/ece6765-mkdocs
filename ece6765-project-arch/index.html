@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://cornell-ece6765.github.io/ece6765-mkdocs/ece6765-project-arch/">
       
       
-        <link rel="prev" href="../ece6765-project-overview/">
+        <link rel="prev" href="../ece6765-project-m1/">
       
       
         <link rel="next" href="../ece6765-eval-harness/">
@@ -404,6 +404,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: Baseline Instrumentation and Characterization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -563,15 +591,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-the-fixed-interface-trace-in-results-out" class="md-nav__link">
+  <a href="#2-the-fixed-evaluation-interface" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. The Fixed Interface: Trace In, Results Out
+        2. The Fixed Evaluation Interface
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. The Fixed Interface: Trace In, Results Out">
+    <nav class="md-nav" aria-label="2. The Fixed Evaluation Interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -608,10 +636,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-results-file" class="md-nav__link">
+  <a href="#24-query-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4. Results file
+        2.4. Query API
       
     </span>
   </a>
@@ -850,15 +878,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-the-fixed-interface-trace-in-results-out" class="md-nav__link">
+  <a href="#2-the-fixed-evaluation-interface" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. The Fixed Interface: Trace In, Results Out
+        2. The Fixed Evaluation Interface
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. The Fixed Interface: Trace In, Results Out">
+    <nav class="md-nav" aria-label="2. The Fixed Evaluation Interface">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -895,10 +923,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-results-file" class="md-nav__link">
+  <a href="#24-query-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4. Results file
+        2.4. Query API
       
     </span>
   </a>
@@ -978,213 +1006,178 @@
 <p>This page describes <strong>what is fixed for the semester and what is yours to
 change</strong>, and it is important not to confuse them.</p>
 <p>Three things are fixed for the semester. The first is the external interface:
-your pipeline
-consumes a <strong>trace file</strong> of requests and writes a results file with answers
-and per-request timings, and it exposes a <code>/health</code> readiness check. A single
-evaluation harness has to drive every group's pipeline, and comparable
-numbers across groups are what make a class-wide discussion of results
-possible.</p>
+the evaluation harness sends queries to your frontend with <code>POST /query</code>, and
+your pipeline exposes a <code>/health</code> readiness check. A single evaluation harness
+has to drive every group's pipeline, and comparable numbers across groups are
+what make a class-wide discussion of results possible.</p>
 <p>The second is the <strong>four-service decomposition</strong> -- <code>frontend</code>, <code>embedding</code>,
 <code>vectordb</code>, and <code>generation</code>. You keep these four services, with these
 responsibilities, throughout the semester. You may not merge them, split them, or
 re-decompose the pipeline. </p>
 <p>The third is the <strong>workload</strong>: all groups use the course-specified embedding
-model, generation model, and ClapNQ dataset. These are fixed so that the
+model, generation model, and CLAPNQ dataset. These are fixed so that the
 comparison is about systems rather than differences in models or data.</p>
-<p>M1 additionally fixes the baseline communication protocol: plain HTTP with
-JSON, batch size 1, and requests processed in trace order. This is an M1-only
-constraint; after M1, the communication protocol and scheduling policy are
-part of the experimental design space.</p>
-<p>What is open (and what this project is actually about) is <strong>how those
-four services talk to each other</strong>. Transport, serialization, framing,
-batching, concurrency, connection management: all of it is yours, and
-changing it is one of the experimental axes of the semester. Everything
-<em>inside</em> a service, except the fixed models and dataset, is yours too:
-languages, libraries, algorithms, threading, memory layout.</p>
+<p>The released implementation is frozen for M1. Do not change its application
+logic or configuration, or upgrade or replace released dependencies. You may
+add instrumentation, observability dependencies and their lockfile entries,
+and internal correlation metadata if they do not change its answers or
+external API. Later milestone handouts state which implementation choices are
+open for experimentation.</p>
 <h2 id="1-services">1. Services<a class="headerlink" href="#1-services" title="Permanent link">&para;</a></h2>
 <p>Your pipeline is four services, running as separate processes. In M1 they
-communicate over HTTP on localhost; what they communicate over after that is
-up to you.</p>
+communicate over HTTP on localhost.</p>
 <table>
 <thead>
 <tr>
 <th>Service</th>
+<th style="text-align: right;">Baseline port</th>
 <th>Responsibility</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>frontend</code></td>
-<td>Loads the trace, schedules and orchestrates work across the other three, writes results</td>
+<td style="text-align: right;">8000</td>
+<td>Accepts queries and orchestrates work across the other three services</td>
 </tr>
 <tr>
 <td><code>embedding</code></td>
+<td style="text-align: right;">8001</td>
 <td>Encodes query text into a dense vector</td>
 </tr>
 <tr>
 <td><code>vectordb</code></td>
+<td style="text-align: right;">8002</td>
 <td>Nearest-neighbor search over the passage index</td>
 </tr>
 <tr>
 <td><code>generation</code></td>
+<td style="text-align: right;">8003</td>
 <td>Produces the answer text from query + retrieved passages</td>
 </tr>
 </tbody>
 </table>
-<p>Note that under the trace-driven model the frontend's job is larger than it
-looks. It is not just a proxy: it is the <strong>scheduler</strong> for the whole
-workload, and it owns the decision of what order the queued
-requests get executed in. You can start from a first-come-first-serve 
-scheduling algorithm and try other scheduling algorithms later on.</p>
+<p>The frontend is not just a proxy: it coordinates the other services and is
+the natural place to implement scheduling policy when a milestone permits it.</p>
 <h3 id="11-the-decomposition-is-fixed">1.1. The decomposition is fixed<a class="headerlink" href="#11-the-decomposition-is-fixed" title="Permanent link">&para;</a></h3>
 <p><strong>These four services, with these responsibilities, are a constraint for the
 whole semester.</strong> Unless explicitly mentioned that you are allowed, you may 
 not fuse embedding into vectordb, split generation
 into prefill and decode, absorb the frontend's scheduling into another
 service, or otherwise re-cut the boundaries.</p>
-<p>You <strong>may replicate</strong> a service -- several instances of <code>embedding</code> behind
-the frontend, a sharded <code>vectordb</code> -- because that is provisioning, not
-re-decomposition. In fact in some of the milestones you should do this to 
-improve the scalability of the application. Note that replicas of a service 
-still present that service's interface.</p>
-<h2 id="2-the-fixed-interface-trace-in-results-out">2. The Fixed Interface: Trace In, Results Out<a class="headerlink" href="#2-the-fixed-interface-trace-in-results-out" title="Permanent link">&para;</a></h2>
-<p>Your pipeline is driven by a <strong>trace file</strong>. This is the one part of the
-contract that cannot change, because a single evaluation harness has to
-drive every group's pipeline and produce numbers that mean the same thing
-across the class.</p>
+<p>Replicate a service only when a milestone explicitly permits it. Replicas
+must still present that service's interface.</p>
+<h2 id="2-the-fixed-evaluation-interface">2. The Fixed Evaluation Interface<a class="headerlink" href="#2-the-fixed-evaluation-interface" title="Permanent link">&para;</a></h2>
+<p>The evaluation harness reads a <strong>trace file</strong> and submits its queries to the
+frontend. This interface cannot change because one harness has to drive every
+group's pipeline and produce comparable numbers.</p>
 <h3 id="21-the-execution-model">2.1. The execution model<a class="headerlink" href="#21-the-execution-model" title="Permanent link">&para;</a></h3>
-<p>The trace file contains a set of requests that are <strong>all available to your
-pipeline at time zero</strong>. There is no arrival process and no request rate.</p>
+<p>The trace file contains a set of requests that are <strong>all available at time
+zero</strong>. There is no arrival process and no request rate.</p>
 <p>This models a real situation in a datacenter: a scheduler upstream has
 already assigned a batch of work to this server, and the server has a full
 queue in front of it from the moment it starts. Everything in the trace is
 sitting there, waiting, at t=0.</p>
+<p>The released frontend processes queries sequentially in input order. For each
+query it calls embedding, vector search, and generation before moving to the
+next query.</p>
 <h3 id="22-trace-file-format">2.2. Trace file format<a class="headerlink" href="#22-trace-file-format" title="Permanent link">&para;</a></h3>
-<p><em>Exact schema TBD -- fixed before M1 is released.</em> The working format is
-newline-delimited JSON, one request per line:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Q"</span><span class="p">:</span><span class="w"> </span><span class="s2">"who is the prime minister of Japan in August 2026?"</span><span class="p">}</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Q"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What was the average temperature in Ithaca in August 2026?"</span><span class="p">}</span>
+<p>The format is newline-delimited JSON, one request per line:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"who is the prime minister of Japan in August 2026?"</span><span class="p">}</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What was the average temperature in Ithaca in August 2026?"</span><span class="p">}</span>
 </span></code></pre></div>
 <ul>
 <li><code>id</code> is an opaque unique string. Results must carry it back unchanged, so
    answers can be attributed to requests.</li>
-<li><code>Q</code> is the raw query. Ground-truth answers are held by the evaluation
-   harness and are not included in the trace given to the pipeline.</li>
-<li>Traces range from a handful of requests to several thousand. </li>
+<li><code>text</code> is the raw query. Public reference answers are not included in the
+   request sent to the pipeline.</li>
+<li>Each public trace contains 100 requests.</li>
 </ul>
+<p>The pipeline API must continue to accept arbitrary unseen IDs and query text;
+the public evaluator's trace validation does not narrow that interface.</p>
 <h3 id="23-invocation">2.3. Invocation<a class="headerlink" href="#23-invocation" title="Permanent link">&para;</a></h3>
-<p>The harness starts your pipeline, waits for it to report ready, and then
-starts the timed run by handing it a trace path and an output path:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>%<span class="w"> </span>./scripts/run.sh<span class="w"> </span>--trace<span class="w"> </span>&lt;trace-path&gt;<span class="w"> </span>--output<span class="w"> </span>&lt;results-path&gt;
+<p>From the <code>evaluation/</code> directory, run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pixi<span class="w"> </span>run<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--trace<span class="w"> </span>traces/short-query-answerable.jsonl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--output<span class="w"> </span>../results/short-query-answerable.json
 </span></code></pre></div>
-<p><em>Exact invocation TBD.</em> The timer starts (t=0) when the harness issues this
-command, and stops when your process exits having written the results file.</p>
-<p>Everything expensive that can happen before t=0 should happen before t=0:
-loading models, building or memory-mapping the index, spawning workers,
-opening connections. That is what <code>/health</code> is for.
-Reading and parsing the trace itself happens <strong>after</strong> t=0 and is on your
-clock.</p>
-<h3 id="24-results-file">2.4. Results file<a class="headerlink" href="#24-results-file" title="Permanent link">&para;</a></h3>
-<p>One record per request. <em>Exact schema TBD.</em></p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"q-00001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"answer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sanae Takaichi"</span><span class="p">,</span><span class="w"> </span><span class="nt">"start_time_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">100.8</span><span class="p">,</span><span class="w"> </span><span class="nt">"last_token_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">1893.2</span><span class="p">}</span>
+<p>The evaluator launches the pipeline, waits for <code>/health</code>, submits
+the workload through <code>POST /query</code>, scores the response, and writes a report.
+Use <code>--output &lt;results-path&gt;</code> to choose the report path.</p>
+<h3 id="24-query-api">2.4. Query API<a class="headerlink" href="#24-query-api" title="Permanent link">&para;</a></h3>
+<p>The harness sends a JSON request to <code>POST /query</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"queries"</span><span class="p">:[{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"query-id"</span><span class="p">,</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"question text"</span><span class="p">}]}</span>
 </span></code></pre></div>
-<ul>
-<li><code>answer</code> -- the generated text, scored for quality by the harness.</li>
-<li><code>start_time_ms</code> -- milliseconds from <strong>t=0</strong> to when the request is 
-   scheduled for execution by the frontend.</li>
-<li><code>last_token_ms</code> -- milliseconds from <strong>t=0</strong> to the last token emitted for
-   this request.</li>
-</ul>
-<p>Both timestamps are measured from the start of the run, <strong>not</strong> from when
-your pipeline happened to start working on that request. A request your
-scheduler leaves until the end has a large <code>last_token_ms</code>, and that is the
-point: the number includes however long the request sat in your queue.</p>
-<p>Every <code>id</code> in the trace must appear exactly once in the results. Order does
-not matter; the harness matches on <code>id</code>.</p>
-<div class="admonition warning">
-<p class="admonition-title">You report your own timestamps, and they are checked</p>
-<p>Per-request timing has to come from inside your pipeline -- the harness
-cannot see individual completions from outside. It does independently
-measure total wall-clock time for the run, and it will cross-check your
-reported numbers against it. Results whose self-reported timings are
-inconsistent with the externally observed wall clock are treated as a
-failed run, not as a fast one.</p>
-<p>Instrument this carefully and early. A pipeline that is genuinely fast
-but reports its own timing incorrectly scores the same as a slow one.</p>
-</div>
+<p>The frontend returns:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span><span class="nt">"responses"</span><span class="p">:[{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"query-id"</span><span class="p">,</span><span class="nt">"answer"</span><span class="p">:</span><span class="s2">"answer text"</span><span class="p">,</span><span class="nt">"start_time_ms"</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span><span class="nt">"last_token_ms"</span><span class="p">:</span><span class="mf">100.0</span><span class="p">}]}</span>
+</span></code></pre></div>
+<p><code>queries</code> must be nonempty, IDs must be unique, and every requested ID must
+appear exactly once in <code>responses</code>. Response order does not matter. Both
+timestamps are nonnegative milliseconds from a common origin at the start of
+frontend processing for the <code>/query</code> request. <code>start_time_ms</code> is recorded
+immediately before that query's embedding call. <code>last_token_ms</code> is recorded
+immediately after its blocking generation call returns, and it must not
+precede <code>start_time_ms</code>.</p>
+<p>The frontend reports these per-query timestamps. The evaluator separately
+measures the complete HTTP request to calculate throughput.</p>
 <h3 id="25-readiness">2.5. Readiness<a class="headerlink" href="#25-readiness" title="Permanent link">&para;</a></h3>
-<p>Your pipeline must expose <code>GET /health</code> returning HTTP 200 only once
-<strong>every</strong> component is ready to serve. The harness polls this before
-starting the timed run, so that model loading and index construction do not
-land inside your measured time.</p>
+<p>Your pipeline must expose <code>GET /health</code>, returning HTTP 200 with
+<code>{"status":"ok"}</code> only once <strong>every</strong> component is ready to serve. When
+reachable but not ready, the released frontend returns HTTP 503 with
+<code>{"status":"unavailable"}</code>. The harness polls this before starting the timed
+run, so that model loading and index construction do not land inside your
+measured time.</p>
 <p>How you aggregate readiness across however many processes you end up with is
 your problem. Reporting healthy before you actually are will show up as
 inexplicably terrible numbers, because that work moves inside the clock.</p>
 <h2 id="3-internal-interfaces-the-semesters-experiment">3. Internal interfaces: the semester's experiment<a class="headerlink" href="#3-internal-interfaces-the-semesters-experiment" title="Permanent link">&para;</a></h2>
-<p>The decomposition is fixed; the way the four services communicate is not.
-This section is the open one, and it is where the design work of this project
-actually lives.</p>
-<p>What is fixed here is only the <strong>semantics</strong> of each hop -- which service
-needs what data from which other service:</p>
+<p>The decomposition is fixed. The released internal protocol is also fixed for
+M1; later handouts state when these choices become experimental.</p>
+<p>The <strong>semantics</strong> of each hop remain fixed -- which service needs what data
+from which other service:</p>
 <ul>
 <li>the frontend needs a <strong>vector</strong> for a query from <code>embedding</code></li>
 <li>the frontend needs <strong>passages</strong> for a vector from <code>vectordb</code></li>
 <li>the frontend needs an <strong>answer</strong> for a query plus passages from
    <code>generation</code></li>
 </ul>
-<p>Everything about <em>how</em> that data crosses the boundary is yours: the wire
-format, the transport, the framing, how many requests travel at once, who
-initiates, and whether the call blocks.</p>
+<p>How that data crosses the boundary may become part of the later design space:
+the wire format, transport, framing, initiator, and whether the call blocks.</p>
 <p>The reference implementation wires the services together with <strong>plain HTTP
-and JSON bodies</strong>, one query at a time. This is intentionally the naive
-choice: it is easy to get working in M1, and it leaves the obvious wins on
-the table for the rest of the semester.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>frontend ──POST /embed────────▶ embedding    {"texts": [...]}  →  {"vectors": [[...]]}
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>frontend ──POST /search───────▶ vectordb     {"vectors": [[...]], "k": N}
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                                             →  {"passages": [[...]]}
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>frontend ──POST /generate─────▶ generation   {"query": "...", "passages": [...]}
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                                             →  {"answer": "..."}
+and JSON bodies</strong>. It is intentionally naive and serves as the common released
+baseline.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>frontend ──POST /embed────────▶ embedding    {"texts": [...]}  →  {"vectors": [[...]]}
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>frontend ──POST /search───────▶ vectordb     {"vectors": [[...]], "k": N}
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                                             →  {"passages": [[...]]}
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>frontend ──POST /generate─────▶ generation   {"query": "...", "passages": [...]}
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>                                             →  {"answer": "..."}
 </span></code></pre></div>
-<p><strong>Replace any of it.</strong> Build this protocol in M1 because it is the fastest
-thing to get correct, then start taking it apart in M2, where the axes open
-to you -- serialization, transport, batching, call structure, connection
-management, who owns the buffer -- are laid out, and where a measured
-protocol change is a required deliverable.</p>
+<p>Starting in M2, follow the active milestone's instructions about which protocol
+axes you may change and measure.</p>
 <h2 id="4-repository-layout">4. Repository layout<a class="headerlink" href="#4-repository-layout" title="Permanent link">&para;</a></h2>
-<p>Milestone writeups are collected automatically, so <strong>the four <code>mN.md</code> files
-must sit at the repo root with exactly those names</strong>. Because the four
-services are fixed, the <code>src/</code> layout below should stay recognizable all
-semester; the rest is a suggestion you can reorganize as you like.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>project-gNN/
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  README.md              project description + group members
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  m1.md  m2.md           milestone writeups (root level, exact names)
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  m3.md  m4.md
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  img/                   figures referenced from the writeups
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  src/
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    frontend/
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    embedding/
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    vectordb/
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    generation/
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    common/              shared client/transport code -- one client class
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>                         per service, with a selectable protocol
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>                         implementation behind it
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  config/                configuration for each experiment you run
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  scripts/               launch, sweep, and measurement scripts
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  results/               small summarized result files (CSV/JSON)
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  README-data.md         where large artifacts live, how to regenerate
+<p>Your private repository is named <code>team-XX</code> and its canonical checkout is
+<code>/team-XX/ece6765-project/</code>. Milestone writeups are collected automatically,
+so <strong>the four <code>mN.md</code> files must sit at the repository root with exactly those
+names</strong>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/team-XX/
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  embeddings.npy             provided artifact; do not commit
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  ece6765-project/
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    README.md                 project description + group members
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    m1.md  m2.md  m3.md  m4.md
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    img/                      figures referenced from the writeups
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    results/                  small summarized result files
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    template/                 pipeline source and launch scripts
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    evaluation/               course-provided evaluator; do not modify
 </span></code></pre></div>
 <p><code>results/</code> should hold summarized numbers, not raw traces. See the <a href="../ece6765-git-workflow/">Git
 Workflow</a> page for size limits.</p>
 <h2 id="5-reproducibility-requirement">5. Reproducibility requirement<a class="headerlink" href="#5-reproducibility-requirement" title="Permanent link">&para;</a></h2>
-<p>From M1 onward, your repository must contain a single documented command
-that brings up your entire pipeline, whatever it consists of, on a clean
-server:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>%<span class="w"> </span>./scripts/launch.sh
-</span></code></pre></div>
-<p>and a single command that runs the harness against them. The staff will run
-these. If your pipeline only comes up when a specific group member types a
-specific sequence of commands from memory, it does not count as working, and
-it means your final results cannot be reproduced.</p>
+<p>From M1 onward, your repository must document the exact commands that bring up
+the entire pipeline from <code>/team-XX/ece6765-project/</code> and run the harness
+against it. The staff will run these. If your pipeline only comes up when a
+specific group member types a specific sequence of commands from memory, it
+does not count as working, and it means your final results cannot be
+reproduced.</p>
 
 
 

@@ -16,7 +16,7 @@
         <link rel="prev" href="..">
       
       
-        <link rel="next" href="../ece6765-project-arch/">
+        <link rel="next" href="../ece6765-project-m1/">
       
       
         
@@ -600,6 +600,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: Baseline Instrumentation and Characterization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -999,9 +1027,9 @@
 <h1 id="course-project-overview">Course Project Overview<a class="headerlink" href="#course-project-overview" title="Permanent link">&para;</a></h1>
 <p>The ECE 6765 course project is a semester-long study of <strong>system
 sensitivity</strong>, built around a single application: a <strong>retrieval-augmented
-generation (RAG) pipeline implemented as four microservices</strong>. You build it
-once, then spend the rest of the semester using it to find out how a real
-workload responds to the machine underneath it.</p>
+generation (RAG) pipeline implemented as four microservices</strong>. You begin with
+a working baseline, then spend the rest of the semester using it to find out
+how a real workload responds to the machine underneath it.</p>
 <h2 id="what-the-project-is-for">What the project is for<a class="headerlink" href="#what-the-project-is-for" title="Permanent link">&para;</a></h2>
 <p>The goal is to develop a working understanding of how application
 performance responds to the system underneath it -- to be able to take a
@@ -1040,18 +1068,17 @@ different resource profiles chained together behind a single request:</p>
 <li><strong>Vector DB</strong> is memory-bound -- sensitive to capacity, bandwidth, NUMA
    locality, and page size.</li>
 <li><strong>Generation</strong> is bound by both compute and memory bandwidth.</li>
-<li><strong>Frontend</strong> is I/O-bound and sensitive to request ordering.</li>
+<li><strong>Frontend</strong> is I/O-bound and coordinates the other services.</li>
 </ul>
 <h2 id="what-kind-of-project-this-is">What kind of project this is<a class="headerlink" href="#what-kind-of-project-this-is" title="Permanent link">&para;</a></h2>
 <p>This is a graduate course, and this is a graduate project. It is open-ended
 research and engineering work, not a guided lab.</p>
 <p>Every milestone handout on this site states <strong>what you must accomplish and
 what you must report</strong>. None of them tell you how.</p>
-<p>You will be given a <strong>starter code template</strong>. It is not a solution and it
-is not a working application -- it is a skeleton that shows the shape of the
-interfaces. Making it into something that runs, and then something that runs 
-well, is entirely on you. There is no step-by-step walkthrough or provided
-debugging path.</p>
+<p>You will be given a <strong>working starter code template</strong>. It is a baseline, not
+a solution: understanding it, measuring it, and making permitted modifications
+are entirely on you. There is no step-by-step walkthrough or provided debugging
+path.</p>
 <p>Choosing an implementation strategy, finding out why your service deadlocks
 under load, discovering that a library has no ARM64 build and deciding what
 to do about it, and figuring out how to measure something the tooling does
@@ -1109,40 +1136,34 @@ shapes how the project is graded:</p>
    the exercise.</li>
 </ul>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<p>Four services, driven by a trace file of requests:</p>
+<p>Four services behind a frontend query API:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                          ┌──────────────┐      ┌────────────┐
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   trace file             │              │─────▶│ embedding  │
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   all requests at t=0    │              │◀─────│            │
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> ────────────────────────▶│              │      └────────────┘
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                          │   frontend   │
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                          │              │      ┌────────────┐
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                          │   loads      │─────▶│ vector DB  │
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   results file           │   schedules  │◀─────│            │
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   answers + per-request  │   runs it    │      └────────────┘
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>   timings from t=0       │              │
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a> ◀────────────────────────│              │      ┌────────────┐
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                          │              │─────▶│ generation │
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                          │              │◀─────│            │
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                          └──────────────┘      └────────────┘
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a> evaluation harness      │              │─────▶│ embedding  │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a> ───── POST /query ─────▶│              │◀─────│            │
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                         │   frontend   │      └────────────┘
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                         │              │      ┌────────────┐
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                         │ orchestrates │─────▶│ vector DB  │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a> ◀──── responses ────────│              │◀─────│            │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                         │              │      └────────────┘
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                         │              │      ┌────────────┐
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                         │              │─────▶│ generation │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                         │              │◀─────│            │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                         └──────────────┘      └────────────┘
 </span></code></pre></div>
-<p>Your pipeline is driven by a <strong>trace file</strong>: a set of requests that are all
-available to it at time zero, with no arrival process. This models a server
-that an upstream scheduler has already handed a full queue of work. Because
-everything is available immediately, <strong>the execution order is entirely
-yours</strong> -- and per-request latency is measured from t=0, so it includes
-however long a request sat in your queue before you got to it.</p>
+<p>The evaluation harness reads the trace and sends its queries to the frontend
+through <code>POST /query</code>. The frontend returns answers and per-request timing
+information.</p>
 <p>The reference implementation uses <strong>plain HTTP with JSON</strong> between services,
-<strong>batch size 1</strong>, and processes the trace in order. All three are
-deliberate: they are the obvious things to optimize, and we want you to
-measure the cost before you fix it.</p>
+with straightforward blocking orchestration. This is a deliberately simple
+baseline whose costs you can measure before changing it.</p>
 <div class="admonition note">
 <p class="admonition-title">The four services are fixed</p>
 <p>You keep these four services -- <code>frontend</code>, <code>embedding</code>, <code>vectordb</code>,
 <code>generation</code> -- with these functionalities throughout the semester.
 <strong>Merging, splitting, or re-decomposing the pipeline is not permitted.</strong>
-You may replicate a service, which is provisioning rather than
-re-decomposition.</p>
-<p>What you can change, is <strong>the communication between
+When a milestone permits it, you may replicate a service, which is
+provisioning rather than re-decomposition.</p>
+<p>What you can change in later milestones is <strong>the communication between
 them</strong>: wire format, transport, framing, batching, concurrency,
 connection management. That is the open design space that we explore in this project. </p>
 <p>The reason for the constraint is that service boundaries are often fixed at
@@ -1242,8 +1263,8 @@ issue with Linux.</p>
 </details>
 <h2 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Groups are <strong>three students</strong>. </li>
-<li>Each group gets a private repository <code>project-gNN</code> in the
+<li>Groups are <strong>three or four students</strong>. </li>
+<li>Each group gets a private repository <code>team-XX</code> in the
    <a href="https://github.com/cornell-ece6765">cornell-ece6765</a> GitHub
    organization, with all members as collaborators. See the <a href="../ece6765-git-workflow/">Git
    Workflow</a> page.</li>
@@ -1256,7 +1277,7 @@ issue with Linux.</p>
 <h2 id="grading-criteria">Grading criteria<a class="headerlink" href="#grading-criteria" title="Permanent link">&para;</a></h2>
 <p>Across the project, we are looking for:</p>
 <p><strong>Methodology.</strong> Are experiments controlled? Is the baseline fair? Do you
-run enough repetitions to distinguish a real effect from noise?</p>
+characterize run-to-run noise before claiming an effect?</p>
 <p><strong>Explanation over tuning.</strong> Can you explain <em>why</em> a configuration helped,
 in terms of the architecture? </p>
 <p><strong>Rigor in reporting.</strong> Distributions, not single numbers. Named confounds.

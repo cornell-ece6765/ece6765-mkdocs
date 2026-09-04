@@ -471,6 +471,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ece6765-project-m1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: Baseline Instrumentation and Characterization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -750,35 +778,33 @@
 <a href="https://www.csl.cornell.edu/courses/ece6765/index.html">https://www.csl.cornell.edu/courses/ece6765/index.html</a></p>
 <p>This is the ECE 6765 Modern Datacenter Architecture documentation site. It
 hosts the handouts for the semester-long course project. If you find any
-bugs or errors in this documentation, please contant the instructor.</p>
+bugs or errors in this documentation, please contact the instructor.</p>
 <h2 id="the-course-project">The Course Project<a class="headerlink" href="#the-course-project" title="Permanent link">&para;</a></h2>
-<p>You will build a <strong>retrieval-augmented generation pipeline as four
-microservices</strong> -- frontend, embedding, vector DB, and generation -- and
-then spend the semester using it to find out how sensitive a real workload
-is to the system underneath it.</p>
-<p>Those four services stay fixed for the semester. What you change is
-everything underneath and between them. </p>
+<p>You will begin with a working <strong>retrieval-augmented generation pipeline as
+four microservices</strong> -- frontend, embedding, vector DB, and generation -- and
+then spend the semester using it to find out how sensitive a real workload is
+to the system underneath it.</p>
+<p>Those four services stay fixed for the semester. Each milestone handout states
+what you may change underneath and between them.</p>
 <p>The pipeline is the instrument, not the goal. What you are building is the
 ability to change something about a machine and explain what happened.</p>
-<p>Your pipeline is driven by a trace file of requests that are all
-available to it at time zero -- a server handed a full queue by an upstream
-scheduler. Execution order is entirely yours, and per-request latency is
-measured from t=0, so it includes queuing as well as processing.</p>
+<p>The evaluation harness reads a trace whose requests are all available at
+time zero and sends them to your frontend through <code>POST /query</code>.
+Per-request latency includes queuing as well as processing.</p>
 <p>Because the services have genuinely different resource profiles, the
 interesting decisions are about communication, resource allocation, and
 scheduling: for example, what protocol carries a dense vector between two
 services and what that costs, how many cores each service gets, where its
 memory lives, how requests are batched at each hop, what the interconnect
-costs, what order you drain the queue in, etc. Those are datacenter
-architecture decisions, and this project puts you on the other side of
-them.</p>
+costs, etc. Those are datacenter architecture decisions, and this project
+puts you on the other side of them.</p>
 <div class="admonition danger">
 <p class="admonition-title">This is an open-ended graduate project</p>
 <p>The handouts here state <strong>what</strong> you must accomplish and what you must
-report. They do not tell you how. We will give you a starter code
-template, but it is neither a solution nor a working application.
-Debugging, implementation strategy, tool selection, and project
-execution are entirely yours, and they are graded work.</p>
+report. They do not tell you how. We will give you a working starter
+template, but it is a baseline rather than a solution. Debugging,
+implementation strategy, tool selection, and project execution are
+entirely yours, and they are graded work.</p>
 <p>You are assumed to be fluent with the Linux command line, comfortable
 using AI coding tools well, and solid on low-level systems and
 architecture. See <a href="ece6765-project-overview/#what-kind-of-project-this-is">what kind of project this
@@ -800,9 +826,10 @@ schedule</a>.</p>
 how the work is graded. Start here.</p>
 </li>
 <li>
-<p><strong>Milestone 1</strong> &middot; <em>not yet released</em></p>
-<p>Build the four-service pipeline. Get it correct, instrument it, and
-establish a baseline.</p>
+<p><strong><a href="ece6765-project-m1/">Milestone 1: Baseline Instrumentation and Characterization</a></strong>
+  &middot; <em>released</em></p>
+<p>Instrument the supplied four-service baseline and establish where its
+time goes.</p>
 </li>
 <li>
 <p><strong>Milestone 2</strong> &middot; <em>not yet released</em></p>
@@ -824,10 +851,10 @@ frequency, vector units, and contention from a noisy neighbor.</p>
 <ul>
 <li><strong><a href="ece6765-project-arch/">Reference Architecture and API</a></strong> -- the
    service contract. Read before M1.</li>
-<li><strong><a href="ece6765-eval-harness/">Evaluation Harness and Metrics</a></strong> -- how
-   correctness and performance are scored.</li>
+<li><strong><a href="ece6765-eval-harness/">Evaluation Harness and Metrics</a></strong> -- how public
+   answer quality and performance are reported.</li>
 <li><strong><a href="ece6765-server-guide/">Server and Measurement Guide</a></strong> -- server
-   access, profiling tools, measurement hygiene.</li>
+   access, platform notes, measurement hygiene.</li>
 <li><strong><a href="ece6765-report-guidelines/">Project Report Guidelines</a></strong> -- writeup
    format and how to report measurements.</li>
 <li><strong><a href="ece6765-git-workflow/">Git Workflow for Group Repos</a></strong> -- repo setup

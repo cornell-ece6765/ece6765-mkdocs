@@ -10,13 +10,13 @@
         <meta name="author" content="Mohammad Alian">
       
       
-        <link rel="canonical" href="https://cornell-ece6765.github.io/ece6765-mkdocs/ece6765-eval-harness/">
+        <link rel="canonical" href="https://cornell-ece6765.github.io/ece6765-mkdocs/ece6765-project-m1/">
       
       
-        <link rel="prev" href="../ece6765-project-arch/">
+        <link rel="prev" href="../ece6765-project-overview/">
       
       
-        <link rel="next" href="../ece6765-server-guide/">
+        <link rel="next" href="../ece6765-project-arch/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Evaluation Harness and Metrics - ECE 6765 Modern Datacenter Architecture</title>
+        <title>Milestone 1: Baseline Instrumentation and Characterization - ECE 6765 Modern Datacenter Architecture</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#evaluation-harness-and-metrics" class="md-skip">
+        <a href="#milestone-1-baseline-instrumentation-and-characterization" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Evaluation Harness and Metrics
+              Milestone 1: Baseline Instrumentation and Characterization
             
           </span>
         </div>
@@ -214,10 +214,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../ece6765-project-overview/" class="md-tabs__link">
           
   
@@ -234,12 +236,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../ece6765-project-arch/" class="md-tabs__link">
           
   
@@ -328,26 +328,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -365,7 +370,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -408,10 +413,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../ece6765-project-m1/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: Baseline Instrumentation and Characterization
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -427,6 +459,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-what-to-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. What to Do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. What to Do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-set-up-the-released-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. Set up the released baseline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-preserve-the-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Preserve the baseline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-instrument-the-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Instrument the pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-measure-the-four-public-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4. Measure the four public traces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-answer-the-measurement-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5. Answer the measurement question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-to-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What to Submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -443,31 +600,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -485,7 +637,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -528,37 +680,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Evaluation Harness and Metrics
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../ece6765-eval-harness/" class="md-nav__link">
         
   
   
@@ -574,126 +699,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1-what-the-harness-does" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. What the harness does
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-public-workloads-and-answer-quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Public workloads and answer quality
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-performance-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Performance metrics
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Performance metrics">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#31-completion-latency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.1. Completion latency
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#32-throughput" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.2. Throughput
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#33-what-this-means-for-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3.3. What this means for optimization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-running-the-harness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Running the harness
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Running the harness">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#41-measurement-discipline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.1. Measurement discipline
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -817,10 +822,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-what-the-harness-does" class="md-nav__link">
+  <a href="#1-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. What the harness does
+        1. Goals
       
     </span>
   </a>
@@ -828,33 +833,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-public-workloads-and-answer-quality" class="md-nav__link">
+  <a href="#2-what-to-do" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Public workloads and answer quality
+        2. What to Do
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-performance-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Performance metrics
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Performance metrics">
+    <nav class="md-nav" aria-label="2. What to Do">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-completion-latency" class="md-nav__link">
+  <a href="#21-set-up-the-released-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1. Completion latency
+        2.1. Set up the released baseline
       
     </span>
   </a>
@@ -862,10 +856,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-throughput" class="md-nav__link">
+  <a href="#22-preserve-the-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2. Throughput
+        2.2. Preserve the baseline
       
     </span>
   </a>
@@ -873,10 +867,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#33-what-this-means-for-optimization" class="md-nav__link">
+  <a href="#23-instrument-the-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.3. What this means for optimization
+        2.3. Instrument the pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-measure-the-four-public-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4. Measure the four public traces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-answer-the-measurement-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5. Answer the measurement question
       
     </span>
   </a>
@@ -889,30 +905,24 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-running-the-harness" class="md-nav__link">
+  <a href="#3-what-to-submit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Running the harness
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Running the harness">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#41-measurement-discipline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4.1. Measurement discipline
+        3. What to Submit
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#4-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tips
+      
+    </span>
+  </a>
   
 </li>
       
@@ -936,110 +946,152 @@
   
 
 
-<h1 id="evaluation-harness-and-metrics">Evaluation Harness and Metrics<a class="headerlink" href="#evaluation-harness-and-metrics" title="Permanent link">&para;</a></h1>
-<p>The course-provided evaluation harness is the source of truth for public
-answer-quality scores, end-to-end latency, and throughput. It drives every
-group's pipeline through the same external API so results are comparable. It
-does not measure time inside the four services.</p>
-<h2 id="1-what-the-harness-does">1. What the harness does<a class="headerlink" href="#1-what-the-harness-does" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Launches your pipeline and polls <code>GET /health</code> until it reports ready.
-   Model loading and index construction happen here and are <strong>not</strong> timed.</li>
-<li>Submits the first query from the selected trace as an unmeasured warm-up.</li>
-<li>Submits the complete selected trace in one <code>POST /query</code>, measuring the
-   request with an external wall clock.</li>
-<li>Scores the returned answers against the public references and computes the
-   performance metrics.</li>
-<li>Writes a JSON report and prints a summary table.</li>
-</ol>
-<p>The trace contains every request up front: all of them are available to your
-pipeline at t=0, with no arrival process and no rate limit. This models a
-server that has already been handed a full queue of work by an upstream
-scheduler.</p>
-<h2 id="2-public-workloads-and-answer-quality">2. Public workloads and answer quality<a class="headerlink" href="#2-public-workloads-and-answer-quality" title="Permanent link">&para;</a></h2>
-<p>The repository provides four 100-query workloads derived from <strong>CLAPNQ</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Trace</th>
-<th>Contents</th>
-<th>Public quality metric</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>short-query-answerable.jsonl</code></td>
-<td>100 short answerable queries</td>
-<td>Mean stemmed ROUGE-L F1</td>
-</tr>
-<tr>
-<td><code>long-query-answerable.jsonl</code></td>
-<td>100 long answerable queries</td>
-<td>Mean stemmed ROUGE-L F1</td>
-</tr>
-<tr>
-<td><code>short-query-unanswerable.jsonl</code></td>
-<td>100 short unanswerable queries</td>
-<td>Exact unanswerable accuracy</td>
-</tr>
-<tr>
-<td><code>long-query-unanswerable.jsonl</code></td>
-<td>100 long unanswerable queries</td>
-<td>Exact unanswerable accuracy</td>
-</tr>
-</tbody>
-</table>
-<p>Both metrics use a 0--100 scale. On an unanswerable trace, only an answer
-whose stripped text is exactly <code>unanswerable</code> counts as an abstention.</p>
-<h2 id="3-performance-metrics">3. Performance metrics<a class="headerlink" href="#3-performance-metrics" title="Permanent link">&para;</a></h2>
-<p>For each <code>POST /query</code>, the frontend uses the start of its request processing
-as a common t=0. All per-query timestamps are measured from that origin, so
-they include time spent waiting inside the pipeline.</p>
-<h3 id="31-completion-latency">3.1. Completion latency<a class="headerlink" href="#31-completion-latency" title="Permanent link">&para;</a></h3>
-<p>For each query, <code>last_token_ms</code> is the time from t=0 until its completed answer
-is available at the frontend. It is reported as p50, p95, p99, and maximum.</p>
-<p>The distribution captures both processing time and time spent waiting for
-resources inside the pipeline.</p>
-<p>The evaluator compares the maximum <code>last_token_ms</code> with its external wall
-clock and warns if the terminal completion times are inconsistent. This is a
-diagnostic; it does not fail the evaluation.</p>
-<h3 id="32-throughput">3.2. Throughput<a class="headerlink" href="#32-throughput" title="Permanent link">&para;</a></h3>
-<p>Requests per second over the run: the number of requests in the trace
-divided by the externally measured wall-clock duration of <code>POST /query</code>.</p>
-<p>This is the headline throughput number. It uses the harness's external wall
-clock rather than the frontend's per-query timestamps.</p>
-<h3 id="33-what-this-means-for-optimization">3.3. What this means for optimization<a class="headerlink" href="#33-what-this-means-for-optimization" title="Permanent link">&para;</a></h3>
-<p>The two metrics push in different directions:</p>
+<h1 id="milestone-1-baseline-instrumentation-and-characterization">Milestone 1: Baseline Instrumentation and Characterization<a class="headerlink" href="#milestone-1-baseline-instrumentation-and-characterization" title="Permanent link">&para;</a></h1>
+<p>In this milestone you start from the course-provided four-service RAG
+pipeline, add observability, and characterize the frozen baseline. Your central
+question is: <strong>where does the time go?</strong> Performance optimization is explicitly
+not the goal yet.</p>
 <ul>
-<li><strong>Throughput</strong> rewards pipelining, concurrency, batching, and high
-   utilization.</li>
-<li><strong>Completion-latency percentiles</strong> reflect how quickly queries finish.</li>
+<li><strong>Deadline:</strong> see the <a href="https://www.csl.cornell.edu/courses/ece6765/schedule.html">course
+   schedule</a></li>
+<li><strong>Submitted by:</strong> the group, one submission per group</li>
+<li><strong>Submit via:</strong> GitHub, as <code>m1.md</code> plus code in your private <code>team-XX</code>
+   repository</li>
+<li><strong>Server checkout:</strong> <code>/team-XX/ece6765-project/</code></li>
 </ul>
-<p>Optimizations can affect throughput and latency differently, so measure and
-report both.</p>
-<p>When comparing configurations, report both and explain any tradeoff.</p>
-<h2 id="4-running-the-harness">4. Running the harness<a class="headerlink" href="#4-running-the-harness" title="Permanent link">&para;</a></h2>
-<p>From the <code>evaluation/</code> directory of the canonical team checkout, run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>/team-XX/ece6765-project/evaluation
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pixi<span class="w"> </span>run<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--trace<span class="w"> </span>traces/short-query-answerable.jsonl<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--output<span class="w"> </span>../results/short-query-answerable.json
+<h2 id="1-goals">1. Goals<a class="headerlink" href="#1-goals" title="Permanent link">&para;</a></h2>
+<p>By the end of this milestone your group should have:</p>
+<ul>
+<li>A working copy of the released <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">four-service
+   pipeline</a> that
+   preserves the external <a href="../ece6765-project-arch/#24-query-api">query contract</a>.</li>
+<li>Enough internal timing instrumentation to give a quantitative, defensible
+   answer to <strong>where does time go in this pipeline?</strong></li>
+<li>One public harness report for each of the four provided traces, including
+   answer quality, throughput, and the required latency percentiles.</li>
+<li>A detailed time breakdown for at least one identified public trace.</li>
+<li>Exact commands that let staff reproduce the measurements on your team's
+   server.</li>
+</ul>
+<h2 id="2-what-to-do">2. What to Do<a class="headerlink" href="#2-what-to-do" title="Permanent link">&para;</a></h2>
+<h3 id="21-set-up-the-released-baseline">2.1. Set up the released baseline<a class="headerlink" href="#21-set-up-the-released-baseline" title="Permanent link">&para;</a></h3>
+<p>Log in to your assigned server (see the <a href="../ece6765-server-guide/">Server and Measurement
+Guide</a>), clone your private repository at
+<code>/team-XX/ece6765-project/</code> (see the <a href="../ece6765-git-workflow/">Git
+Workflow</a>), and follow <code>template/README.md</code> in that
+repository.</p>
+<p>Before adding instrumentation, confirm that the released implementation
+starts, reports healthy, answers a small request, and passes its tests.</p>
+<h3 id="22-preserve-the-baseline">2.2. Preserve the baseline<a class="headerlink" href="#22-preserve-the-baseline" title="Permanent link">&para;</a></h3>
+<p>The released implementation is the M1 baseline. Do not change its application
+logic, configuration, dependency versions, or <code>evaluation/</code> code.</p>
+<p>You may add instrumentation, observability dependencies and their lockfile
+entries, and internal correlation metadata. These additions must not change
+the external <code>POST /query</code> or <code>/health</code> contracts or the answers produced.</p>
+<h3 id="23-instrument-the-pipeline">2.3. Instrument the pipeline<a class="headerlink" href="#23-instrument-the-pipeline" title="Permanent link">&para;</a></h3>
+<p>Add an observability layer that lets you answer quantitatively:</p>
+<blockquote>
+<p><strong>Where does time go in this pipeline?</strong></p>
+</blockquote>
+<p>At minimum, distinguish embedding, vector search, generation, and any material
+remaining overhead. You choose the timer placement, telemetry format, and
+analysis method. No particular aggregation script, notebook, profiler, or
+dashboard is required.</p>
+<p>In the report, define where each measured interval begins and ends, identify
+any overlap, and quantify any end-to-end time your categories do not explain.
+The existing response timing fields remain part of the fixed <a href="../ece6765-project-arch/#24-query-api">query
+contract</a>.</p>
+<p>The evaluator compares its external wall clock with the maximum reported
+<code>last_token_ms</code>. That consistency check is diagnostic only in M1; it is not a
+separate grading threshold.</p>
+<h3 id="24-measure-the-four-public-traces">2.4. Measure the four public traces<a class="headerlink" href="#24-measure-the-four-public-traces" title="Permanent link">&para;</a></h3>
+<p>Run each public 100-query trace <strong>once</strong> with the released <a href="../ece6765-eval-harness/">evaluation
+harness</a>:</p>
+<ul>
+<li><code>short-query-answerable.jsonl</code></li>
+<li><code>long-query-answerable.jsonl</code></li>
+<li><code>short-query-unanswerable.jsonl</code></li>
+<li><code>long-query-unanswerable.jsonl</code></li>
+</ul>
+<p>The evaluator performs an unmeasured warm-up using the first trace record.
+Exclude the warm-up invocation from the detailed breakdown, not that query ID;
+the same record appears again in the measured batch.</p>
+<p>For every trace, report:</p>
+<ul>
+<li>the applicable public answer-quality score;</li>
+<li>throughput in requests per second; and</li>
+<li>completion-latency p50, p95, p99, and maximum.</li>
+</ul>
+<p>The public quality scores are descriptive in M1. There is no score threshold
+to clear and no credit for changing the frozen baseline to raise them.</p>
+<p>Staff will launch the submitted application using your documented command,
+then send a small batch of unseen queries to the frontend. This checks startup
+and health, the API, response IDs and cardinality, nonempty answers, valid
+timestamps, and obviously broken or workload-specific behavior. It is not a
+hidden accuracy test and produces no private accuracy grade; ambiguous
+semantic behavior is reviewed by a person rather than a hidden score cutoff.</p>
+<h3 id="25-answer-the-measurement-question">2.5. Answer the measurement question<a class="headerlink" href="#25-answer-the-measurement-question" title="Permanent link">&para;</a></h3>
+<p>For at least one identified public trace, present a figure or table showing
+where end-to-end time goes. Explain the measurement method, identify the
+dominant stage or stages, and support that conclusion with the data.</p>
+<h2 id="3-what-to-submit">3. What to Submit<a class="headerlink" href="#3-what-to-submit" title="Permanent link">&para;</a></h2>
+<p>Commit your instrumentation changes and a file named <code>m1.md</code> at the repository
+root containing:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Title and group members</strong> -- project title, plus the name and
+       NetID of every group member</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Baseline confirmation</strong> -- released version and confirmation that
+       the frozen functional configuration was preserved</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Instrumentation and methodology</strong> -- measurement boundaries,
+       overlap, and any unattributed time</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>How to run it</strong> -- exact commands to launch the pipeline and run the
+       harness on a clean server</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Public results</strong> -- quality, throughput, and p50/p95/p99/maximum
+       completion latency for one run of each public trace</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Time breakdown</strong> -- a figure or table for at least one identified
+       public trace</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Interpretation</strong> -- which stage or stages dominate and what evidence
+       supports that conclusion</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Division of labor</strong> -- who owns which service going forward</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status and blockers</strong> -- what is not working and what you are stuck
+       on</li>
+</ul>
+<p>Figures go in <code>img/</code>; harness reports and small result summaries go in
+<code>results/</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>/team-XX/ece6765-project
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>add<span class="w"> </span>-A
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Milestone 1 submission"</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>git<span class="w"> </span>push
 </span></code></pre></div>
-<p>The harness handles launching your pipeline, waiting for <code>/health</code>, timing
-the run, and scoring the output.</p>
-<p>The evaluator writes the requested JSON report and prints a summary table.</p>
-<h3 id="41-measurement-discipline">4.1. Measurement discipline<a class="headerlink" href="#41-measurement-discipline" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Characterize comparative variation.</strong> Before claiming a configuration
-   improvement, establish the run-to-run noise.</li>
-<li><strong>Vary the trace.</strong> A configuration tuned to one trace can fail on
-   another with a different mix of query lengths.</li>
-<li><strong>Control the machine.</strong> Another group's job is not running on your
-   server, but your own stray processes might be. See the <a href="../ece6765-server-guide/">Server and
-   Measurement Guide</a> for a checklist.</li>
-<li><strong>Change one thing.</strong> If you change the protocol and core count in the
-   same experiment, you have learned nothing about either.</li>
-</ul>
+<p>The submission is the last commit on <code>main</code> at or before the deadline.</p>
+<p>Feedback will be pushed to your group repository as
+<code>m1-feedback-&lt;DATE&gt;.md</code> after the deadline.</p>
+<h2 id="4-tips">4. Tips<a class="headerlink" href="#4-tips" title="Permanent link">&para;</a></h2>
+<p>These are offered as engineering judgment from past performance projects.
+None of them are requirements.</p>
+<div class="admonition tip">
+<p class="admonition-title">Budget for friction</p>
+<p>The dominant cost may be understanding unfamiliar code, getting
+dependencies and models running on ARM64, and deciding where a timer
+belongs. Start early enough to distinguish an instrumentation problem
+from an environment problem.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Keep checking behavior</p>
+<p>Instrumentation can accidentally change ordering, data flow, or answers.
+Run the tests and a small request after every substantive change.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Do not optimize in M1</p>
+<p>Groups that arrive at M2 with an already-tuned pipeline have no baseline
+to compare against. The naive version is an asset.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Watch the vector serialization</p>
+<p>The frontend's vector-search request moves a full dense vector as a JSON
+array of floats. You are not asked to fix this in M1, but instrument it so
+that a later change can quantify what it cost.</p>
+</div>
 
 
 
