@@ -57,9 +57,9 @@ and measure them.
  - **Quantize the model.** Explore lower-precision inference for the
    course-specified generation model. You may change the inference backend
    (for example, from [Transformers](https://huggingface.co/docs/transformers/index)
-   to [llama.cpp](https://github.com/ggml-org/llama.cpp),
-   [vLLM](https://github.com/vllm-project/vllm), or
-   [SGLang](https://github.com/sgl-project/sglang)). Measure performance and
+   to [vLLM](https://github.com/vllm-project/vllm),
+   [SGLang](https://github.com/sgl-project/sglang), or
+   [llama.cpp](https://github.com/ggml-org/llama.cpp)). Measure performance and
    answer quality, and distinguish the effects of a backend change from
    those of quantization.
  - **Use a supplied chunked database.** Staff will provide two variants of
