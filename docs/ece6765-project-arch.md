@@ -18,6 +18,9 @@ re-decompose the pipeline.
 The third is the **workload**: all groups use the course-specified embedding
 model, generation model, and CLAPNQ dataset. These are fixed so that the
 comparison is about systems rather than differences in models or data.
+[Milestone 2](ece6765-project-m2.md) permits quantized versions of the
+same generation model and staff-provided chunked variants of CLAPNQ; the
+evaluation workloads remain unchanged.
 
 The released implementation is frozen for M1. Do not change its application
 logic or configuration, or upgrade or replace released dependencies. You may
