@@ -60,6 +60,7 @@ Layout
 ------
 
 ```
+AGENTS.md                        conventions and release steps (read first)
 docs/
   index.md                         landing page
   ece6765-project-overview.md      project logistics, groups, grading
