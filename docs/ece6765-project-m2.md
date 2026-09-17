@@ -59,12 +59,21 @@ permissions prevented you from measuring.
 ### 2.2. Place your pipeline phases on a roofline
 
 Build a roofline model for one socket of your server, using **floating-point**
-throughput as the compute ceiling. Both the vector database and the generation
-model do their arithmetic in floating point, so that is the ceiling that binds
-here; you do not need an integer roofline for now. Measure the
-attainable compute and memory-bandwidth ceilings on your machine rather than
-deriving them from published peak numbers alone, and say how you obtained
-each.
+throughput as the compute ceiling. In the baseline, both the vector database
+and the generation model do their arithmetic in floating point, so that is the
+ceiling that binds here. Measure the attainable compute and memory-bandwidth
+ceilings on your machine rather than deriving them from published peak numbers
+alone, and say how you obtained each.
+
+Not every PMU exposes usable floating-point counters: on some Arm server cores
+the floating-point events are ambiguous, only partially implemented, or absent
+altogether. If you cannot get a trustworthy operation count out of the counters
+on your machine, fall back to the published specification for the compute
+ceiling -- cores x SIMD width x operations per cycle x the frequency you
+actually sustain -- and to an analytical operation count, derived from the
+shapes of the operations each phase performs, for the per-phase points. Mark
+which of your numbers are measured and which are derived this way, and say what
+stopped the counters from working.
 
 Then measure the arithmetic intensity and achieved floating-point throughput
 of each phase of your RAG pipeline separately -- embedding, vector search,
@@ -72,6 +81,17 @@ generation, and any other phase your decomposition exposes -- and plot each
 phase as a point on that roofline. For every point, say whether the phase is
 compute-bound or bandwidth-bound, how far below the relevant ceiling it sits,
 and what you think accounts for the gap.
+
+When you quantize the generation model in
+[Section 2.4](#24-explore-optimizations), its arithmetic moves off the
+floating-point units and the floating-point ceiling no longer bounds it.
+Build an integer roofline for the precision your quantized model actually uses
+-- the integer throughput ceiling at that width, against the same
+memory-bandwidth ceiling -- place the quantized generation phase on it, and
+compare that placement with where the unquantized phase sat on the
+floating-point roofline: whether the phase stayed on the same side of the
+ridge point, and how the move in arithmetic intensity relates to the speedup
+you measured. The fallback above applies here too.
 
 ### 2.3. Identify the CPU bottleneck with top-down analysis
 
@@ -129,7 +149,9 @@ top of these four if you justify and measure them.
    [SGLang](https://github.com/sgl-project/sglang), or
    [llama.cpp](https://github.com/ggml-org/llama.cpp)). Measure performance and
    answer quality, and distinguish the effects of a backend change from
-   those of quantization.
+   those of quantization. Place the quantized generation phase on the integer
+   roofline from [Section 2.2](#22-place-your-pipeline-phases-on-a-roofline)
+   and report what moved.
  - **Use a supplied chunked database.** Staff will provide two variants of
    the existing CLAPNQ corpus: 128-token chunks with 64-token overlap, and
    64-token chunks with 32-token overlap. Replace the baseline database with
@@ -174,8 +196,10 @@ repo root containing:
  - [ ] **Title and group members**
  - [ ] **Server block diagram** -- annotated with the measured properties of
        the machine, with tools, measurement conditions, and limitations
- - [ ] **Roofline** -- the measured ceilings and each pipeline phase placed
-       on them
+ - [ ] **Roofline** -- the floating-point ceilings and each pipeline phase
+       placed on them, plus the integer roofline with the quantized generation
+       phase placed on it; state for every ceiling whether it was measured or
+       taken from the specification, and why
  - [ ] **Top-down analysis** -- the top-level breakdown per pipeline phase,
        the counters it was built from, and what it says about the CPU
        bottleneck
