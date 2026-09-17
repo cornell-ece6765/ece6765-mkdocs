@@ -1,11 +1,12 @@
 Milestone 2: Profiling and Application-Level Optimization
 ==========================================================================
 
-In Milestone 1 you instrumented the supplied baseline and identified its
-likely bottleneck. In this milestone, characterize your server and profile
-the pipeline, then use that evidence to choose and evaluate application-level
-optimizations. This is an open-ended investigation: you decide which
-approaches are worth pursuing and explain what you learn.
+In Milestone 1 you instrumented the supplied baseline and measured where its
+time goes. That told you which stage dominates, but not what limits it. In
+this milestone, characterize your server and profile the pipeline against it
+to find out, then use that evidence to choose and evaluate application-level
+optimizations. The four directions below are all required; how far you take
+each one, and what you conclude from it, is up to you.
 
 System-level knobs -- NUMA placement, page size, core pinning, frequency --
 are [Milestone 3](ece6765-project-m3.md). Keep them fixed here and record
@@ -22,37 +23,104 @@ deadline.**
 --------------------------------------------------------------------------
 
  - Characterize the hardware resources relevant to your pipeline.
- - Use profiling evidence to confirm or refute your M1 bottleneck hypothesis.
- - Choose and evaluate application-level optimizations based on that evidence.
- - Explain their effects on performance, resource use, and answer quality.
+ - Explain what limits the stages your M1 breakdown found dominant.
+ - Evaluate each of the four application-level optimization directions.
+ - Report the performance and answer-quality tradeoff each one makes.
 
 2. What to Do
 --------------------------------------------------------------------------
 
-### 2.1. Characterize and profile
+### 2.1. Draw a block diagram of your server
 
-Characterize your server and profile the baseline under load before making
-changes. Describe the relevant hardware resources and show where time is
-spent across the RAG pipeline. Use hardware performance counters to support
-your explanation of the bottleneck; choose measurements that help test your
-hypothesis rather than collecting every available counter.
+Before you profile anything, establish what the machine is. Produce a block
+diagram of your server, annotated with the quantities that determine where
+data moves and what limits it, together with the text needed to read it.
+Measure what you can rather than quoting a datasheet, and mark clearly which
+numbers you measured and which you took from documentation.
 
-Useful approaches include a hardware block diagram or roofline model,
-memory bandwidth and latency measurements, core utilization, IPC, cache
-misses per thousand instructions, instruction breakdown, and top-down
-analysis. These are examples, not a required checklist. Use the counters
-supported by your hardware and tools, and explain any measurement limitations.
-See the [Server and Measurement Guide](ece6765-server-guide.md).
+Cover at least:
 
-State whether the evidence confirms your M1 hypothesis. If it does not,
-explain what changed your understanding.
+ - **Sockets and cores** -- how many sockets, how many cores each, and the
+   interconnect between them if there is more than one.
+ - **Cache hierarchy** -- level sizes and which cores share each level.
+ - **Memory** -- channels and capacity per socket, unloaded access latency,
+   latency as offered load increases, and the peak bandwidth you can actually
+   reach.
+ - **NUMA** -- latency and bandwidth for local and remote access, for every
+   node pair your machine exposes.
+ - **I/O** -- PCIe generation and lane counts, which socket each link hangs
+   off, and what is attached to it.
 
-### 2.2. Explore optimizations
+The loaded-latency behavior is the part groups most often skip and most often
+need later: an idle-latency number alone will not explain a pipeline running
+under load. State the tools you used and any quantity your hardware or your
+permissions prevented you from measuring.
 
-Choose from the following directions based on your profile. You do not need
-to pursue all four, and there is no required number of optimizations or
-categories. Other application-level approaches are welcome if you justify
-and measure them.
+### 2.2. Place your pipeline phases on a roofline
+
+Build a roofline model for one socket of your server, using **floating-point**
+throughput as the compute ceiling. Both the vector database and the generation
+model do their arithmetic in floating point, so that is the ceiling that binds
+here; you do not need an integer roofline for now. Measure the
+attainable compute and memory-bandwidth ceilings on your machine rather than
+deriving them from published peak numbers alone, and say how you obtained
+each.
+
+Then measure the arithmetic intensity and achieved floating-point throughput
+of each phase of your RAG pipeline separately -- embedding, vector search,
+generation, and any other phase your decomposition exposes -- and plot each
+phase as a point on that roofline. For every point, say whether the phase is
+compute-bound or bandwidth-bound, how far below the relevant ceiling it sits,
+and what you think accounts for the gap.
+
+### 2.3. Identify the CPU bottleneck with top-down analysis
+
+Apply the top-down methodology to each phase of the pipeline to determine what
+limits the CPU while that phase runs. Start by attributing lost execution
+capacity to a small number of top-level causes -- work actually retiring,
+work thrown away by misspeculation, the frontend failing to supply the core,
+and the backend failing to absorb what it is given -- and then drill into the
+dominant cause as far as the counters on your hardware allow. Report the
+breakdown per phase, not one number for the whole pipeline: the phases stress
+the core in different ways, and a single aggregate hides exactly the
+difference you are looking for.
+
+The published formulations of this analysis assume the counters of the core
+they were written for, and yours are not those cores. Arm cores differ in
+whether they account for issue slots at all; where slot accounting is absent,
+the equivalent analysis is built from cycle-level stall counters and the
+event groups your PMU does provide, and the resulting categories will not map
+one-to-one onto the ones in the papers. Work out what your PMU supports
+before you fit your data to someone else's category names, and report the
+breakdown your hardware can actually justify.
+
+The methodology is described in Yasin's paper, [A Top-Down Method for
+Performance Analysis and Counters
+Architecture](https://ieeexplore.ieee.org/document/6844459). For its
+application on ARM cores, including the counter groups and the ordering of the
+drill-down, see [Arm Neoverse V1 top-down
+methodology](https://developer.arm.com/community/arm-community-blogs/b/servers-and-cloud-computing-blog/posts/arm-neoverse-v1-top-down-methodology),
+which is an example of adapting it to an Arm core rather than a recipe for
+yours. Consult the reference manual and telemetry guide for your own core for
+the events it implements, and state plainly any category you could not
+resolve and why.
+
+See the [Server and Measurement Guide](ece6765-server-guide.md) for platform
+notes and measurement hygiene.
+
+Taking the three results together, state what limits each stage of your
+pipeline, and relate that back to the time breakdown you reported in M1.
+
+### 2.4. Explore optimizations
+
+Explore all four directions below. For each one, report what it costs and
+what it buys: the effect on throughput and completion latency, on answer
+quality, and on resource use, measured against your M1 baseline. Use your
+profile to decide how far to push each direction and which configurations are
+worth exploring within it. Where your profile predicts that a direction will
+not help, say so before you measure it, and then report whether the
+measurement agreed. Additional application-level approaches are welcome on
+top of these four if you justify and measure them.
 
  - **Quantize the model.** Explore lower-precision inference for the
    course-specified generation model. You may change the inference backend
@@ -80,7 +148,7 @@ same model and the staff-provided chunked corpus variants are permitted in
 this milestone. Continue using the course evaluation workloads and report
 answer quality alongside performance.
 
-### 2.3. Measure and explain
+### 2.5. Measure and explain
 
 Keep your M1 baseline runnable. Compare each change against it under the
 same workload and machine conditions, isolating changes where possible.
@@ -104,14 +172,23 @@ Commit your implementation, configurations, and a file named `m2.md` at the
 repo root containing:
 
  - [ ] **Title and group members**
- - [ ] **Characterization and profiling** -- relevant server properties,
-       tools, measurement conditions, baseline profile, and limitations
- - [ ] **Hypothesis outcome** -- whether your M1 diagnosis held up and why
- - [ ] **Optimization experiments** -- what you chose, why, what changed,
-       and how to reproduce each configuration
- - [ ] **Results and explanation** -- baseline comparisons of throughput,
-       completion latency, answer quality, and relevant resource measurements;
-       include negative results and interactions between combined changes
+ - [ ] **Server block diagram** -- annotated with the measured properties of
+       the machine, with tools, measurement conditions, and limitations
+ - [ ] **Roofline** -- the measured ceilings and each pipeline phase placed
+       on them
+ - [ ] **Top-down analysis** -- the top-level breakdown per pipeline phase,
+       the counters it was built from, and what it says about the CPU
+       bottleneck
+ - [ ] **What limits each stage** -- the resource each stage runs out of, tied
+       back to your M1 time breakdown, including anything that contradicts
+       what the breakdown led you to expect
+ - [ ] **Optimization experiments** -- all four directions: what you changed,
+       which configurations you explored and why, and how to reproduce each
+ - [ ] **Results and tradeoffs** -- for each direction, baseline comparisons
+       of throughput, completion latency, answer quality, and relevant
+       resource measurements, with the tradeoff each one makes stated
+       explicitly; include negative results and interactions between
+       combined changes
  - [ ] **Post-optimization profile** -- what now limits the pipeline
  - [ ] **Status and blockers**
 

@@ -69,7 +69,8 @@ puts you on the other side of them.
     Instrument the supplied four-service baseline and establish where its
     time goes.
 
-- **Milestone 2** &middot; *not yet released*
+- **[Milestone 2: Profiling and Application-Level Optimization](ece6765-project-m2.md)**
+  &middot; *released*
 
     Profile with performance counters. Optimize batching, parallelism,
     communication, and algorithms.
