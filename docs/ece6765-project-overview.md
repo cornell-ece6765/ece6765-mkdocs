@@ -196,8 +196,9 @@ compared.
 Infrastructure
 --------------------------------------------------------------------------
 
-Each group is given access to a **dedicated Ampere server**. All groups get
-identical hardware.
+Each group is given access to a **dedicated Ampere server**, donated to
+the course by [Ampere Computing](https://amperecomputing.com). All groups
+get identical hardware.
 
 Models are fixed for all groups so that the comparison is about systems, not
 about model optimization. 

@@ -104,3 +104,9 @@ Reference
 
     All milestone deadlines are on the [course
     schedule](https://www.csl.cornell.edu/courses/ece6765/schedule.html). 
+
+Acknowledgments
+--------------------------------------------------------------------------
+
+We thank [Ampere Computing](https://amperecomputing.com) for donating the
+Ampere Altra servers that made this project possible.
