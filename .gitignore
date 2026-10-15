@@ -4,3 +4,6 @@ site/
 # Local preview environment
 .venv/
 __pycache__/
+
+# Unreleased handouts stay out of the public repo; see AGENTS.md.
+docs/ece6765-project-m4.md

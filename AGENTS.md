@@ -89,8 +89,25 @@ To release milestone N, do all three in the same commit: delete its line from
 card into a link marked *released*. Missing any one of them either publishes a
 page nobody can navigate to, or advertises a link that 404s.
 
-As of 2026-09-16: **M1 is released; M2, M3, and M4 are still drafts** and each
-still carries the `_TBD_` placeholders described below.
+As of 2026-10-15: **M1 and M2 are released; M3 is finalized but still a
+draft; M4 is a draft** that still carries the `_TBD_` placeholders described
+below.
+
+`draft_docs:` only keeps a page off the built site. This repository is
+public, so a committed draft's markdown is readable on GitHub. Draft content
+does not bind the course; redesign freely.
+
+Keep unreleased handouts out of git. `docs/ece6765-project-m4.md` is
+untracked and listed in `.gitignore`. It lives only in the instructor's
+working copy, and `mkdocs serve` still shows it as a draft. On release, remove
+its `.gitignore` line and commit it with the other release steps. Earlier
+versions remain in git history.
+
+To check a draft's links before release, build it with a temporary config
+that inherits `mkdocs.yml` (`INHERIT: mkdocs.yml`) and overrides
+`draft_docs:`. Run `mkdocs build --strict -f <that file> -d <scratch dir>`,
+then delete the file. A plain `mkdocs build --strict` skips drafts, so it
+never checks their links.
 
 ## What never ships in a published handout
 
