@@ -1,0 +1,1425 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Mohammad Alian">
+      
+      
+        <link rel="canonical" href="https://cornell-ece6765.github.io/ece6765-mkdocs/ece6765-project-m3/">
+      
+      
+        <link rel="prev" href="../ece6765-project-m2/">
+      
+      
+        <link rel="next" href="../ece6765-project-arch/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Milestone 3: System Sensitivity Study - ECE 6765 Modern Datacenter Architecture</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#milestone-3-system-sensitivity-study" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ECE 6765 Modern Datacenter Architecture" class="md-header__button md-logo" aria-label="ECE 6765 Modern Datacenter Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ECE 6765 Modern Datacenter Architecture
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Milestone 3: System Sensitivity Study
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cornell-ece6765/ece6765-mkdocs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cornell-ece6765/ece6765-mkdocs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ece6765-project-overview/" class="md-tabs__link">
+          
+  
+  
+  Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ece6765-project-arch/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ECE 6765 Modern Datacenter Architecture" class="md-nav__button md-logo" aria-label="ECE 6765 Modern Datacenter Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ECE 6765 Modern Datacenter Architecture
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cornell-ece6765/ece6765-mkdocs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cornell-ece6765/ece6765-mkdocs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Project
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: Baseline Instrumentation and Characterization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 2: Profiling and Application-Level Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 3: System Sensitivity Study
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 3: System Sensitivity Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-your-starting-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Your Starting Point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-to-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What to Do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. What to Do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-establish-a-controlled-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. Establish a controlled environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-core-allocation-and-scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. Core allocation and scalability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-memory-placement-and-page-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. Memory placement and page size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-microarchitectural-interference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4. Microarchitectural interference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-clock-frequency-and-energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5. Clock frequency and energy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-methodology-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Methodology requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Methodology requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-changing-machine-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1. Changing machine state
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-what-to-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What to Submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-arch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference Architecture and API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-eval-harness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Harness and Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-server-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server and Measurement Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-report-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Report Guidelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-git-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Workflow for Group Repos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-your-starting-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Your Starting Point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-to-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What to Do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. What to Do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-establish-a-controlled-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. Establish a controlled environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-core-allocation-and-scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. Core allocation and scalability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-memory-placement-and-page-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. Memory placement and page size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-microarchitectural-interference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4. Microarchitectural interference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-clock-frequency-and-energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5. Clock frequency and energy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-methodology-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Methodology requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Methodology requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-changing-machine-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1. Changing machine state
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-what-to-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What to Submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="milestone-3-system-sensitivity-study">Milestone 3: System Sensitivity Study<a class="headerlink" href="#milestone-3-system-sensitivity-study" title="Permanent link">&para;</a></h1>
+<p>Milestone 2 optimized your application. This milestone holds the
+application fixed and asks the central question of the project: <strong>given a
+fixed program, how sensitive is its performance to the system underneath
+it?</strong></p>
+<p>Every knob here -- core allocation, NUMA placement, page size, contention
+from a co-runner, clock frequency and the policy that sets it -- is a
+datacenter architecture decision that someone makes for real, at scale,
+with real consequences. You get to measure what those decisions are worth
+on a workload you have already profiled.</p>
+<p>The deliverable is not a faster pipeline. It is a defensible account of
+which system properties this workload cares about, which it does not, and
+why -- and the "does not" half carries as much credit as the other.</p>
+<p><strong>See the <a href="https://www.csl.cornell.edu/courses/ece6765/schedule.html">course schedule</a>
+or the <a href="https://canvas.cornell.edu/calendar">Canvas calendar</a> for the
+deadline.</strong></p>
+<ul>
+<li><strong>Submitted by:</strong> the group, one submission per group</li>
+<li><strong>Submit via:</strong> GitHub, as <code>m3.md</code> plus code in your <code>team-XX</code> repo</li>
+</ul>
+<h2 id="1-goals">1. Goals<a class="headerlink" href="#1-goals" title="Permanent link">&para;</a></h2>
+<p>By the end of this milestone your group should have:</p>
+<ul>
+<li>A controlled environment -- fixed clock frequency and a known machine
+   state -- with its remaining run-to-run variation measured.</li>
+<li>Controlled sweeps of all four configuration families: core
+   allocation, memory placement and page size, interference, and clock
+   frequency and energy.</li>
+<li>An explanation of each significant effect in architectural terms,
+   backed by measurement, and checked against the characterization you
+   built in M2.</li>
+<li>A <strong>sensitivity summary</strong>: for each knob you swept, how much it moved
+   performance, which component it acted on, and the mechanism behind it.</li>
+<li>A <strong>best-known configuration</strong>, reproducible from a committed
+   configuration file, and what it delivers over your M3 starting point.</li>
+</ul>
+<h2 id="2-your-starting-point">2. Your Starting Point<a class="headerlink" href="#2-your-starting-point" title="Permanent link">&para;</a></h2>
+<p>Your M3 baseline is <strong>your own M2 final configuration</strong>: the combined
+configuration you reported in <code>m2.md</code>. Groups start from different places,
+and that is expected; every comparison in this milestone is against your
+own baseline.</p>
+<ul>
+<li>Tag the commit of that configuration <code>m3-baseline</code> and push the tag.</li>
+<li>List every setting in it that differs from the released starter or the
+   server's defaults: backend and precision, corpus variant, index, replica
+   and thread counts, and any placement, page-size, or frequency setting
+   you already applied in M2.</li>
+<li>If you had to change the M2 configuration to make it run reproducibly,
+   say what you changed and why.</li>
+<li>Re-measure the baseline on all four public traces in the controlled
+   environment of <a href="#31-establish-a-controlled-environment">Section 3.1</a>,
+   following the methodology in
+   <a href="#4-methodology-requirements">Section 4</a>. Your M2 numbers
+   were taken under different machine conditions and are not a valid
+   reference for M3 comparisons.</li>
+</ul>
+<p>Application logic is not the subject of this milestone. If you change
+application code -- for example, to make a knob controllable -- measure
+that change separately and say so. Inter-service communication (wire
+format, transport, framing) stays as it is in your baseline; it opens as a
+design axis in Milestone 4.</p>
+<h2 id="3-what-to-do">3. What to Do<a class="headerlink" href="#3-what-to-do" title="Permanent link">&para;</a></h2>
+<p>Performance on these servers is not determined by your configuration
+alone. Clock-frequency changes, interference from other processes, SSD
+garbage collection, and other background activity can perturb any one
+run. Before you can see what a design decision is worth, you need an
+environment in which that decision is the only thing that changes. Build
+that environment first (3.1), then sweep all four configuration families
+(3.2 through 3.5). For each family, hold everything else fixed and change
+one variable at a time.</p>
+<div class="admonition note">
+<p class="admonition-title">The knobs listed are a starting point</p>
+<p>Each family names knobs worth investigating; none of the lists is
+exhaustive, and some entries may turn out not to exist or not to matter
+on this platform. Finding a configuration dimension that is not listed
+and showing it matters is worth more than exhaustively sweeping the
+ones that are.</p>
+</div>
+<h3 id="31-establish-a-controlled-environment">3.1. Establish a controlled environment<a class="headerlink" href="#31-establish-a-controlled-environment" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Fix the clock frequency.</strong> Set every core to one fixed frequency and
+   keep it there for every experiment in Sections 3.2 through 3.4. Choose
+   a frequency the cores can sustain under full load, report it, and
+   verify from measurement that the cores actually run at it. Frequency
+   itself is the subject of Section 3.5, and only there.</li>
+<li><strong>Control the rest of the machine state.</strong> Establish the starting
+   state described in <a href="#4-methodology-requirements">Section 4</a> before
+   every run, and keep anything that is not part of your experiment off
+   the server while you measure.</li>
+<li><strong>Measure your noise floor.</strong> Run your baseline several times in this
+   environment and report the run-to-run variation that remains. That
+   variation is the smallest effect any later sweep can claim. If it is
+   large, find out why and reduce it before you start sweeping.</li>
+</ul>
+<h3 id="32-core-allocation-and-scalability">3.2. Core allocation and scalability<a class="headerlink" href="#32-core-allocation-and-scalability" title="Permanent link">&para;</a></h3>
+<p>You have a fixed number of cores and four services, some of them
+replicated, competing for them.</p>
+<ul>
+<li><strong>Isolated scaling.</strong> How does each service scale as you give it more
+   cores, measured on its own? Where does each one stop scaling, and what
+   stops it?</li>
+<li><strong>End-to-end allocation.</strong> Sweep the division of cores among services,
+   replicas, and threads per replica. Which split maximizes end-to-end
+   throughput, and what does it do to the completion-latency
+   distribution?</li>
+<li><strong>Oversubscription.</strong> What happens when the threads you start exceed
+   the cores they can run on, and where in the pipeline does that cost
+   show up?</li>
+<li><strong>Service placement.</strong> Which services share a socket with which, and
+   what that placement costs or saves.</li>
+</ul>
+<p>Expect the answer to be interesting. Services that scale well in isolation
+often do not once they compete for shared cache, memory bandwidth, and
+cores, and the best end-to-end split is rarely the one the individual
+scaling curves predict. Report both, and explain the gap.</p>
+<h3 id="33-memory-placement-and-page-size">3.3. Memory placement and page size<a class="headerlink" href="#33-memory-placement-and-page-size" title="Permanent link">&para;</a></h3>
+<p>Your M2 block diagram measured what local and remote memory cost on this
+machine. This family finds out what that costs your pipeline.</p>
+<ul>
+<li><strong>NUMA placement.</strong> Which node each service's memory is allocated on,
+   whether its threads run on the same node, and what interleaved and
+   deliberately remote placements cost. The generation weights and the
+   vector index are the working sets most worth investigating.</li>
+<li><strong>Verify placement.</strong> Requesting a placement policy does not guarantee
+   where pages land. Measure where each service's memory actually resides,
+   and report it with every result in this family.</li>
+<li><strong>Automatic page migration.</strong> Whether the kernel moves pages between
+   nodes while your pipeline runs, and what that does to placement,
+   performance, and run-to-run variation.</li>
+<li><strong>Page size.</strong> Base pages versus huge pages, for the model weights and
+   the vector index. Tie the result back to your M2 counter data: if a
+   phase showed address-translation overhead, this is where you find out
+   what it cost.</li>
+<li><strong>Remote memory as a slower tier.</strong> Treat the other socket's memory as
+   a slower, more distant tier: where placing part of a working set there
+   is acceptable, and where it damages tail latency.</li>
+</ul>
+<h3 id="34-microarchitectural-interference">3.4. Microarchitectural interference<a class="headerlink" href="#34-microarchitectural-interference" title="Permanent link">&para;</a></h3>
+<p>The "dedicated server" you have been measuring on is a convenient fiction.
+In a real datacenter your workload shares last-level cache, memory
+bandwidth, and interconnect with whatever else the scheduler put on that
+machine -- and in your own pipeline, the components already contend with
+each other.</p>
+<p>This family is the one that most directly tests whether you understand
+what your components are bound by.</p>
+<ul>
+<li><strong>Self-interference.</strong> Your own components and replicas already
+   compete. Which pairs hurt each other when they share cores, a socket,
+   or a memory controller? Isolate them and measure the difference. If
+   your replicas slow each other down while measured memory traffic is
+   well below the bandwidth you measured in M2, explain why.</li>
+<li><strong>Induced interference.</strong> Run a co-runner alongside your pipeline --
+   for example a cache-thrashing loop, a bandwidth hog, or a spin loop --
+   and measure the damage as a function of what it contends for and how
+   hard. A component you concluded was compute-bound in M2 should barely
+   notice a bandwidth hog. Check whether that prediction holds.</li>
+<li><strong>Contention-aware placement.</strong> Given what you find, is there a
+   placement that isolates your most sensitive component from the rest?
+   What does that isolation cost in throughput? Find out which hardware
+   isolation mechanisms this platform offers, if any.</li>
+<li><strong>Tail latency under interference.</strong> Interference usually shows up in
+   the tail long before it shows up in the mean. Report distributions.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">This is the noisy-neighbor problem</p>
+<p>You are reproducing, at small scale, the effect that drives a great
+deal of real datacenter provisioning policy: why operators leave
+capacity on the floor, why some workloads are marked non-colocatable,
+and why isolation mechanisms exist in hardware at all. A clean
+measurement of how much a co-runner costs your p99 is one of the most
+transferable results you can produce in this project.</p>
+</div>
+<h3 id="35-clock-frequency-and-energy">3.5. Clock frequency and energy<a class="headerlink" href="#35-clock-frequency-and-energy" title="Permanent link">&para;</a></h3>
+<p>Every other family ran at one fixed frequency. This family lifts that
+restriction and measures what frequency, and the policy that sets it, is
+worth to your workload.</p>
+<ul>
+<li><strong>Fixed-frequency sweep.</strong> Sweep the core clock across the range the
+   platform supports and measure throughput and the latency distribution.
+   A phase that is memory-bound will barely respond to frequency, which
+   makes this a clean test of your M2 characterizations.</li>
+<li><strong>Frequency governors.</strong> Compare dynamic voltage and frequency
+   scaling (DVFS) under the on-demand governor, which raises the clock
+   with load, against the performance governor, which holds the highest
+   frequency, and against the server's default policy. Report the
+   frequencies your cores actually ran at under each, and what each costs
+   or saves in throughput, tail latency, and energy relative to your
+   fixed-frequency results.</li>
+<li><strong>Uncore frequency.</strong> If the platform lets you change the frequency of
+   the uncore -- the interconnect, shared cache, and memory controllers
+   -- measure its effect separately from the core clock. If it does not,
+   say how you established that.</li>
+<li><strong>Power and energy.</strong> Where the platform exposes power measurements,
+   report power and energy per query across the sweep, and say where they
+   come from and what they cover.</li>
+</ul>
+<p>This family connects directly to the energy proportionality and power
+capping material from Topic 4: what would capping this server's power
+cost your workload, and which component would pay?</p>
+<h2 id="4-methodology-requirements">4. Methodology requirements<a class="headerlink" href="#4-methodology-requirements" title="Permanent link">&para;</a></h2>
+<p>This milestone generates many configurations, and the most common failure
+is a pile of numbers with no controlled comparison behind them. These
+requirements apply to every experiment, starting with the controlled
+environment in <a href="#31-establish-a-controlled-environment">Section 3.1</a>. A
+single run is not sufficient: run every experiment several times and
+report statistically significant results with bounded error. A knob's
+effect is only real if it exceeds that error.</p>
+<div class="admonition danger">
+<p class="admonition-title">Automate your sweeps</p>
+<p>Hand-running configurations and pasting numbers into a spreadsheet
+does not survive contact with this milestone. Write a sweep script
+that takes a configuration, applies the machine state, launches the
+pipeline, runs the harness, and records the result together with the
+state it was taken under. Commit it. You will re-run everything at
+least once when you discover a mistake, and again in M4.</p>
+</div>
+<ul>
+<li><strong>One variable at a time.</strong> Every reported effect must come from a
+   comparison where only that variable changed.</li>
+<li><strong>Start from a known state.</strong> Page cache contents, free memory per node,
+   and leftover processes all change where your pipeline's memory lands
+   and how fast it runs. Define the machine state each run starts from,
+   establish it before every launch, and say how.</li>
+<li><strong>Run-to-run variation.</strong> Repeat each configuration you draw a
+   conclusion from, report the mean with an error bound, and compare
+   configurations measured in the same session. If you cannot distinguish
+   a 3% effect from noise, report it as indistinguishable -- not as a 3%
+   improvement.</li>
+<li><strong>Record the whole configuration.</strong> Every result needs the full machine
+   state it was taken under, as listed in the <a href="../ece6765-server-guide/#43-record-the-machine-state">Server and Measurement
+   Guide</a>, plus
+   where each service's memory actually resided and the frequencies its
+   cores ran at. Verify the state was applied; do not trust that a script
+   applied it.</li>
+<li><strong>Traces.</strong> You may run a sweep on a single trace. Your M3 baseline and
+   your best-known configuration must each be measured on <strong>all four</strong>
+   public traces.</li>
+<li><strong>Re-check functional correctness.</strong> Check functional correctness at
+   every step to make sure the application logic stays the same in every
+   run.</li>
+</ul>
+<h3 id="41-changing-machine-state">4.1. Changing machine state<a class="headerlink" href="#41-changing-machine-state" title="Permanent link">&para;</a></h3>
+<p>Your group has sudo on its server, and many knobs in this milestone need
+it. With that comes responsibility for a machine your teammates share:</p>
+<ul>
+<li>Apply every machine-state change through a committed script, never by
+   hand, so the state behind each result is reproducible.</li>
+<li>Restore the server's default state when you finish a session, and
+   record what the defaults are.</li>
+<li>Do not change the boot configuration, the kernel, or account and sudo
+   settings. If a knob you want needs one of these, ask staff first.</li>
+<li>Settings applied at runtime are lost when the server reboots. Your
+   scripts, not your memory, are what reapply them.</li>
+</ul>
+<h2 id="5-what-to-submit">5. What to Submit<a class="headerlink" href="#5-what-to-submit" title="Permanent link">&para;</a></h2>
+<p>Commit your sweep infrastructure, configurations, and results, push the
+<code>m3-baseline</code> tag, and add a file named <code>m3.md</code> at the repository root
+containing:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Title and group members</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Starting point</strong> -- the <code>m3-baseline</code> commit, the list of
+       non-default settings, and the re-measured baseline on all four
+       traces</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Experimental setup</strong> -- the fixed frequency you chose and how
+       you verified it, the machine state each run starts from, what was
+       held fixed, how state was applied and verified, the noise floor you
+       measured, and how you handled it</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Per-family results</strong> -- for each of the four families, figures
+       with an explanation of each significant effect in architectural
+       terms, including where each service's memory resided</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Core allocation study</strong> -- isolated scaling curves, the
+       end-to-end allocation sweep, the optimum you found, and why it
+       differs from what the isolated curves predict</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Sensitivity summary</strong> -- a table with one row per knob: the range
+       swept, the effect on throughput and on tail latency relative to
+       measured variation, the component it acted on, and the mechanism</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Connection to M2</strong> -- where the M2 characterizations predicted
+       these results, and where they did not</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Best-known configuration</strong> -- committed as a configuration file
+       in your repository, with its improvement over your M3 baseline in
+       throughput, the latency distribution, and answer quality on all
+       four traces</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Null and negative results</strong> -- knobs that did not matter, and why
+       that is itself informative</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>How to run it</strong> -- exact commands that apply the machine state,
+       launch the baseline and the best-known configuration, run the
+       harness, and restore the defaults</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status and blockers</strong></li>
+</ul>
+<p>Follow the <a href="../ece6765-report-guidelines/">Report Guidelines</a>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>add<span class="w"> </span>m3.md<span class="w"> </span>img/<span class="w"> </span>results/<span class="w"> </span>scripts/<span class="w"> </span>&lt;your<span class="w"> </span>config<span class="w"> </span>directory&gt;
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Milestone 3 submission"</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>push
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>m3-baseline
+</span></code></pre></div>
+<p>The submission is the last commit on <code>main</code> at or before the deadline.</p>
+<p>Feedback will be pushed to your group repository as
+<code>m3-feedback-&lt;DATE&gt;.md</code> after the deadline.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Mohammad Alian
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../js/extras.js"></script>
+      
+        <script src="../js/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
