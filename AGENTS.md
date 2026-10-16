@@ -89,9 +89,8 @@ To release milestone N, do all three in the same commit: delete its line from
 card into a link marked *released*. Missing any one of them either publishes a
 page nobody can navigate to, or advertises a link that 404s.
 
-As of 2026-10-15: **M1 and M2 are released; M3 is finalized but still a
-draft; M4 is a draft** that still carries the `_TBD_` placeholders described
-below.
+As of 2026-10-15: **M1, M2, and M3 are released; M4 is a draft** that still
+carries the `_TBD_` placeholders described below.
 
 `draft_docs:` only keeps a page off the built site. This repository is
 public, so a committed draft's markdown is readable on GitHub. Draft content

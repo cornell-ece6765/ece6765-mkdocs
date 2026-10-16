@@ -75,10 +75,11 @@ puts you on the other side of them.
     Profile with performance counters. Optimize batching, parallelism,
     communication, and algorithms.
 
-- **Milestone 3** &middot; *not yet released*
+- **[Milestone 3: System Sensitivity Study](ece6765-project-m3.md)**
+  &middot; *released*
 
-    Measure sensitivity: NUMA, page size, core allocation, PCIe affinity,
-    frequency, vector units, and contention from a noisy neighbor.
+    Build a controlled environment, then measure sensitivity to core
+    allocation, NUMA placement and page size, interference, and frequency.
 
 - **Milestone 4** &middot; *not yet released*
 
