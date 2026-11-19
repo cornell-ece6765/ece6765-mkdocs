@@ -3,7 +3,7 @@ Public Leaderboard
 
 This leaderboard shows the score that each group reports on the four
 public traces. Staff update it once a day. Groups whose leaderboard score
-rises ten times earn a participation bonus. [Milestone
+rises six times earn a participation bonus. [Milestone
 4](ece6765-project-m4.md#5-public-leaderboard) describes how to report a
 score and which updates count.
 

@@ -15,7 +15,7 @@ interfaces, including the models, the vector search, and the division of
 the pipeline into services ([Section 3](#3-what-you-may-change)).
 
 A public leaderboard, updated once a day, shows the score that each group
-reports on the public traces. Groups whose leaderboard score rises ten times
+reports on the public traces. Groups whose leaderboard score rises six times
 earn a participation bonus ([Section 5](#5-public-leaderboard)).
 
 To receive credit for an optimization, `m4.md` must explain what the
@@ -257,7 +257,7 @@ record.
 An update counts toward the participation bonus when its leaderboard score
 is at least 2% higher than that of your previous counted update. Your first
 scored update counts. The script reads `main` once a day, so it counts at
-most one update per day, and ten counted updates require at least ten days.
+most one update per day, and six counted updates require at least six days.
 The 2% margin keeps run-to-run variation from counting as an improvement.
 
 ### 5.3. Verification after the deadline
