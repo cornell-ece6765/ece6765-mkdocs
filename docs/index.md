@@ -85,6 +85,10 @@ puts you on the other side of them.
 
     Combine everything, measure it, and write the report that explains it.
 
+- **[Public Leaderboard](ece6765-leaderboard.md)** &middot; *updated daily*
+
+    The score that each group reports on the public traces.
+
 </div>
 
 Reference
