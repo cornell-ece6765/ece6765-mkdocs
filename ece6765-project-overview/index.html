@@ -691,6 +691,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../ece6765-project-m4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 4: Performance Contest
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../ece6765-leaderboard/" class="md-nav__link">
         
   
@@ -1243,7 +1271,7 @@ baseline whose costs you can measure before changing it.</p>
 <div class="admonition note">
 <p class="admonition-title">The four services are fixed</p>
 <p>You keep these four services -- <code>frontend</code>, <code>embedding</code>, <code>vectordb</code>,
-<code>generation</code> -- with these functionalities throughout the semester.
+<code>generation</code> -- with these functionalities through Milestone 3.
 <strong>Merging, splitting, or re-decomposing the pipeline is not permitted.</strong>
 When a milestone permits it, you may replicate a service, which is
 provisioning rather than re-decomposition.</p>
@@ -1254,26 +1282,24 @@ connection management. That is the open design space that we explore in this pro
 application development time, and are not something a performance engineer
 can change. See <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">the decomposition is
 fixed</a>.</p>
+<p><a href="../ece6765-project-m4/#3-what-you-may-change">Milestone 4</a> lifts this
+constraint. In that milestone you may change anything behind
+<code>POST /query</code> and <code>GET /health</code>, including the decomposition.</p>
 </div>
 <p>The full contract -- endpoint shapes, request and response schemas, and what
 is fixed versus open -- is on the <a href="../ece6765-project-arch/">Reference Architecture and
 API</a> page.</p>
 <h2 id="a-note-on-the-end-of-the-semester">A note on the end of the semester<a class="headerlink" href="#a-note-on-the-end-of-the-semester" title="Permanent link">&para;</a></h2>
-<p>The last Milestone is currently planned to include a <strong>performance contest</strong>:
-every group runs the same trace on identical servers and the results are
-compared. </p>
-<div class="admonition note">
-<p class="admonition-title">This may change</p>
-<p>This is the first offering of this project. Milestones are released
-gradually, and the shape of Milestones will depend on how the earlier milestones
-actually go -- both for you and for the server cluster. </p>
-</div>
+<p>The last milestone, <a href="../ece6765-project-m4/">Milestone 4</a>, is a
+<strong>performance contest</strong>. After the deadline, staff run every group's final
+configuration on the same hidden traces and compare the results.</p>
 <h2 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h2>
 <p>Each group is given access to a <strong>dedicated Ampere server</strong>, donated to
 the course by <a href="https://amperecomputing.com">Ampere Computing</a>. All groups
 get identical hardware.</p>
-<p>Models are fixed for all groups so that the comparison is about systems, not
-about model optimization. </p>
+<p>Models are fixed for all groups through Milestone 3 so that the comparison
+is about systems, not about model optimization. Milestone 4 lets you change
+them.</p>
 <p>Server accesses are covered
 in the <a href="../ece6765-server-guide/">Server and Measurement Guide</a>.</p>
 <div class="admonition danger">

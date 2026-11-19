@@ -1,0 +1,1715 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Mohammad Alian">
+      
+      
+        <link rel="canonical" href="https://cornell-ece6765.github.io/ece6765-mkdocs/ece6765-project-m4/">
+      
+      
+        <link rel="prev" href="../ece6765-project-m3/">
+      
+      
+        <link rel="next" href="../ece6765-leaderboard/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Milestone 4: Performance Contest - ECE 6765 Modern Datacenter Architecture</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#milestone-4-performance-contest" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ECE 6765 Modern Datacenter Architecture" class="md-header__button md-logo" aria-label="ECE 6765 Modern Datacenter Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ECE 6765 Modern Datacenter Architecture
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Milestone 4: Performance Contest
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cornell-ece6765/ece6765-mkdocs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cornell-ece6765/ece6765-mkdocs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ece6765-project-overview/" class="md-tabs__link">
+          
+  
+  
+  Project
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ece6765-project-arch/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ECE 6765 Modern Datacenter Architecture" class="md-nav__button md-logo" aria-label="ECE 6765 Modern Datacenter Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ECE 6765 Modern Datacenter Architecture
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cornell-ece6765/ece6765-mkdocs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cornell-ece6765/ece6765-mkdocs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Project
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 1: Baseline Instrumentation and Characterization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 2: Profiling and Application-Level Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-m3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 3: System Sensitivity Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 4: Performance Contest
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Milestone 4: Performance Contest
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-your-starting-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Your Starting Point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-you-may-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What You May Change
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-contest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The Contest
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. The Contest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-hidden-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1. Hidden traces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-how-staff-run-the-contest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2. How staff run the contest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-contest-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3. Contest score
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4. Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-public-leaderboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Public Leaderboard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Public Leaderboard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-report-a-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1. Report a score
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-how-updates-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2. How updates count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-verification-after-the-deadline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3. Verification after the deadline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-what-to-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. What to Do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. What to Do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-choose-the-traces-you-tune-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1. Choose the traces you tune on
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-optimize-and-measure-each-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2. Optimize, and measure each optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-launch-from-a-rebooted-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3. Launch from a rebooted server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-what-to-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. What to Submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-leaderboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Public Leaderboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-project-arch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference Architecture and API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-eval-harness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Harness and Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-server-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server and Measurement Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-report-guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Report Guidelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ece6765-git-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Workflow for Group Repos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-your-starting-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Your Starting Point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-you-may-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What You May Change
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-contest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The Contest
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. The Contest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-hidden-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1. Hidden traces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-how-staff-run-the-contest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2. How staff run the contest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-contest-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3. Contest score
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4. Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-public-leaderboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Public Leaderboard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Public Leaderboard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-report-a-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1. Report a score
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-how-updates-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2. How updates count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-verification-after-the-deadline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3. Verification after the deadline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-what-to-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. What to Do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. What to Do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-choose-the-traces-you-tune-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1. Choose the traces you tune on
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-optimize-and-measure-each-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2. Optimize, and measure each optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-launch-from-a-rebooted-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3. Launch from a rebooted server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-what-to-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. What to Submit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="milestone-4-performance-contest">Milestone 4: Performance Contest<a class="headerlink" href="#milestone-4-performance-contest" title="Permanent link">&para;</a></h1>
+<p>This milestone is a performance contest. After the deadline, staff run
+every group's final configuration on a set of hidden traces, which no group
+sees before the contest, and rank the groups by a score that rewards
+throughput and penalizes any loss of answer quality
+(<a href="#43-contest-score">Section 4.3</a>). The hidden traces differ from the four
+public traces in input and output sequence length
+(<a href="#41-hidden-traces">Section 4.1</a>). You may tune on the public traces, on
+traces that you build, or on both.</p>
+<p>You may change anything behind the <code>POST /query</code> and <code>GET /health</code>
+interfaces, including the models, the vector search, and the division of
+the pipeline into services (<a href="#3-what-you-may-change">Section 3</a>).</p>
+<p>A public leaderboard, updated once a day, shows the score that each group
+reports on the public traces. Groups whose leaderboard score rises ten times
+earn a participation bonus (<a href="#5-public-leaderboard">Section 5</a>).</p>
+<p>To receive credit for an optimization, <code>m4.md</code> must explain what the
+optimization changes, which bottleneck it removes, and how much it changes
+throughput and answer quality, as you measured it. An optimization that the
+report does not explain receives no credit, however much it raises
+throughput.</p>
+<p><strong>See the <a href="https://www.csl.cornell.edu/courses/ece6765/schedule.html">course schedule</a>
+or the <a href="https://canvas.cornell.edu/calendar">Canvas calendar</a> for the
+deadline.</strong></p>
+<ul>
+<li><strong>Submitted by:</strong> the group, one submission per group</li>
+<li><strong>Submit via:</strong> GitHub, as <code>m4.md</code> plus code in your <code>team-XX</code> repo</li>
+<li><strong>Leaderboard:</strong> <a href="../ece6765-leaderboard/">Public Leaderboard</a>, updated
+   once a day</li>
+</ul>
+<h2 id="1-goals">1. Goals<a class="headerlink" href="#1-goals" title="Permanent link">&para;</a></h2>
+<p>By the end of this milestone your group should have:</p>
+<ul>
+<li>A final configuration that reaches the highest <a href="#43-contest-score">contest
+   score</a> you can on traces of different input and
+   output sequence lengths.</li>
+<li>A set of traces, the public ones and any that you build, that covers
+   the input and output sequence lengths you prepared the final
+   configuration for.</li>
+<li>For each optimization in the final configuration, the bottleneck it
+   removes and a measurement of its effect.</li>
+<li>Commands that let staff launch the final configuration on a rebooted
+   server and run it on any trace.</li>
+</ul>
+<h2 id="2-your-starting-point">2. Your Starting Point<a class="headerlink" href="#2-your-starting-point" title="Permanent link">&para;</a></h2>
+<p>Your M4 baseline is <strong>your own M3 best-known configuration</strong>. Every
+improvement you report in this milestone is measured against it.</p>
+<ul>
+<li>Tag the commit of that configuration <code>m4-baseline</code> and push the tag.</li>
+<li>Re-measure it on the four public traces and on every trace you build,
+   in the controlled environment of <a href="../ece6765-project-m3/#31-establish-a-controlled-environment">M3 Section
+   3.1</a>.</li>
+<li>Report its results on the public traces as your first leaderboard
+   update (<a href="#51-report-a-score">Section 5.1</a>).</li>
+</ul>
+<h2 id="3-what-you-may-change">3. What You May Change<a class="headerlink" href="#3-what-you-may-change" title="Permanent link">&para;</a></h2>
+<p>In this milestone you may change anything behind the <code>POST /query</code> and
+<code>GET /health</code> interfaces. This includes the vector-search algorithm and
+library, the chunking of the corpus and the index built over it, the
+embedding and generation models, the model-serving framework, the prompt
+and the decoding settings, the communication between services, request
+scheduling, and the machine-state settings of M3. Unlike in M1 through M3,
+the <a href="../ece6765-project-arch/#11-the-decomposition-is-fixed">four-service
+decomposition</a> is
+not fixed either, so you may merge, split, or replace services.</p>
+<p>The following are fixed:</p>
+<ul>
+<li>The <a href="../ece6765-project-arch/#24-query-api"><code>POST /query</code></a> and
+   <a href="../ece6765-project-arch/#25-readiness"><code>GET /health</code></a> contracts.</li>
+<li>The <code>evaluation/</code> directory, which you may not modify.</li>
+<li>The <a href="../ece6765-project-m3/#41-changing-machine-state">rules for changing machine
+   state</a> of M3, which
+   protect the server that your group shares.</li>
+</ul>
+<p>Every change must follow the <a href="#44-rules">contest rules</a>. A change that
+lowers answer quality below that of the M1 baseline lowers your <a href="#43-contest-score">contest
+score</a>.</p>
+<h2 id="4-the-contest">4. The Contest<a class="headerlink" href="#4-the-contest" title="Permanent link">&para;</a></h2>
+<h3 id="41-hidden-traces">4.1. Hidden traces<a class="headerlink" href="#41-hidden-traces" title="Permanent link">&para;</a></h3>
+<p>Staff measure every group on the same hidden traces. A hidden trace has the
+<a href="../ece6765-project-arch/#22-trace-file-format">format</a> of the public traces
+and queries the same CLAPNQ corpus, but no group sees it before the
+contest.</p>
+<p>Expect hidden traces that differ from the public traces, and from each
+other, in input and output sequence length. The input sequence length of a
+request is the number of tokens in the prompt that your generation model
+reads, and its output sequence length is the number of tokens that the
+model generates for the answer. The trace sets the query, which determines
+part of the prompt and the answer that the evaluator expects. Your pipeline
+sets the rest of the prompt, such as the instructions and the retrieved
+passages.</p>
+<h3 id="42-how-staff-run-the-contest">4.2. How staff run the contest<a class="headerlink" href="#42-how-staff-run-the-contest" title="Permanent link">&para;</a></h3>
+<p>Staff check out the last commit on <code>main</code> at or before the deadline and run
+its final configuration on a rebooted server, using only the commands in
+<code>m4.md</code>. Staff do not debug a launch that fails. They run each hidden trace
+three times with the course evaluator. For each run, the evaluator reports
+the <a href="../ece6765-eval-harness/#2-public-workloads-and-answer-quality">answer quality</a>
+and the <a href="../ece6765-eval-harness/#32-throughput">throughput</a> as
+<code>requests_per_second</code>, the number of requests in the trace divided by the
+wall-clock time of its <code>POST /query</code>. Staff also run the released M1
+baseline (<code>m1-release</code>) three times on each hidden trace.</p>
+<p><code>POST /query</code> returns only after the last answer of the batch completes, so
+the request that completes last determines the wall-clock time. The
+evaluator also reports completion-latency percentiles, which do not affect
+the contest score.</p>
+<h3 id="43-contest-score">4.3. Contest score<a class="headerlink" href="#43-contest-score" title="Permanent link">&para;</a></h3>
+<p>The contest score rewards throughput and penalizes any loss of answer
+quality relative to the M1 baseline. The penalty grows faster than the
+loss, so a small loss costs a small fraction of the score and a large loss
+costs almost all of it.</p>
+<p>For each hidden trace <em>t</em>, staff compute your score from the mean
+<code>requests_per_second</code> and the mean quality of the three runs of your final
+configuration and of the M1 baseline:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>S_t     = RPS_t / RPS_t(M1)
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>L_t     = max(0, 100 * (1 - Q_t / Q_t(M1)))
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>score_t = S_t * 2^(-(L_t / 5)^2)
+</span></code></pre></div>
+<ul>
+<li><strong><code>S_t</code></strong> is your speedup over the M1 baseline on trace <em>t</em>.</li>
+<li><strong><code>Q_t</code></strong> is your quality on trace <em>t</em>, either the ROUGE-L F1 score or
+   the unanswerable accuracy, whichever applies.</li>
+<li><strong><code>L_t</code></strong> is your quality loss on trace <em>t</em>, in percent of the quality of
+   the M1 baseline. On a trace with both answerable and unanswerable
+   queries, <code>L_t</code> is the mean of the losses of the two quality metrics,
+   weighted by the number of queries that each metric scores. A quality
+   above that of the M1 baseline counts as <code>L_t = 0</code>, with no bonus.</li>
+</ul>
+<p>Your contest score is the geometric mean of <code>score_t</code> across the hidden
+traces, so that every trace counts equally whatever its length. The contest
+ranks groups by this score.</p>
+<p>A quality loss of 5% halves the score on a trace. The table lists the
+factor by which each loss multiplies your speedup, and the speedup at which
+a configuration with that loss scores the same as the M1 baseline.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Quality loss <code>L_t</code></th>
+<th style="text-align: right;">Factor <code>2^(-(L_t / 5)^2)</code></th>
+<th style="text-align: right;">Speedup that offsets the loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00x</td>
+</tr>
+<tr>
+<td style="text-align: right;">1%</td>
+<td style="text-align: right;">0.97</td>
+<td style="text-align: right;">1.03x</td>
+</tr>
+<tr>
+<td style="text-align: right;">2%</td>
+<td style="text-align: right;">0.90</td>
+<td style="text-align: right;">1.12x</td>
+</tr>
+<tr>
+<td style="text-align: right;">3%</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">1.28x</td>
+</tr>
+<tr>
+<td style="text-align: right;">5%</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">2.00x</td>
+</tr>
+<tr>
+<td style="text-align: right;">7%</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">3.89x</td>
+</tr>
+<tr>
+<td style="text-align: right;">10%</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">16.0x</td>
+</tr>
+</tbody>
+</table>
+<p>For example, on one trace, a configuration 4x faster than the M1 baseline
+with a 3% quality loss scores 3.12, a configuration 2.5x faster with no
+loss scores 2.50, and a configuration 6x faster with a 6% quality loss
+scores 2.21.</p>
+<div class="admonition warning">
+<p class="admonition-title">One trace with a large quality loss lowers the whole score</p>
+<p>The geometric mean multiplies the scores of all hidden traces, so a
+trace with a 10% quality loss multiplies your contest score by
+0.06^(1/<em>n</em>), where <em>n</em> is the number of hidden traces. A configuration
+that answers "unanswerable" to every query scores close to 0 on every
+trace with answerable queries, and therefore close to 0 overall. Run
+the M1 baseline on every trace you tune on, so that you can compute
+your score on it.</p>
+</div>
+<h3 id="44-rules">4.4. Rules<a class="headerlink" href="#44-rules" title="Permanent link">&para;</a></h3>
+<p>These rules keep the contest scores of the groups comparable.</p>
+<ul>
+<li>Your pipeline generates every answer during the measured
+   <code>POST /query</code>. Do not reuse an answer, or a result computed for one
+   query such as its embedding or its retrieved passages, from an earlier
+   request, including the <a href="../ece6765-eval-harness/#1-what-the-harness-does">warm-up
+   query</a>, and do not
+   precompute them for known queries. Loading models, building indexes,
+   and opening connections before <code>/health</code> reports ready are permitted.</li>
+<li>Do not train or fine-tune a model on the CLAPNQ questions or their
+   reference answers.</li>
+<li>Your pipeline does not recognize specific queries or traces. It may
+   schedule a request by a property that it measures, such as the length
+   of its text, but not by its ID or by matching its text against known
+   queries.</li>
+<li>Report <code>start_time_ms</code> at the time your pipeline starts work on a query
+   and <code>last_token_ms</code> at the time its complete answer is ready, both in
+   milliseconds from the start of the <code>POST /query</code> request, as in the
+   <a href="../ece6765-project-arch/#24-query-api">query API</a>.</li>
+</ul>
+<h2 id="5-public-leaderboard">5. Public Leaderboard<a class="headerlink" href="#5-public-leaderboard" title="Permanent link">&para;</a></h2>
+<p>Until the deadline, staff publish a leaderboard of the scores that groups
+report on the four public traces, updated once a day. The leaderboard lets
+every group follow its progress and see where it stands.</p>
+<div class="admonition info">
+<p class="admonition-title">This leaderboard is not the contest ranking</p>
+<p>This leaderboard is a good-faith effort to show where each group
+stands. It ranks the scores that groups report on the public traces,
+as of the last daily update. Only the hidden traces that staff run
+after the deadline decide the contest. After the deadline, staff rerun
+each group's latest update to check that its score is reproducible
+(<a href="#53-verification-after-the-deadline">Section 5.3</a>).</p>
+</div>
+<h3 id="51-report-a-score">5.1. Report a score<a class="headerlink" href="#51-report-a-score" title="Permanent link">&para;</a></h3>
+<p>Run the evaluator with <code>--runs 3</code> on each of the four public traces,
+unchanged, and write each report to <code>leaderboard/</code> at the root of your
+repository under the name of its trace:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>/team-XX/ece6765-project/evaluation
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pixi<span class="w"> </span>run<span class="w"> </span>evaluate<span class="w"> </span>--runs<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--trace<span class="w"> </span>traces/short-query-answerable.jsonl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--output<span class="w"> </span>../leaderboard/short-query-answerable.json
+</span></code></pre></div>
+<p>Add <code>leaderboard/README.md</code> with the exact commands that apply the machine
+state on a rebooted server, launch the configuration that produced the
+reports, and run the evaluator on a trace. Commit the four reports and
+<code>leaderboard/README.md</code>, and push the commit to <code>main</code>. This commit is your
+update, and it must contain the configuration that produced the reports.
+The <a href="#44-rules">contest rules</a> apply to every configuration that you
+report.</p>
+<h3 id="52-how-updates-count">5.2. How updates count<a class="headerlink" href="#52-how-updates-count" title="Permanent link">&para;</a></h3>
+<p>Once a day, a staff script reads <code>leaderboard/</code> on <code>main</code> of every group
+repository. It scores a group only when all four reports are present, each
+from three measured runs of an unchanged public trace. It recomputes answer
+quality from the answers in each report, and it computes the leaderboard
+score with the formula of <a href="#43-contest-score">Section 4.3</a>, applied to the
+four public traces and to reports of <code>m1-release</code> that staff measured on
+them. The script also stores a copy of each report with the hash of its
+commit, so a later change to the history of <code>main</code> does not change the
+record.</p>
+<p>An update counts toward the participation bonus when its leaderboard score
+is at least 2% higher than that of your previous counted update. Your first
+scored update counts. The script reads <code>main</code> once a day, so it counts at
+most one update per day, and ten counted updates require at least ten days.
+The 2% margin keeps run-to-run variation from counting as an improvement.</p>
+<h3 id="53-verification-after-the-deadline">5.3. Verification after the deadline<a class="headerlink" href="#53-verification-after-the-deadline" title="Permanent link">&para;</a></h3>
+<p>After the deadline, staff check out the commit of your latest counted
+update, reboot your server, follow <code>leaderboard/README.md</code> in that commit,
+and run each public trace three times. Staff may also rerun one earlier
+counted update, chosen at random, in the same way. You lose the
+participation bonus in either of these cases:</p>
+<ul>
+<li>A rerun scores below 90% of the leaderboard score of the update that it
+   reruns.</li>
+<li>The configuration of a counted update breaks the <a href="#44-rules">contest
+   rules</a>, for example by looking up the reference answers of
+   the public queries.</li>
+</ul>
+<h2 id="6-what-to-do">6. What to Do<a class="headerlink" href="#6-what-to-do" title="Permanent link">&para;</a></h2>
+<h3 id="61-choose-the-traces-you-tune-on">6.1. Choose the traces you tune on<a class="headerlink" href="#61-choose-the-traces-you-tune-on" title="Permanent link">&para;</a></h3>
+<p>You may tune on the public traces, build new traces, or both. Each public
+trace contains 100 queries and separates short from long queries and
+answerable from unanswerable ones. A configuration tuned on one mix of
+queries can lose throughput on another, and the hidden traces differ from
+the public ones.</p>
+<p>The released evaluator accepts a trace at any path and scores any trace
+built from the 400 queries of the public traces, with their IDs and text
+unchanged, in any subset, mix, size, and order. It rejects a query that no
+public trace contains, because it has no reference answer for it. To
+measure a query that no public trace contains, for example a longer one,
+send it to <code>POST /query</code> with your own client. Such a run measures
+throughput and latency but not answer quality.</p>
+<p>Commit every trace you build, and the script that built it, outside
+<code>evaluation/</code>.</p>
+<h3 id="62-optimize-and-measure-each-optimization">6.2. Optimize, and measure each optimization<a class="headerlink" href="#62-optimize-and-measure-each-optimization" title="Permanent link">&para;</a></h3>
+<p>Base each optimization on a measurement that shows the bottleneck it
+targets, from your M2 and M3 work or from new profiling, and re-profile
+when an optimization moves the bottleneck. Measure the effect of each
+optimization on throughput and answer quality against the same
+configuration without it, on traces of different input and output sequence
+lengths. Optimizations interact, so state how you isolated each one.</p>
+<p>Follow the <a href="../ece6765-project-m3/#4-methodology-requirements">M3 methodology
+requirements</a>. Measure
+in a controlled environment, repeat each configuration, and report the mean
+with an error bound. Report an effect smaller than the run-to-run variation
+as indistinguishable from noise.</p>
+<h3 id="63-launch-from-a-rebooted-server">6.3. Launch from a rebooted server<a class="headerlink" href="#63-launch-from-a-rebooted-server" title="Permanent link">&para;</a></h3>
+<p>Staff launch your final configuration on a rebooted server from the
+commands in <code>m4.md</code> alone. Settings applied at runtime, such as the clock
+frequency, huge pages, and page migration, are lost at reboot, so your
+committed scripts must apply them. Before you commit a final configuration
+to <code>main</code>, reboot your server, run the commands in <code>m4.md</code> exactly as
+written, and run the evaluator on a trace.</p>
+<h2 id="7-what-to-submit">7. What to Submit<a class="headerlink" href="#7-what-to-submit" title="Permanent link">&para;</a></h2>
+<p>Commit your final configuration, your traces and scripts, and your results,
+push the <code>m4-baseline</code> tag, and add a file named <code>m4.md</code> at the repository
+root containing:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Title and group members</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Starting point:</strong> the <code>m4-baseline</code> commit and its re-measured
+       results on the four public traces and on your own traces</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Traces:</strong> the traces you tuned and evaluated on, how you built
+       each new one, and the range of input and output sequence lengths
+       it covers</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Optimizations</strong> (the core of the report): for each optimization
+       in the final configuration, what you changed, the bottleneck it
+       targets and the measurement that identified it, how you isolated
+       its effect, and its measured effect on throughput and answer
+       quality across input and output sequence lengths</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Final configuration:</strong> throughput, the completion-latency
+       distribution, and answer quality on every trace you evaluated,
+       with run-to-run variation, compared with the M4 baseline</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>What did not work:</strong> optimizations you tried and dropped, with
+       the diagnosis of why each one did not help</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>How to run it:</strong> exact commands that install every model,
+       library, and index that you added, apply the machine state on a
+       rebooted server, launch the final configuration, run the evaluator
+       on a trace at any path, and restore the defaults</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>AI assistance disclosure</strong>, as described in the <a href="../ece6765-report-guidelines/#7-use-of-ai-assistants">Report
+       Guidelines</a></li>
+</ul>
+<p>Follow the <a href="../ece6765-report-guidelines/">Report Guidelines</a>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>add<span class="w"> </span>m4.md<span class="w"> </span>img/<span class="w"> </span>results/<span class="w"> </span>scripts/<span class="w"> </span>traces/<span class="w"> </span>&lt;your<span class="w"> </span>config<span class="w"> </span>directory&gt;
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Milestone 4 submission"</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>push
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>m4-baseline
+</span></code></pre></div>
+<p>The submission is the last commit on <code>main</code> at or before the deadline, and
+staff run the final configuration in that commit.</p>
+<h2 id="8-tips">8. Tips<a class="headerlink" href="#8-tips" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Report your first score early</p>
+<p>The leaderboard counts at most one update a day, and each counted
+update must raise your score by 2%. Report your M4 baseline in the
+first days of the milestone, and report a new score after each
+optimization that you measure.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Keep <code>main</code> launchable</p>
+<p>Staff run the last commit on <code>main</code> at or before the deadline, so a
+late commit that breaks the launch or lowers answer quality replaces a
+working final configuration. Develop risky changes on a branch, and
+merge one only after it launches on a rebooted server and raises your
+contest score on the traces you have.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Find out what the last requests wait for</p>
+<p>The throughput of a trace depends on when its last answer completes.
+From the per-query timestamps, plot when each request starts and
+completes, and check which services are idle while the last requests
+finish.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Mohammad Alian
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../js/extras.js"></script>
+      
+        <script src="../js/leaderboard.js"></script>
+      
+        <script src="../js/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
