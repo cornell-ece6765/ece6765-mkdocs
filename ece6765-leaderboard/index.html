@@ -821,11 +821,14 @@ each group's latest update to check that its score is reproducible.</p>
 Loading the leaderboard.
 </div>
 
-<p>The score of a group is its speedup over the released M1 baseline
-(<code>m1-release</code>) on the four public traces, reduced for any loss of answer
-quality. A group that has not reported a score yet has a score of 0 and no
-rank. Counted updates are the daily updates that count toward the
-participation bonus.</p>
+<p>The score of a group on a trace is its speedup over the released M1
+baseline (<code>m1-release</code>) on that trace, reduced for any loss of answer
+quality (<a href="../ece6765-project-m4/#43-contest-score">Milestone 4, Section 4.3</a>).
+The overall score is the geometric mean of the four trace scores, so a large
+quality loss on one trace lowers it sharply. The leaderboard ranks the groups
+by the overall score and by the score on each trace. Only the overall score
+decides which updates count toward the participation bonus. A group that
+has not reported a score yet has a score of 0 and no rank.</p>
 
 
 
