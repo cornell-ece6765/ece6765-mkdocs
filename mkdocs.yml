@@ -74,8 +74,7 @@ extra_javascript:
 # locally without shipping. To release one, delete its line here, restore its
 # entry under `nav:`, and re-link it from docs/index.md.
 
-draft_docs: |
-  ece6765-project-m4.md
+draft_docs: ""
 
 # Pages
 
@@ -88,6 +87,7 @@ nav:
     - 'Milestone 1: Baseline Instrumentation and Characterization': ece6765-project-m1.md
     - 'Milestone 2: Profiling and Application-Level Optimization': ece6765-project-m2.md
     - 'Milestone 3: System Sensitivity Study': ece6765-project-m3.md
+    - 'Milestone 4: Performance Contest': ece6765-project-m4.md
     - 'Public Leaderboard': ece6765-leaderboard.md
 
   - 'Reference':

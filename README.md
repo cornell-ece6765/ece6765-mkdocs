@@ -60,13 +60,13 @@ Layout
 ------
 
 ```
-AGENTS.md                        conventions and release steps (read first)
 docs/
   index.md                         landing page
   ece6765-project-overview.md      project logistics, groups, grading
   ece6765-project-m[1-4].md        the four milestone handouts
   ece6765-report-guidelines.md     report format expectations
   ece6765-git-workflow.md          how groups use their GitHub repo
+  ece6765-leaderboard.md           public leaderboard (data in ece6765-leaderboard)
   img/                             figures (png/svg/jpg)
   stylesheets/extra.css            typography and admonition tweaks
   js/                              mathjax config + misc

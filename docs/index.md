@@ -17,8 +17,9 @@ four microservices** -- frontend, embedding, vector DB, and generation -- and
 then spend the semester using it to find out how sensitive a real workload is
 to the system underneath it.
 
-Those four services stay fixed for the semester. Each milestone handout states
-what you may change underneath and between them.
+Those four services stay fixed through Milestone 3, and Milestone 4 lets you
+change them. Each milestone handout states what you may change underneath and
+between them.
 
 The pipeline is the instrument, not the goal. What you are building is the
 ability to change something about a machine and explain what happened.
@@ -81,9 +82,11 @@ puts you on the other side of them.
     Build a controlled environment, then measure sensitivity to core
     allocation, NUMA placement and page size, interference, and frequency.
 
-- **Milestone 4** &middot; *not yet released*
+- **[Milestone 4: Performance Contest](ece6765-project-m4.md)**
+  &middot; *released*
 
-    Combine everything, measure it, and write the report that explains it.
+    Optimize your pipeline for hidden traces of different input and output
+    sequence lengths, and explain each optimization.
 
 - **[Public Leaderboard](ece6765-leaderboard.md)** &middot; *updated daily*
 

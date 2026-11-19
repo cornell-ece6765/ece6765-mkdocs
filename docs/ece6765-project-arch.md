@@ -4,7 +4,7 @@ Reference Architecture and API
 This page describes **what is fixed for the semester and what is yours to
 change**, and it is important not to confuse them.
 
-Three things are fixed for the semester. The first is the external interface:
+Three things are fixed through Milestone 3. The first is the external interface:
 the evaluation harness sends queries to your frontend with `POST /query`, and
 your pipeline exposes a `/health` readiness check. A single evaluation harness
 has to drive every group's pipeline, and comparable numbers across groups are
@@ -12,7 +12,7 @@ what make a class-wide discussion of results possible.
 
 The second is the **four-service decomposition** -- `frontend`, `embedding`,
 `vectordb`, and `generation`. You keep these four services, with these
-responsibilities, throughout the semester. You may not merge them, split them, or
+responsibilities, through Milestone 3. You may not merge them, split them, or
 re-decompose the pipeline. 
 
 The third is the **workload**: all groups use the course-specified embedding
@@ -21,6 +21,11 @@ comparison is about systems rather than differences in models or data.
 [Milestone 2](ece6765-project-m2.md) permits quantized versions of the
 same generation model and staff-provided chunked variants of CLAPNQ; the
 evaluation workloads remain unchanged.
+
+[Milestone 4](ece6765-project-m4.md#3-what-you-may-change) keeps only the
+external interface fixed. In that milestone you may change the
+decomposition, the models, and anything else behind `POST /query` and
+`GET /health`.
 
 The released implementation is frozen for M1. Do not change its application
 logic or configuration, or upgrade or replace released dependencies. You may
@@ -47,8 +52,8 @@ the natural place to implement scheduling policy when a milestone permits it.
 
 ### 1.1. The decomposition is fixed
 
-**These four services, with these responsibilities, are a constraint for the
-whole semester.** Unless explicitly mentioned that you are allowed, you may 
+**These four services, with these responsibilities, are a constraint
+through Milestone 3.** Unless explicitly mentioned that you are allowed, you may 
 not fuse embedding into vectordb, split generation
 into prefill and decode, absorb the frontend's scheduling into another
 service, or otherwise re-cut the boundaries.
@@ -150,8 +155,8 @@ inexplicably terrible numbers, because that work moves inside the clock.
 3. Internal interfaces: the semester's experiment
 --------------------------------------------------------------------------
 
-The decomposition is fixed. The released internal protocol is also fixed for
-M1; later handouts state when these choices become experimental.
+The decomposition is fixed through Milestone 3. The released internal
+protocol is also fixed for M1; later handouts state when these choices become experimental.
 
 The **semantics** of each hop remain fixed -- which service needs what data
 from which other service:

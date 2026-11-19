@@ -160,7 +160,7 @@ baseline whose costs you can measure before changing it.
 !!! note "The four services are fixed"
 
     You keep these four services -- `frontend`, `embedding`, `vectordb`,
-    `generation` -- with these functionalities throughout the semester.
+    `generation` -- with these functionalities through Milestone 3.
     **Merging, splitting, or re-decomposing the pipeline is not permitted.**
     When a milestone permits it, you may replicate a service, which is
     provisioning rather than re-decomposition.
@@ -174,6 +174,10 @@ baseline whose costs you can measure before changing it.
     can change. See [the decomposition is
     fixed](ece6765-project-arch.md#11-the-decomposition-is-fixed).
 
+    [Milestone 4](ece6765-project-m4.md#3-what-you-may-change) lifts this
+    constraint. In that milestone you may change anything behind
+    `POST /query` and `GET /health`, including the decomposition.
+
 The full contract -- endpoint shapes, request and response schemas, and what
 is fixed versus open -- is on the [Reference Architecture and
 API](ece6765-project-arch.md) page.
@@ -182,15 +186,9 @@ API](ece6765-project-arch.md) page.
 A note on the end of the semester
 --------------------------------------------------------------------------
 
-The last Milestone is currently planned to include a **performance contest**:
-every group runs the same trace on identical servers and the results are
-compared. 
-
-!!! note "This may change"
-
-    This is the first offering of this project. Milestones are released
-    gradually, and the shape of Milestones will depend on how the earlier milestones
-    actually go -- both for you and for the server cluster. 
+The last milestone, [Milestone 4](ece6765-project-m4.md), is a
+**performance contest**. After the deadline, staff run every group's final
+configuration on the same hidden traces and compare the results.
 
 
 Infrastructure
@@ -200,8 +198,9 @@ Each group is given access to a **dedicated Ampere server**, donated to
 the course by [Ampere Computing](https://amperecomputing.com). All groups
 get identical hardware.
 
-Models are fixed for all groups so that the comparison is about systems, not
-about model optimization. 
+Models are fixed for all groups through Milestone 3 so that the comparison
+is about systems, not about model optimization. Milestone 4 lets you change
+them.
 
 Server accesses are covered
 in the [Server and Measurement Guide](ece6765-server-guide.md).
